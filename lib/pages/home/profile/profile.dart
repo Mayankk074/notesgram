@@ -30,10 +30,29 @@ class _ProfileState extends State<Profile> {
         ? const LoadingShared()
         : Container(
             alignment: Alignment.center,
-            padding: const EdgeInsets.fromLTRB(20.0, 100.0, 20.0, 0.0),
+            padding: const EdgeInsets.fromLTRB(20.0, 50.0, 20.0, 0.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Row(
+                  children: [
+                    TextButton.icon(
+                        onPressed: (){},
+                        label: Icon(
+                          Icons.logout,
+                          size: 30.0,
+                        ),
+                    ),
+                    SizedBox(width: 190.0,),
+                    TextButton.icon(
+                      onPressed: (){},
+                      label: Icon(
+                        Icons.settings,
+                        size: 30.0,
+                      ),
+                    ),
+                  ],
+                ),
                 CupertinoButton(
                   onPressed: () async {
                     // picking image from gallery
@@ -87,6 +106,43 @@ class _ProfileState extends State<Profile> {
                   ),
                 ),
                 SizedBox(height: 20.0,),
+                const Row(
+                  children: [
+                    SizedBox(width: 70,),
+                    Text(
+                        "0",
+                      style: TextStyle(
+                        fontSize: 40,
+                      ),
+                    ),
+                    SizedBox(width: 140,),
+                    Text(
+                        "0",
+                      style: TextStyle(
+                        fontSize: 40,
+                      ),
+                    ),
+                  ],
+                ),
+                const Row(
+                  children: [
+                    SizedBox(width: 40,),
+                    Text("Followers"),
+                    SizedBox(width: 110,),
+                    Text("Following")
+                  ],
+                ),
+                SizedBox(height: 20.0,),
+                Text(
+                  "0",
+                  style: TextStyle(
+                    fontSize: 40.0,
+                  ),
+                ),
+                Text(
+                  "PDFs Uploaded",
+                ),
+                SizedBox(height: 50,),
                 ElevatedButton(
                   onPressed: () async {
                     //picking the notes pdf

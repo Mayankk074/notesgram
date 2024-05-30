@@ -21,7 +21,7 @@ class Notes extends StatelessWidget {
     return ListView.builder(
       itemCount: notesList != null ? notesList?.length : 0,
       itemBuilder: (context, index){
-        return NotesTile(pdf: notesList?[index], name: notesNames?[index],);
+        return NotesTile(pdfLink: notesList?[index], name: notesNames?[index],userName: "",userDP: "",);
       }
     );
     // return Container(

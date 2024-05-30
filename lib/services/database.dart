@@ -15,6 +15,7 @@ class DatabaseService{
   final CollectionReference _notesCollection=FirebaseFirestore.instance
       .collection('notes');
 
+
   //upload the data of user in database
   Future updataUserData(String username, String email, String password, String? downloadUrl) async {
     return await _userCollection.doc(uid).set({
@@ -24,10 +25,11 @@ class DatabaseService{
       'profilePic': downloadUrl,
     });
   }
-  List notesList=[];
-  List notesName=[];
+
   //upload the notes data of user in database
   Future updataNotesData(String? url, String? name) async {
+    List notesList=[];
+    List notesName=[];
     try {
       // Fetch the existing notes data from the database
       DocumentSnapshot snapshot = await _notesCollection.doc(uid).get();
@@ -56,22 +58,27 @@ class DatabaseService{
     }
   }
 
-  //get the notes of the user
-  // Stream<DocumentSnapshot> get notesData{
-  //   return _notesCollection.doc(uid).snapshots();
-  // }
+  Future<DocumentSnapshot> getUserSnap()async {
+    return await _userCollection.doc(uid).get();
+  }
 
   NotesModel? _notesofUser(DocumentSnapshot? snap){
     return snap != null ? NotesModel(notesDoc: List<String>.from(snap?.get('notes')),
         notesName: List<String>.from(snap?.get('names'))) : null;
   }
 
+  //get the notes of all Users
+  Stream<QuerySnapshot> get allNotes{
+    return _notesCollection.snapshots();
+  }
+
+
+  //get the notes of loggedIn user
   Stream<NotesModel?> get notesData{
     return _notesCollection.doc(uid).snapshots().map(
       _notesofUser
     );
   }
-
 
   //get the data of the user
   Stream<DocumentSnapshot> get userData{

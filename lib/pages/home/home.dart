@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:notesgram/models/notesModel.dart';
 import 'package:notesgram/models/userUid.dart';
+import 'package:notesgram/pages/home/explore/explore.dart';
 import 'package:notesgram/pages/home/profile/profile.dart';
 import 'package:notesgram/pages/home/upload.dart';
 import 'package:notesgram/services/auth.dart';
@@ -30,12 +31,21 @@ class _HomeState extends State<Home> {
 
     return MultiProvider(
       providers: [
+        //listening to user data
         StreamProvider<DocumentSnapshot?>.value(
           value: DatabaseService(uid: user.uid).userData,
           initialData: null,
         ),
+        
+        //listening to user notes
         StreamProvider<NotesModel?>.value(
           value: DatabaseService(uid: user.uid).notesData,
+          initialData: null,
+        ),
+
+        //listening to all user notes
+        StreamProvider<QuerySnapshot?>.value(
+          value: DatabaseService(uid: user.uid).allNotes,
           initialData: null,
         ),
       ],
@@ -49,12 +59,7 @@ class _HomeState extends State<Home> {
               child: Text('Logout'),
             ),
           ),
-          Center(
-            child: ElevatedButton(
-              onPressed: () {},
-              child: Text('Search'),
-            ),
-          ),
+          Explore(),
           Container(
             child: Notes(),
           ),
