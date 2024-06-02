@@ -58,6 +58,7 @@ class _AllNotesState extends State<AllNotes> {
     userDPs.clear();
 
     return FutureBuilder(
+      //getting the snapshot from DB only once
       future: getAllNotes(),
       builder: (context, AsyncSnapshot<void> snap){
         if (snap.connectionState == ConnectionState.waiting) {

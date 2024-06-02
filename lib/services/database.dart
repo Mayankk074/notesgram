@@ -27,9 +27,11 @@ class DatabaseService{
   }
 
   //upload the notes data of user in database
-  Future updataNotesData(String? url, String? name) async {
+  Future updataNotesData(String? url, String? name, String? course, String? subject) async {
     List notesList=[];
     List notesName=[];
+    List notesCourse=[];
+    List notesSubject=[];
     try {
       // Fetch the existing notes data from the database
       DocumentSnapshot snapshot = await _notesCollection.doc(uid).get();
@@ -37,6 +39,8 @@ class DatabaseService{
       try {
         notesList = List<String>.from(snapshot.get('notes'));
         notesName = List<String>.from(snapshot.get('names'));
+        notesCourse = List<String>.from(snapshot.get('course'));
+        notesSubject = List<String>.from(snapshot.get('subject'));
       } catch (e) {
 
       }
@@ -47,11 +51,17 @@ class DatabaseService{
         notesList.add(url);
         //add name of file in list
         notesName.add(name);
+        //add course of file in list
+        notesCourse.add(course);
+        //add subject of file in list
+        notesSubject.add(subject);
       }
       // Update the notes data in the database
       await _notesCollection.doc(uid).set({
         'notes': notesList,
         'names': notesName,
+        'course': notesCourse,
+        'subject': notesSubject,
       });
     } catch (e) {
       print('Error updating notes data: $e');
@@ -63,8 +73,12 @@ class DatabaseService{
   }
 
   NotesModel? _notesofUser(DocumentSnapshot? snap){
-    return snap != null ? NotesModel(notesDoc: List<String>.from(snap?.get('notes')),
-        notesName: List<String>.from(snap?.get('names'))) : null;
+    return snap != null ? NotesModel(
+      notesLink: List<String>.from(snap.get('notes')),
+      notesName: List<String>.from(snap.get('names')),
+      notesCourse: List<String>.from(snap.get('course')),
+      notesSubject: List<String>.from(snap.get('subject')),
+    ) : null;
   }
 
   //get the notes of all Users

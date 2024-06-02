@@ -14,14 +14,23 @@ class Notes extends StatelessWidget {
     final notesDocument=Provider.of<NotesModel?>(context);
 
 
-    List<String>? notesList=notesDocument?.notesDoc;
+    List<String>? notesList=notesDocument?.notesLink;
     List<String>? notesNames=notesDocument?.notesName;
+    List<String>? notesCourse=notesDocument?.notesCourse;
+    List<String>? notesSubject=notesDocument?.notesSubject;
     // List notesList = List<String>.from(notesDoc?.get('notes'));
 
     return ListView.builder(
-      itemCount: notesList != null ? notesList?.length : 0,
+      itemCount: notesList != null ? notesList.length : 0,
       itemBuilder: (context, index){
-        return NotesTile(pdfLink: notesList?[index], name: notesNames?[index],userName: "",userDP: "",);
+        return NotesTile(
+          pdfLink: notesList?[index],
+          name: notesNames?[index],
+          userName: "",
+          userDP: "",
+          course: notesCourse?[index],
+          subject: notesSubject?[index],
+        );
       }
     );
     // return Container(
