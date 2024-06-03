@@ -22,7 +22,7 @@ class NotesTile extends StatelessWidget {
           children: [
             ListTile(
               leading: CupertinoButton(
-                padding: EdgeInsets.all(0),
+                padding: EdgeInsets.only(left: 5),
                 onPressed: (){},
                 child: CircleAvatar(
                   backgroundImage: NetworkImage(
@@ -37,25 +37,14 @@ class NotesTile extends StatelessWidget {
                 icon: Icon(Icons.download,),
               ),
             ),
-            SizedBox(height: 10,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(width: 100.0,),
-                Text("Course/Class:"),
-                SizedBox(width: 50.0,),
-                Text("Subject:"),
-              ],
-            ),
-            SizedBox(height: 10,),
             Row(
               children: [
-                SizedBox(width: 20.0,),
-                Text(userName!),
-                SizedBox(width: 100.0,),
-                Text(course!),
-                SizedBox(width: 70.0,),
-                Text(subject!),
+                // SizedBox(width: 20,),
+                Expanded(child: Center(child: Text(userName!))),
+                // SizedBox(width: 30.0,),
+                Expanded(child: Center(child: Text("Course/Class:\n$course"))),
+                // SizedBox(width: 30.0,),
+                Expanded(child: Center(child: Text("Subject:\n$subject"))),
               ],
             ),
             SizedBox(height: 10,)

@@ -7,7 +7,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:notesgram/models/userUid.dart';
+import 'package:notesgram/pages/home/profile/settingsForm.dart';
 import 'package:notesgram/pages/home/profile/uploadForm.dart';
+import 'package:notesgram/services/auth.dart';
 import 'package:notesgram/services/database.dart';
 import 'package:notesgram/services/storage.dart';
 import 'package:notesgram/shared/loadingShared.dart';
@@ -39,14 +41,27 @@ class _ProfileState extends State<Profile> {
           ),
         );
       });
+    }
 
+    void _showSettingsPanel(){
+      showModalBottomSheet(context: context,
+          isScrollControlled: true,
+          builder: (context){
+            return Padding(
+              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: Container(
+                height: 300,
+                child: SettingsForm(userDoc: userDoc,),
+              ),
+            );
+          });
     }
 
     return userDoc == null
         ? const LoadingShared()
         : Container(
             alignment: Alignment.center,
-            padding: const EdgeInsets.fromLTRB(20.0, 50.0, 20.0, 0.0),
+            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -54,7 +69,36 @@ class _ProfileState extends State<Profile> {
                   Row(
                     children: [
                       TextButton.icon(
-                          onPressed: (){},
+                          onPressed: (){
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context){
+                                return AlertDialog(
+                                  title: Text('Alert!!'),
+                                  content: const SingleChildScrollView(
+                                    child: Text(
+                                      'Do you really want to Sign Out?'
+                                    )
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text('Yes'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        AuthService().signOut();
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: Text('No'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              });
+                            //
+                          },
                           label: Icon(
                             Icons.logout,
                             size: 30.0,
@@ -62,7 +106,7 @@ class _ProfileState extends State<Profile> {
                       ),
                       SizedBox(width: 190.0,),
                       TextButton.icon(
-                        onPressed: (){},
+                        onPressed: () => _showSettingsPanel(),
                         label: Icon(
                           Icons.settings,
                           size: 30.0,

@@ -17,6 +17,8 @@ class _AllNotesState extends State<AllNotes> {
 
   List<List<String>> namesOfNotes=[];
   List<List<String>> linkOfNotes=[];
+  List<List<String>> notesCourse=[];
+  List<List<String>> notesSubject=[];
   List<String> userNames=[];
   List<String> userDPs=[];
   final CollectionReference _notesCollection=FirebaseFirestore.instance
@@ -43,6 +45,8 @@ class _AllNotesState extends State<AllNotes> {
 
       namesOfNotes.add(List<String>.from(snap.get('names')));
       linkOfNotes.add(List<String>.from(snap.get('notes')));
+      notesCourse.add(List<String>.from(snap.get('course')));
+      notesSubject.add(List<String>.from(snap.get('subject')));
     }
     print(namesOfNotes);
   }
@@ -54,6 +58,8 @@ class _AllNotesState extends State<AllNotes> {
     // Clear the lists to prevent duplicates
     namesOfNotes.clear();
     linkOfNotes.clear();
+    notesSubject.clear();
+    notesCourse.clear();
     userNames.clear();
     userDPs.clear();
 
@@ -74,18 +80,32 @@ class _AllNotesState extends State<AllNotes> {
 
               String pdfLink="";
               String pdfName="";
+              String course="";
+              String subject="";
               String userName=userNames[index];
               String userDP=userDPs[index];
               List<Widget> notesTiles = [];
 
               List<String> pdfNamesList=namesOfNotes[index];
               List<String> pdfLinksList=linkOfNotes[index];
+              List<String> courseList=notesCourse[index];
+              List<String> subjectList=notesSubject[index];
 
               for(var i=0;i<pdfNamesList.length;i++){
                 pdfName=pdfNamesList[i];
                 pdfLink=pdfLinksList[i];
+                course=courseList[i];
+                subject=subjectList[i];
                 //creating List of widgets
-                notesTiles.add(NotesTile(pdfLink: pdfLink, name: pdfName, userDP: userDP,userName: userName,));
+                notesTiles.add(NotesTile(
+                  pdfLink: pdfLink,
+                  name: pdfName,
+                  userDP: userDP,
+                  userName: userName,
+                  subject: subject,
+                  course: course,
+                  )
+                );
               }
               //Adding that list of widget in column to show
               return Column(

@@ -12,6 +12,7 @@ class Notes extends StatelessWidget {
 
     // final userDoc=Provider.of<DocumentSnapshot?>(context);
     final notesDocument=Provider.of<NotesModel?>(context);
+    final userDoc=Provider.of<DocumentSnapshot>(context);
 
 
     List<String>? notesList=notesDocument?.notesLink;
@@ -26,8 +27,8 @@ class Notes extends StatelessWidget {
         return NotesTile(
           pdfLink: notesList?[index],
           name: notesNames?[index],
-          userName: "",
-          userDP: "",
+          userName: userDoc['username'],
+          userDP: userDoc['profilePic'],
           course: notesCourse?[index],
           subject: notesSubject?[index],
         );

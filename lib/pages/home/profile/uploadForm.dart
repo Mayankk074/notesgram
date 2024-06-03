@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -31,8 +32,6 @@ class _UploadFormState extends State<UploadForm> {
   Widget build(BuildContext context) {
 
     final user = Provider.of<UserUid>(context);
-
-
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -99,6 +98,12 @@ class _UploadFormState extends State<UploadForm> {
                       .updataNotesData(url, fileName, _currentCourse, _currentSubject);
                   if (!context.mounted) return;
                   Navigator.pop(context);
+                  const snackBar = SnackBar(
+                    content: Text('Yay! PDF has been uploaded!'),
+                  );
+                  // Find the ScaffoldMessenger in the widget tree
+                  // and use it to show a SnackBar.
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
               },
               child: Text('Upload'))
