@@ -12,14 +12,13 @@ class Notes extends StatelessWidget {
 
     // final userDoc=Provider.of<DocumentSnapshot?>(context);
     final notesDocument=Provider.of<NotesModel?>(context);
-    final userDoc=Provider.of<DocumentSnapshot>(context);
+    final userDoc=Provider.of<DocumentSnapshot?>(context);
 
 
     List<String>? notesList=notesDocument?.notesLink;
     List<String>? notesNames=notesDocument?.notesName;
     List<String>? notesCourse=notesDocument?.notesCourse;
     List<String>? notesSubject=notesDocument?.notesSubject;
-    // List notesList = List<String>.from(notesDoc?.get('notes'));
 
     return ListView.builder(
       itemCount: notesList != null ? notesList.length : 0,
@@ -27,8 +26,8 @@ class Notes extends StatelessWidget {
         return NotesTile(
           pdfLink: notesList?[index],
           name: notesNames?[index],
-          userName: userDoc['username'],
-          userDP: userDoc['profilePic'],
+          userName: userDoc?['username'],
+          userDP: userDoc?['profilePic'],
           course: notesCourse?[index],
           subject: notesSubject?[index],
         );
