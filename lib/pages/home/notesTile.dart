@@ -1,13 +1,6 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class NotesTile extends StatelessWidget {
   const NotesTile({super.key, this.pdfLink, this.name, this.userName, this.userDP,this.course,this.subject});
@@ -19,43 +12,11 @@ class NotesTile extends StatelessWidget {
   final String? course;
   final String? subject;
 
-  Future _downloadAndSaveFile(String url) async {
-    // Dio dio = Dio();
-    try {
-      // Create a temporary directory to store the downloaded file
-
-      Directory? tempDir = await getDownloadsDirectory();
-      String? tempPath = tempDir?.path;
-
-      // Download file
-      // await dio.download(url, '$tempPath/$name');
-      final taskId = await FlutterDownloader.enqueue(
-        url: url,
-        savedDir: '$tempPath',
-        showNotification: true, // show download progress in status bar (for Android)
-        // openFileFromNotification: true, // click on notification to open downloaded file (for Android)
-      );
-
-      // Return XFile
-      // return XFile('$tempPath/$name');
-    } catch (e) {
-      print("Error downloading file: $e");
-    }
-  }
-
-  void _openPdf(BuildContext context) async {
-    // Check if the URL launcher is supported on the device
-    if (await canLaunchUrlString(pdfLink!)) {
-      XFile? file=await _downloadAndSaveFile(pdfLink!);
-      // Prompt the user to choose an app to open the PDF with
-      Share.shareXFiles([file!], text: 'Open PDF with...');
-    } else {
-      // Handle the case where the URL cannot be launched
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Could not open PDF.'),
-        ),
-      );
+  Future<void> downloadFile(BuildContext context) async {
+    // launching the pdfLink and it will automatically start downloading
+    final Uri url = Uri.parse(pdfLink!);
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
     }
   }
 
@@ -82,7 +43,7 @@ class NotesTile extends StatelessWidget {
               title: Text(name!),
               trailing: IconButton(
                 onPressed: ()async {
-                  _downloadAndSaveFile(pdfLink!);
+                  await downloadFile(context);
                 },
                 icon: Icon(Icons.download,),
               ),
