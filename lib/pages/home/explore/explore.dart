@@ -18,20 +18,9 @@ class _ExploreState extends State<Explore> {
 
     return Container(
       alignment: Alignment.center,
-      padding: EdgeInsets.fromLTRB(10.0, 50.0, 10.0, 0),
+      padding: EdgeInsets.fromLTRB(5.0, 20.0, 5.0, 0),
       child: Column(
         children: [
-          TextField(
-            decoration: textInputDecoration.copyWith(
-              labelText: "Search",
-            ),
-          ),
-          // ElevatedButton(
-          //   onPressed: ()async {
-          //     List<DocumentSnapshot> list= snapshot.docs;
-          //     print(list[0]['names']);
-          //   } ,
-          //   child: Text("Press"))
           Expanded(
             child: AllNotes(),
           ),

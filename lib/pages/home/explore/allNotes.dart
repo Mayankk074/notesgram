@@ -29,11 +29,7 @@ class _AllNotesState extends State<AllNotes> {
   Future getAllNotes()async {
 
     QuerySnapshot? snapshot= await _notesCollection.get();
-
-    print("get all notes");
-    print(namesOfNotes);
     List<DocumentSnapshot>? allDocs=snapshot.docs;
-    print(namesOfNotes);
 
     //going through all docs and converting into single list of names and notes
     for(DocumentSnapshot snap in allDocs){
@@ -50,7 +46,6 @@ class _AllNotesState extends State<AllNotes> {
       notesCourse.add(List<String>.from(snap.get('course')));
       notesSubject.add(List<String>.from(snap.get('subject')));
     }
-    print(namesOfNotes);
   }
 
 
@@ -78,8 +73,6 @@ class _AllNotesState extends State<AllNotes> {
         return ListView.builder(
             itemCount: namesOfNotes.length,
             itemBuilder: (context, index){
-              print(namesOfNotes);
-
               String pdfLink="";
               String pdfName="";
               String course="";

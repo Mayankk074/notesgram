@@ -147,7 +147,12 @@ class _UserProfileState extends State<UserProfile> {
                 ),
                 SizedBox(height: 50,),
                 ElevatedButton(
-                  onPressed:(){},
+                  onPressed:(){
+                    Navigator.pushNamed(context, '/otherUserFiles',arguments: {
+                      'userSnap':userSnap,
+                      'notesSnap':notesSnap
+                    });
+                  },
                   style: ButtonStyle(
                       fixedSize:
                       WidgetStateProperty.all<Size>(Size(300.0, 60.0)),

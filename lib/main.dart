@@ -1,9 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:notesgram/models/userUid.dart';
-import 'package:notesgram/pages/authenticate/otp.dart';
 import 'package:notesgram/pages/authenticate/signIn.dart';
 import 'package:notesgram/pages/authenticate/signUp.dart';
+import 'package:notesgram/pages/home/otherUserFiles.dart';
 import 'package:notesgram/pages/home/userDP.dart';
 import 'package:notesgram/pages/loading.dart';
 import 'package:notesgram/pages/wrapper.dart';
@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
             '/signUp': (context)=> SignUp(),
             '/signIn': (context)=> SignIn(),
             '/userProfile': (context)=> UserProfile(),
+            '/otherUserFiles': (context)=> OtherUserFiles(),
           },
         ));
   }

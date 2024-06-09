@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:notesgram/models/notesModel.dart';
 import 'package:notesgram/models/userUid.dart';
 import 'package:notesgram/pages/home/explore/explore.dart';
+import 'package:notesgram/pages/home/homeBody.dart';
 import 'package:notesgram/pages/home/profile/profile.dart';
 import 'package:notesgram/pages/home/upload.dart';
 import 'package:notesgram/services/auth.dart';
@@ -42,27 +43,12 @@ class _HomeState extends State<Home> {
           value: DatabaseService(uid: user.uid).notesData,
           initialData: null,
         ),
-
-        //listening to all user notes
-        StreamProvider<QuerySnapshot?>.value(
-          value: DatabaseService(uid: user.uid).allNotes,
-          initialData: null,
-        ),
       ],
       child: Scaffold(
         body: [
-          Center(
-            child: ElevatedButton(
-              onPressed: () {
-                AuthService().signOut();
-              },
-              child: Text('Logout'),
-            ),
-          ),
+          HomeBody(),
           Explore(),
-          Container(
-            child: Notes(),
-          ),
+          Notes(),
           Profile(),
         ][currentIndex],
         bottomNavigationBar: BottomNavigationBar(
