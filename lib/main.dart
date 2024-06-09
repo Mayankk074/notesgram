@@ -4,6 +4,7 @@ import 'package:notesgram/models/userUid.dart';
 import 'package:notesgram/pages/authenticate/otp.dart';
 import 'package:notesgram/pages/authenticate/signIn.dart';
 import 'package:notesgram/pages/authenticate/signUp.dart';
+import 'package:notesgram/pages/home/userDP.dart';
 import 'package:notesgram/pages/loading.dart';
 import 'package:notesgram/pages/wrapper.dart';
 import 'package:notesgram/services/auth.dart';
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
             '/wrapper': (context)=> Wrapper(),
             '/signUp': (context)=> SignUp(),
             '/signIn': (context)=> SignIn(),
-            '/OTP': (context)=> OTP(),
+            '/userProfile': (context)=> UserProfile(),
           },
         ));
   }

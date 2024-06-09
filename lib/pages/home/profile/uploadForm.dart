@@ -11,7 +11,8 @@ import 'package:notesgram/shared/constants.dart';
 import 'package:provider/provider.dart';
 
 class UploadForm extends StatefulWidget {
-  const UploadForm({super.key});
+  UploadForm({super.key, this.userDoc});
+  DocumentSnapshot? userDoc;
 
   @override
   State<UploadForm> createState() => _UploadFormState();
@@ -96,6 +97,18 @@ class _UploadFormState extends State<UploadForm> {
                   //updating the database with pdf url
                   await DatabaseService(uid: user.uid)
                       .updataNotesData(url, fileName, _currentCourse, _currentSubject);
+
+                  //updating the no. of notesUploaded
+                  await DatabaseService(uid: user.uid)
+                      .updataUserData(
+                        widget.userDoc?['username'],
+                        widget.userDoc?['email'],
+                        widget.userDoc?['password'],
+                        widget.userDoc?['profilePic'],
+                        widget.userDoc?['followers'],
+                        List<String>.from(widget.userDoc?['following']),
+                        widget.userDoc?['notesUploaded']+1,
+                      );
                   if (!context.mounted) return;
                   Navigator.pop(context);
                   const snackBar = SnackBar(

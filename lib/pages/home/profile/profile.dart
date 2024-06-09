@@ -37,7 +37,7 @@ class _ProfileState extends State<Profile> {
           padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Container(
             height: 400,
-            child: UploadForm(),
+            child: UploadForm(userDoc: userDoc,),
           ),
         );
       });
@@ -129,10 +129,14 @@ class _ProfileState extends State<Profile> {
                             .uploadImage(convertedImage);
                         //updating the profilePic url
                         DatabaseService(uid: user.uid).updataUserData(
-                            userDoc['username'],
-                            userDoc['email'],
-                            userDoc['password'],
-                            downloadUrl);
+                          userDoc['username'],
+                          userDoc['email'],
+                          userDoc['password'],
+                          downloadUrl,
+                          userDoc['followers'],
+                          List<String>.from(userDoc['following']),
+                          userDoc['notesUploaded']
+                        );
               
                         log("image selected!");
                       } else {
@@ -143,7 +147,8 @@ class _ProfileState extends State<Profile> {
                     child: CircleAvatar(
                       radius: 70.0,
                       // Getting the profile pic from the database
-                      backgroundImage: userDoc['profilePic'] != null
+                      //if there is no dp then dont show image
+                      backgroundImage: userDoc['profilePic'] != 'No DP'
                           ? NetworkImage(userDoc['profilePic'])
                           : null,
                       backgroundColor: Colors.redAccent,
@@ -167,18 +172,18 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                   SizedBox(height: 20.0,),
-                  const Row(
+                  Row(
                     children: [
                       SizedBox(width: 70,),
                       Text(
-                          "0",
+                        '${userDoc['followers']}',
                         style: TextStyle(
                           fontSize: 40,
                         ),
                       ),
                       SizedBox(width: 140,),
                       Text(
-                          "0",
+                        '${userDoc['following'].length}',
                         style: TextStyle(
                           fontSize: 40,
                         ),
@@ -195,7 +200,7 @@ class _ProfileState extends State<Profile> {
                   ),
                   SizedBox(height: 20.0,),
                   Text(
-                    "0",
+                    '${userDoc['notesUploaded']}',
                     style: TextStyle(
                       fontSize: 40.0,
                     ),

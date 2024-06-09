@@ -21,6 +21,7 @@ class _AllNotesState extends State<AllNotes> {
   List<List<String>> notesSubject=[];
   List<String> userNames=[];
   List<String> userDPs=[];
+  List<String> userUids=[];
   final CollectionReference _notesCollection=FirebaseFirestore.instance
       .collection('notes');
 
@@ -37,6 +38,7 @@ class _AllNotesState extends State<AllNotes> {
     //going through all docs and converting into single list of names and notes
     for(DocumentSnapshot snap in allDocs){
       String uid=snap.id;
+      userUids.add(uid);
 
       DocumentSnapshot userSnap=await DatabaseService(uid: uid).getUserSnap();
 
@@ -84,6 +86,7 @@ class _AllNotesState extends State<AllNotes> {
               String subject="";
               String userName=userNames[index];
               String userDP=userDPs[index];
+              String userUid=userUids[index];
               List<Widget> notesTiles = [];
 
               List<String> pdfNamesList=namesOfNotes[index];
@@ -104,6 +107,7 @@ class _AllNotesState extends State<AllNotes> {
                   userName: userName,
                   subject: subject,
                   course: course,
+                  userUid: userUid,
                   )
                 );
               }

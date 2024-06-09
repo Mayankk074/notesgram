@@ -42,10 +42,13 @@ class _SettingsFormState extends State<SettingsForm> {
               onPressed: () async {
                 if(_formKey.currentState!.validate()){
                   await DatabaseService(uid: user?.uid).updataUserData(
-                      _currentUsername!,
-                      widget.userDoc?['email'],
-                      widget.userDoc?['password'],
-                      widget.userDoc?['profilePic']
+                    _currentUsername!,
+                    widget.userDoc?['email'],
+                    widget.userDoc?['password'],
+                    widget.userDoc?['profilePic'],
+                    widget.userDoc?['followers'],
+                    List<String>.from(widget.userDoc?['following']),
+                    widget.userDoc?['notesUploaded'],
                   );
                   if(!context.mounted) return;
                   Navigator.pop(context);

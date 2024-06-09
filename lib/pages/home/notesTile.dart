@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:notesgram/models/userUid.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NotesTile extends StatelessWidget {
-  const NotesTile({super.key, this.pdfLink, this.name, this.userName, this.userDP,this.course,this.subject});
+  const NotesTile({super.key, this.pdfLink, this.name, this.userName, this.userDP,this.course,this.subject, this.userUid});
 
   final String? pdfLink;
   final String? name;
@@ -11,6 +13,7 @@ class NotesTile extends StatelessWidget {
   final String? userDP;
   final String? course;
   final String? subject;
+  final String? userUid;
 
   Future<void> downloadFile(BuildContext context) async {
     // launching the pdfLink and it will automatically start downloading
@@ -21,8 +24,15 @@ class NotesTile extends StatelessWidget {
   }
 
 
+
+
   @override
   Widget build(BuildContext context) {
+    final currentUserUid=Provider.of<UserUid?>(context);
+
+    //checking if current user is trying to open its own profile
+    bool flag=currentUserUid?.uid!=userUid;
+
     return Padding(
       padding: EdgeInsets.only(top: 20.0),
       child: Card(
@@ -30,16 +40,27 @@ class NotesTile extends StatelessWidget {
         child: Column(
           children: [
             ListTile(
-              leading: CupertinoButton(
+              //using the flag to show userProfile
+              leading: flag? CupertinoButton(
                 padding: EdgeInsets.only(left: 5),
-                onPressed: (){},
+                onPressed: (){
+                  Navigator.pushNamed(context, '/userProfile',arguments: {
+                    'userUid': userUid,
+                  });
+                },
                 child: CircleAvatar(
-                  backgroundImage: NetworkImage(
+                  //if there is no dp then dont show image
+                  backgroundImage: userDP !='No DP'? NetworkImage(
                     userDP!,
-                  ),
+                  ): null,
                   radius: 30.0,
                 ),
-              ),
+              ):CircleAvatar(
+                  backgroundImage: userDP !='No DP'? NetworkImage(
+                    userDP!,
+                  ): null,
+                  radius: 30.0,
+                ),
               title: Text(name!),
               trailing: IconButton(
                 onPressed: ()async {

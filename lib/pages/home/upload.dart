@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:notesgram/models/notesModel.dart';
 import 'package:notesgram/pages/home/notesTile.dart';
+import 'package:notesgram/shared/loadingShared.dart';
 import 'package:provider/provider.dart';
 
 class Notes extends StatelessWidget {
@@ -20,7 +21,8 @@ class Notes extends StatelessWidget {
     List<String>? notesCourse=notesDocument?.notesCourse;
     List<String>? notesSubject=notesDocument?.notesSubject;
 
-    return ListView.builder(
+    return userDoc==null ? LoadingShared():
+      ListView.builder(
       itemCount: notesList != null ? notesList.length : 0,
       itemBuilder: (context, index){
         return NotesTile(
@@ -30,11 +32,9 @@ class Notes extends StatelessWidget {
           userDP: userDoc?['profilePic'],
           course: notesCourse?[index],
           subject: notesSubject?[index],
+          userUid: userDoc.id,
         );
       }
     );
-    // return Container(
-    //   child: Text(notesList[0]),
-    // );
   }
 }

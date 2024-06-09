@@ -17,13 +17,63 @@ class DatabaseService{
 
 
   //upload the data of user in database
-  Future updataUserData(String username, String email, String password, String? downloadUrl) async {
+  Future updataUserData(String username, String email, String password, String? downloadUrl, int followers,List<String> following, int notesUploaded) async {
+
     return await _userCollection.doc(uid).set({
       'username': username,
       'email': email,
       'password': password,
       'profilePic': downloadUrl,
+      'followers': followers,
+      'following': following,
+      'notesUploaded': notesUploaded,
     });
+  }
+
+  Future startFollowing(String following) async {
+    List<String> followingList=[];
+
+    // Fetch the existing notes data from the database
+    DocumentSnapshot snapshot = await _userCollection.doc(uid).get();
+
+    try {
+      followingList = List<String>.from(snapshot.get('following'));
+    } catch (e) {
+    }
+    followingList.add(following);
+    _userCollection.doc(uid).set({
+      'username': snapshot['username'],
+      'email': snapshot['email'],
+      'password': snapshot['password'],
+      'profilePic': snapshot['profilePic'],
+      'followers': snapshot['followers'],
+      'following': followingList,
+      'notesUploaded': snapshot['notesUploaded'],
+    }
+    );
+  }
+
+  Future stopFollowing(String following) async {
+    List<String> followingList=[];
+
+    // Fetch the existing notes data from the database
+    DocumentSnapshot snapshot = await _userCollection.doc(uid).get();
+
+    try {
+      followingList = List<String>.from(snapshot.get('following'));
+    } catch (e) {
+    }
+    followingList.remove(following);
+    _userCollection.doc(uid).set({
+      'username': snapshot['username'],
+      'email': snapshot['email'],
+      'password': snapshot['password'],
+      'profilePic': snapshot['profilePic'],
+      'followers': snapshot['followers'],
+      'following': followingList,
+      'notesUploaded': snapshot['notesUploaded'],
+    }
+    );
   }
 
   //upload the notes data of user in database
@@ -72,13 +122,22 @@ class DatabaseService{
     return await _userCollection.doc(uid).get();
   }
 
+  Future<DocumentSnapshot> getNotesSnap()async {
+    return await _notesCollection.doc(uid).get();
+  }
+
   NotesModel? _notesofUser(DocumentSnapshot? snap){
-    return snap != null ? NotesModel(
-      notesLink: List<String>.from(snap.get('notes')),
-      notesName: List<String>.from(snap.get('names')),
-      notesCourse: List<String>.from(snap.get('course')),
-      notesSubject: List<String>.from(snap.get('subject')),
-    ) : null;
+    try{
+      return snap != null ? NotesModel(
+        notesLink: List<String>.from(snap.get('notes')),
+        notesName: List<String>.from(snap.get('names')),
+        notesCourse: List<String>.from(snap.get('course')),
+        notesSubject: List<String>.from(snap.get('subject')),
+      ) : null;
+    }
+    catch(e){
+      //Do nothing
+    }
   }
 
   //get the notes of all Users
