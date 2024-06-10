@@ -22,19 +22,22 @@ class Notes extends StatelessWidget {
     List<String>? notesSubject=notesDocument?.notesSubject;
 
     return userDoc==null ? LoadingShared():
+        notesList !=null ?
       ListView.builder(
-      itemCount: notesList != null ? notesList.length : 0,
+      itemCount: notesList.length,
       itemBuilder: (context, index){
         return NotesTile(
           pdfLink: notesList?[index],
           name: notesNames?[index],
-          userName: userDoc?['username'],
-          userDP: userDoc?['profilePic'],
+          userName: userDoc['username'],
+          userDP: userDoc['profilePic'],
           course: notesCourse?[index],
           subject: notesSubject?[index],
           userUid: userDoc.id,
         );
       }
-    );
+    ): Center(
+          child: Text('No file is uploaded!!'),
+        );
   }
 }

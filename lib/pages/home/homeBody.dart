@@ -49,8 +49,16 @@ class HomeBody extends StatelessWidget {
           if(userSnap!= null){
             followingList=List<String>.from(userSnap['following']);
           }
-          //getting the following list user data
+          // Clear the lists to prevent duplicates
+          namesOfNotes.clear();
+          linkOfNotes.clear();
+          notesSubject.clear();
+          notesCourse.clear();
+          userNames.clear();
+          userDPs.clear();
+
           return FutureBuilder(
+              //getting the following list user data
               future: followingNotes(),
               builder: (context, AsyncSnapshot<void> snap) {
                 if (snap.connectionState == ConnectionState.waiting) {
@@ -59,10 +67,8 @@ class HomeBody extends StatelessWidget {
                   return Center(child: Text('Error: ${snap.error}'));
                 }
 
-                return ListView.builder(
-                    itemCount: namesOfNotes.isNotEmpty
-                        ? namesOfNotes.length
-                        : 0,
+                return namesOfNotes.isNotEmpty? ListView.builder(
+                    itemCount: namesOfNotes.length,
                     itemBuilder: (context, index) {
                       String pdfLink = "";
                       String pdfName = "";
@@ -70,7 +76,7 @@ class HomeBody extends StatelessWidget {
                       String subject = "";
                       String userName = userNames[index];
                       String userDP = userDPs[index];
-                      String userUid = followingList![index];
+                      String userUid = followingList[index];
                       List<Widget> notesTiles = [];
                       List<String> pdfNamesList = namesOfNotes[index];
                       List<String> pdfLinksList = linkOfNotes[index];
@@ -100,6 +106,8 @@ class HomeBody extends StatelessWidget {
                         children: notesTiles,
                       );
                     }
+                ):Center(
+                  child: Text('You are not following anyone!!'),
                 );
               }
           );
