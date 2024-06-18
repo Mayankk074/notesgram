@@ -27,7 +27,7 @@ class OtherUserFiles extends StatelessWidget {
         title: Text('Uploaded Files'),
       ),
       body: ListView.builder(
-          itemCount: notesList != null ? notesList.length : 0,
+          itemCount: notesList.length,
           itemBuilder: (context, index){
             return NotesTile(
               pdfLink: notesList[index],

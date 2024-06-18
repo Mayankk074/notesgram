@@ -46,7 +46,7 @@ class _HomeState extends State<Home> {
       ],
       child: Scaffold(
         body: [
-          HomeBody(),
+          HomeBody(user: user,),
           Explore(),
           Notes(),
           Profile(),

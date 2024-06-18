@@ -34,9 +34,9 @@ class NotesTile extends StatelessWidget {
     bool flag=currentUserUid?.uid!=userUid;
 
     return Padding(
-      padding: EdgeInsets.only(top: 20.0),
+      padding: EdgeInsets.symmetric(vertical: 10.0),
       child: Card(
-        margin: EdgeInsets.fromLTRB(20.0, 6.0, 20.0, 0.0),
+        margin: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
         child: Column(
           children: [
             ListTile(

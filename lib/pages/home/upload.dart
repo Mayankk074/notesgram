@@ -36,7 +36,7 @@ class Notes extends StatelessWidget {
           userUid: userDoc.id,
         );
       }
-    ): Center(
+    ): const Center(
           child: Text('No file is uploaded!!'),
         );
   }

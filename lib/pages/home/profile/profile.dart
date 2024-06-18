@@ -34,6 +34,7 @@ class _ProfileState extends State<Profile> {
           isScrollControlled: true,
           builder: (context){
         return Padding(
+          //for keyboard padding
           padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Container(
             height: 400,
@@ -48,6 +49,7 @@ class _ProfileState extends State<Profile> {
           isScrollControlled: true,
           builder: (context){
             return Padding(
+              //for keyboard padding
               padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
               child: Container(
                 height: 300,
