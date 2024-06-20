@@ -59,8 +59,6 @@ class _HomeBodyState extends State<HomeBody> {
 
   @override
   Widget build(BuildContext context) {
-    print(allNotes);
-
     return allNotes.isNotEmpty? ListView.builder(
         itemCount: allNotes.length,
         itemBuilder: (context, index) {
