@@ -29,13 +29,12 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     return loading? const LoadingShared(): Scaffold(
       appBar: AppBar(
-        title: Text('Sign In'),
-        backgroundColor: Colors.purple[100],
+        backgroundColor: Colors.purple[50],
       ),
       body: SingleChildScrollView(
         child: Container(
           height: 2000.0,
-          padding: const EdgeInsets.fromLTRB(20.0, 200.0, 20.0, 0),
+          padding: const EdgeInsets.fromLTRB(20.0, 80.0, 20.0, 0),
           color: Colors.purple[50],
           child: Form(
             key: _formKey,
@@ -45,13 +44,19 @@ class _SignInState extends State<SignIn> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Welcome Back',
+                      'Hello!',
                       style: TextStyle(
-                        fontSize:40.0,
-                        decoration: TextDecoration.underline,
+                        fontSize:80.0,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
+                ),
+                const Text(
+                  'Sign in to your account',
+                  style: TextStyle(
+                    fontSize:20.0,
+                  ),
                 ),
                 const SizedBox(height: 50.0,),
                 TextFormField(
@@ -92,7 +97,13 @@ class _SignInState extends State<SignIn> {
                       }
                     }
                   },
-                  child: const Text('Sign In'),
+                  style: buttonStyleSignIn,
+                  child: const Text(
+                    'Sign In',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  ),
                 ),
                 Text(
                   error,

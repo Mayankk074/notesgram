@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notesgram/services/auth.dart';
+import 'package:notesgram/shared/constants.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});
@@ -28,14 +29,13 @@ class Login extends StatelessWidget {
                       onPressed: (){
                         Navigator.pushNamed(context, '/signUp');
                       },
-                      style: ButtonStyle(
-                        fixedSize: WidgetStateProperty.all<Size>(Size.fromWidth(300.0)),
-                        backgroundColor: WidgetStateProperty.all<Color>(Colors.purpleAccent[200]!),
-                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                        ))
+                      style: buttonStyleSignUp,
+                      child: const Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                        ),
                       ),
-                      child: const Text('Sign Up'),
                     ),
                   ],
                 ),
@@ -43,16 +43,14 @@ class Login extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () async {
                     Navigator.pushNamed(context, '/signIn');
-                    // print(result.uid);
                   },
-                  style: ButtonStyle(
-                      fixedSize: WidgetStateProperty.all<Size>(Size.fromWidth(300.0)),
-                      backgroundColor: WidgetStateProperty.all<Color>(Colors.purpleAccent[200]!),
-                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                      ))
+                  style: buttonStyleSignIn,
+                  child: const Text(
+                    'Sign In',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),
                   ),
-                  child: const Text('Sign In'),
                 ),
               ],
             ),
