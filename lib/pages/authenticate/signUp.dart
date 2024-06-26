@@ -117,7 +117,7 @@ class _SignUpState extends State<SignUp> {
                         });
                       }
                       else{
-                        await DatabaseService(uid: result.uid).updataUserData(username!, email!, password!,'No DP',0,[],0);
+                        await DatabaseService(uid: result.uid).updateUserData(username!, email!, password!,'No DP',0,[],0);
                         if (context.mounted) Navigator.of(context).pop();
                       }
                     }

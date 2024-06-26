@@ -21,13 +21,13 @@ class Notes extends StatelessWidget {
     List<String>? notesCourse=notesDocument?.notesCourse;
     List<String>? notesSubject=notesDocument?.notesSubject;
 
-    return userDoc==null ? LoadingShared():
+    return userDoc==null ? const LoadingShared():
         notesList !=null ?
       ListView.builder(
       itemCount: notesList.length,
       itemBuilder: (context, index){
         return NotesTile(
-          pdfLink: notesList?[index],
+          pdfLink: notesList[index],
           name: notesNames?[index],
           userName: userDoc['username'],
           userDP: userDoc['profilePic'],

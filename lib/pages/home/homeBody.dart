@@ -4,7 +4,6 @@ import 'package:notesgram/models/note.dart';
 import 'package:notesgram/models/userUid.dart';
 import 'package:notesgram/pages/home/notesTile.dart';
 import 'package:notesgram/services/database.dart';
-import 'package:provider/provider.dart';
 
 class HomeBody extends StatefulWidget {
   HomeBody({super.key, this.user});

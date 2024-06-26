@@ -11,7 +11,7 @@ const textInputDecoration=InputDecoration(
 );
 
 var buttonStyleSignIn= ButtonStyle(
-  fixedSize: WidgetStateProperty.all<Size>(Size(250.0, 50)),
+  fixedSize: WidgetStateProperty.all<Size>(const Size(250.0, 50)),
   backgroundColor: WidgetStateProperty.all<Color>(Colors.purple[200]!),
   shape: WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(28.0),
@@ -22,7 +22,7 @@ var buttonStyleSignIn= ButtonStyle(
 );
 
 var buttonStyleSignUp=ButtonStyle(
-  fixedSize: WidgetStateProperty.all<Size>(Size(250.0, 50)),
+  fixedSize: WidgetStateProperty.all<Size>(const Size(250.0, 50)),
   backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
   shape: WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(28.0),

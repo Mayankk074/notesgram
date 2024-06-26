@@ -15,21 +15,21 @@ class StorageServices{
    TaskSnapshot taskSnapshot=await uploadTask;
 
    //getting the url of pic
-   String downlaodUrl=await taskSnapshot.ref.getDownloadURL();
+   String downloadUrl=await taskSnapshot.ref.getDownloadURL();
 
-   return downlaodUrl;
+   return downloadUrl;
   }
 
   Future<String> uploadPdf(File? file)async {
     //Creating different uid everytime with the help of uuid package.
-    UploadTask uploadTask= FirebaseStorage.instance.ref().child(uid!).child(Uuid().v1()).putFile(file!);
+    UploadTask uploadTask= FirebaseStorage.instance.ref().child(uid!).child(const Uuid().v1()).putFile(file!);
     // running the uploadTask
     TaskSnapshot taskSnapshot=await uploadTask;
 
     //getting the url of pic
-    String downlaodUrl=await taskSnapshot.ref.getDownloadURL();
+    String downloadUrl=await taskSnapshot.ref.getDownloadURL();
 
-    return downlaodUrl;
+    return downloadUrl;
   }
 
 

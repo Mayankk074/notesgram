@@ -29,11 +29,11 @@ class MyApp extends StatelessWidget {
         child:  MaterialApp(
           initialRoute: '/',
           routes: {
-            '/': (context)=> Loading(),
-            '/wrapper': (context)=> Wrapper(),
-            '/signUp': (context)=> SignUp(),
-            '/signIn': (context)=> SignIn(),
-            '/userProfile': (context)=> UserProfile(),
+            '/': (context)=> const Loading(),
+            '/wrapper': (context)=> const Wrapper(),
+            '/signUp': (context)=> const SignUp(),
+            '/signIn': (context)=> const SignIn(),
+            '/userProfile': (context)=> const UserProfile(),
             '/otherUserFiles': (context)=> OtherUserFiles(),
           },
         ));

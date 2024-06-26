@@ -35,35 +35,40 @@ class _UploadFormState extends State<UploadForm> {
     final user = Provider.of<UserUid>(context);
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(25.0),
       child: Form(
         key: _formKey,
         child: Column(
           // mainAxisSize: MainAxisSize.min,
           children: [
             ElevatedButton(
-                onPressed: () async {
-                  //picking the notes pdf
-                  FilePickerResult? result = await FilePicker.platform.pickFiles(
-                    type: FileType.custom,
-                    allowedExtensions: ['pdf'],
-                  );
-                  if (result != null) {
-                    XFile? file = result.files.first.xFile;
-                    pdf = File(file.path);
-                    //fileName
-                    setState(() {
-                      fileName = result.files.first.name;
-                    });
-                  } else {
-                    // User canceled the picker
-                    print('user cancelled the picker');
-                  }
-                },
-                child: Text('Attach')),
-            SizedBox(height: 10.0,),
+              onPressed: () async {
+                //picking the notes pdf
+                FilePickerResult? result = await FilePicker.platform.pickFiles(
+                  type: FileType.custom,
+                  allowedExtensions: ['pdf'],
+                );
+                if (result != null) {
+                  XFile? file = result.files.first.xFile;
+                  pdf = File(file.path);
+                  //fileName
+                  setState(() {
+                    fileName = result.files.first.name;
+                  });
+                }
+              },
+              style: buttonStyleSignIn,
+              child: const Text(
+                'Attach',
+                style: TextStyle(
+                  fontSize: 16.0,
+                ),
+              ),
+
+            ),
+            const SizedBox(height: 10.0,),
             Text(fileName),
-            SizedBox(height: 10.0,),
+            const SizedBox(height: 10.0,),
             TextFormField(
               decoration: textInputDecoration.copyWith(
                 hintText: 'Course/Class Name'
@@ -71,7 +76,7 @@ class _UploadFormState extends State<UploadForm> {
               validator: (val) => val!.isEmpty ? "Enter Course" : null,
               onChanged: (val) => setState(() => _currentCourse=val),
             ),
-            SizedBox(height: 10.0,),
+            const SizedBox(height: 10.0,),
             TextFormField(
               decoration: textInputDecoration.copyWith(
                 hintText: 'Subject Name'
@@ -79,14 +84,9 @@ class _UploadFormState extends State<UploadForm> {
               validator: (val) => val!.isEmpty ? "Enter Course" : null,
               onChanged: (val) => setState(() => _currentSubject=val),
             ),
-            SizedBox(height: 30.0,),
+            const SizedBox(height: 30.0,),
             ElevatedButton(
-              style: ButtonStyle(
-                  fixedSize:
-                  WidgetStateProperty.all<Size>(Size(200.0, 60.0)),
-                  backgroundColor:
-                  WidgetStateProperty.all<Color>(Colors.purple[100]!)
-              ),
+              style: buttonStyleSignUp,
               onPressed: () async {
 
                 if(_formKey.currentState!.validate()){
@@ -96,11 +96,11 @@ class _UploadFormState extends State<UploadForm> {
 
                   //updating the database with pdf url
                   await DatabaseService(uid: user.uid)
-                      .updataNotesData(url, fileName, _currentCourse, _currentSubject);
+                      .updateNotesData(url, fileName, _currentCourse, _currentSubject);
 
                   //updating the no. of notesUploaded
                   await DatabaseService(uid: user.uid)
-                      .updataUserData(
+                      .updateUserData(
                         widget.userDoc?['username'],
                         widget.userDoc?['email'],
                         widget.userDoc?['password'],
@@ -119,7 +119,12 @@ class _UploadFormState extends State<UploadForm> {
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
               },
-              child: Text('Upload'))
+              child: const Text(
+                'Upload',
+                style: TextStyle(
+                  fontSize: 16.0,
+                ),
+              ))
           ],
         ),
       ),

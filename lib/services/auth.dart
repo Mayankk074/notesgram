@@ -18,7 +18,6 @@ class AuthService{
       User? user=result.user;
       return _userUidFromUser(user);
     }  catch (e) {
-      print(e.toString());
       return null;
     }
   }
@@ -30,7 +29,6 @@ class AuthService{
       User? user=result.user;
       return _userUidFromUser(user);
     } catch(e){
-      print(e.toString());
       return null;
     }
   }
@@ -48,7 +46,6 @@ class AuthService{
       User? user = result.user;
       return _userUidFromUser(user);
     } catch(e){
-      print(e.toString());
       return null;
     }
   }

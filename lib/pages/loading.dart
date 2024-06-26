@@ -11,12 +11,12 @@ class Loading extends StatefulWidget {
 }
 
 class _LoadingState extends State<Loading> {
-
-
  // Redirecting to login screen
   void toLogin() async {
     await Future.delayed(const Duration(seconds: 3));
-    Navigator.pushReplacementNamed(context, '/wrapper');
+    if(mounted) {
+      Navigator.pushReplacementNamed(context, '/wrapper');
+    }
   }
 
   @override

@@ -26,7 +26,7 @@ class _SettingsFormState extends State<SettingsForm> {
 
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(8.0,40,8,0),
+      padding: const EdgeInsets.fromLTRB(8.0,40,8,0),
       child: Form(
         key: _formKey,
         child: Column(
@@ -37,11 +37,11 @@ class _SettingsFormState extends State<SettingsForm> {
               validator: (val) => val!.isEmpty ? "Enter username" : null,
               onChanged: (val) => setState(()=> _currentUsername=val),
             ),
-            SizedBox(height: 60.0,),
+            const SizedBox(height: 60.0,),
             ElevatedButton(
               onPressed: () async {
                 if(_formKey.currentState!.validate()){
-                  await DatabaseService(uid: user?.uid).updataUserData(
+                  await DatabaseService(uid: user?.uid).updateUserData(
                     _currentUsername!,
                     widget.userDoc?['email'],
                     widget.userDoc?['password'],
@@ -60,12 +60,12 @@ class _SettingsFormState extends State<SettingsForm> {
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
               },
-              child: Text('Update'),
-              style: ButtonStyle(
-                  fixedSize:
-                  WidgetStateProperty.all<Size>(Size(200.0, 60.0)),
-                  backgroundColor:
-                  WidgetStateProperty.all<Color>(Colors.purple[100]!)
+              style: buttonStyleSignUp,
+              child: const Text(
+                'Update',
+                style: TextStyle(
+                  fontSize: 16.0,
+                ),
               ),
             ),
           ],

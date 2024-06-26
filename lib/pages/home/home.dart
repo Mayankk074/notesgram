@@ -1,19 +1,12 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:notesgram/models/notesModel.dart';
 import 'package:notesgram/models/userUid.dart';
 import 'package:notesgram/pages/home/explore/explore.dart';
 import 'package:notesgram/pages/home/homeBody.dart';
 import 'package:notesgram/pages/home/profile/profile.dart';
 import 'package:notesgram/pages/home/upload.dart';
-import 'package:notesgram/services/auth.dart';
 import 'package:notesgram/services/database.dart';
-import 'package:notesgram/services/storage.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -47,9 +40,9 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         body: [
           HomeBody(user: user,),
-          Explore(),
-          Notes(),
-          Profile(),
+          const Explore(),
+          const Notes(),
+          const Profile(),
         ][currentIndex],
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
@@ -60,6 +53,7 @@ class _HomeState extends State<Home> {
           },
           currentIndex: currentIndex,
           iconSize: 30.0,
+          selectedItemColor: Colors.black,
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: ''),
             BottomNavigationBarItem(icon: Icon(Icons.search), label: ''),

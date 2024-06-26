@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:notesgram/models/notesModel.dart';
 
 class DatabaseService{
@@ -17,7 +18,7 @@ class DatabaseService{
 
 
   //upload the data of user in database
-  Future updataUserData(String username, String email, String password, String? downloadUrl, int followers,List<String> following, int notesUploaded) async {
+  Future updateUserData(String username, String email, String password, String? downloadUrl, int followers,List<String> following, int notesUploaded) async {
 
     return await _userCollection.doc(uid).set({
       'username': username,
@@ -39,6 +40,9 @@ class DatabaseService{
     try {
       followingList = List<String>.from(snapshot.get('following'));
     } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+      }
     }
     followingList.add(following);
     _userCollection.doc(uid).set({
@@ -62,6 +66,9 @@ class DatabaseService{
     try {
       followingList = List<String>.from(snapshot.get('following'));
     } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+      }
     }
     followingList.remove(following);
     _userCollection.doc(uid).set({
@@ -77,7 +84,7 @@ class DatabaseService{
   }
 
   //upload the notes data of user in database
-  Future updataNotesData(String? url, String? name, String? course, String? subject) async {
+  Future updateNotesData(String? url, String? name, String? course, String? subject) async {
     List notesList=[];
     List notesName=[];
     List notesCourse=[];
@@ -92,7 +99,9 @@ class DatabaseService{
         notesCourse = List<String>.from(snapshot.get('course'));
         notesSubject = List<String>.from(snapshot.get('subject'));
       } catch (e) {
-
+        if (kDebugMode) {
+          print(e.toString());
+        }
       }
 
       // Add the new note to the list
@@ -114,7 +123,9 @@ class DatabaseService{
         'subject': notesSubject,
       });
     } catch (e) {
-      print('Error updating notes data: $e');
+      if (kDebugMode) {
+        print('Error updating notes data: $e');
+      }
     }
   }
 
@@ -126,7 +137,7 @@ class DatabaseService{
     return await _notesCollection.doc(uid).get();
   }
 
-  NotesModel? _notesofUser(DocumentSnapshot? snap){
+  NotesModel? _notesOfUser(DocumentSnapshot? snap){
     try{
       return snap != null ? NotesModel(
         notesLink: List<String>.from(snap.get('notes')),
@@ -136,7 +147,7 @@ class DatabaseService{
       ) : null;
     }
     catch(e){
-      //Do nothing
+      return null;
     }
   }
 
@@ -149,7 +160,7 @@ class DatabaseService{
   //get the notes of loggedIn user
   Stream<NotesModel?> get notesData{
     return _notesCollection.doc(uid).snapshots().map(
-      _notesofUser
+      _notesOfUser
     );
   }
 

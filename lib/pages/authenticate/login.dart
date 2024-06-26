@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:notesgram/services/auth.dart';
 import 'package:notesgram/shared/constants.dart';
 
 class Login extends StatelessWidget {
-  Login({super.key});
-
-  final AuthService _auth=AuthService();
+  const Login({super.key});
 
   @override
   Widget build(BuildContext context) {

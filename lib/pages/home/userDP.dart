@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:notesgram/models/userUid.dart';
 import 'package:notesgram/services/database.dart';
+import 'package:notesgram/shared/constants.dart';
 import 'package:provider/provider.dart';
 
 class UserProfile extends StatefulWidget {
@@ -43,7 +44,7 @@ class _UserProfileState extends State<UserProfile> {
       future: getUserProfile(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snap) {
         if (snap.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snap.hasError) {
           return Center(child: Text('Error: ${snap.error}'));
         }
@@ -53,7 +54,7 @@ class _UserProfileState extends State<UserProfile> {
           ),
           body: Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -77,20 +78,20 @@ class _UserProfileState extends State<UserProfile> {
                     letterSpacing: 1.0,
                   ),
                 ),
-                SizedBox(height: 20.0,),
+                const SizedBox(height: 20.0,),
                 Row(
                   children: [
-                    SizedBox(width: 70,),
+                    const SizedBox(width: 70,),
                     Text(
                       '${userSnap?['followers']}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 40,
                       ),
                     ),
-                    SizedBox(width: 140,),
+                    const SizedBox(width: 140,),
                     Text(
                       '${userSnap?['following'].length}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 40,
                       ),
                     ),
@@ -104,48 +105,44 @@ class _UserProfileState extends State<UserProfile> {
                     Text("Following")
                   ],
                 ),
-                SizedBox(height: 20.0,),
+                const SizedBox(height: 20.0,),
                 Text(
                   '${userSnap?['notesUploaded']}',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 40.0,
                   ),
                 ),
-                Text(
-                  "PDFs Uploaded",
-                ),
-                SizedBox(height: 50,),
+                const Text("PDFs Uploaded"),
+                const SizedBox(height: 50,),
                 ElevatedButton(
                   onPressed:()async{
                     setState(() => isFollow=!isFollow);
                     List<String> followingList=List<String>.from(userSnap?['following']);
                     if(isFollow){
                       //increase the no. of followers of another user
-                      await DatabaseService(uid: data['userUid'] ).updataUserData(
+                      await DatabaseService(uid: data['userUid'] ).updateUserData(
                           userSnap?['username'], userSnap?['email'], userSnap?['password'],
                           userSnap?['profilePic'], userSnap?['followers']+1, followingList, userSnap?['notesUploaded']);
                       //adding the other user uid in the following
                       await DatabaseService(uid: userUid?.uid ).startFollowing(data['userUid']);
                     }else{
                       //decrease the no. of followers of another user
-                      await DatabaseService(uid: data['userUid'] ).updataUserData(
+                      await DatabaseService(uid: data['userUid'] ).updateUserData(
                           userSnap?['username'], userSnap?['email'], userSnap?['password'],
                           userSnap?['profilePic'], userSnap?['followers']-1, followingList, userSnap?['notesUploaded']);
                       //removing the other userUid in the following
                       await DatabaseService(uid: userUid?.uid ).stopFollowing(data['userUid']);
                     }
                   },
-                  style: ButtonStyle(
-                      fixedSize:
-                      WidgetStateProperty.all<Size>(Size(300.0, 60.0)),
-                      backgroundColor:
-                      WidgetStateProperty.all<Color>(Colors.purple[100]!)
-                  ),
+                  style: buttonStyleSignUp,
                   child: Text(
-                    isFollow?'Following':'Follow'
+                    isFollow?'Following':'Follow',
+                    style: const TextStyle(
+                      fontSize: 16.0,
+                    ),
                   ),
                 ),
-                SizedBox(height: 50,),
+                const SizedBox(height: 50,),
                 ElevatedButton(
                   onPressed:(){
                     Navigator.pushNamed(context, '/otherUserFiles',arguments: {
@@ -153,13 +150,13 @@ class _UserProfileState extends State<UserProfile> {
                       'notesSnap':notesSnap
                     });
                   },
-                  style: ButtonStyle(
-                      fixedSize:
-                      WidgetStateProperty.all<Size>(Size(300.0, 60.0)),
-                      backgroundColor:
-                      WidgetStateProperty.all<Color>(Colors.purple[100]!)
+                  style: buttonStyleSignIn,
+                  child: const Text(
+                    'Uploaded Files',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),
                   ),
-                  child: const Text('Uploaded Files'),
                 ),
               ],
             ),

@@ -1,8 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,6 +10,7 @@ import 'package:notesgram/pages/home/profile/uploadForm.dart';
 import 'package:notesgram/services/auth.dart';
 import 'package:notesgram/services/database.dart';
 import 'package:notesgram/services/storage.dart';
+import 'package:notesgram/shared/constants.dart';
 import 'package:notesgram/shared/loadingShared.dart';
 import 'package:provider/provider.dart';
 
@@ -76,7 +75,7 @@ class _ProfileState extends State<Profile> {
                               context: context,
                               builder: (BuildContext context){
                                 return AlertDialog(
-                                  title: Text('Alert!!'),
+                                  title: const Text('Alert!!'),
                                   content: const SingleChildScrollView(
                                     child: Text(
                                       'Do you really want to Sign Out?'
@@ -84,14 +83,14 @@ class _ProfileState extends State<Profile> {
                                   ),
                                   actions: <Widget>[
                                     TextButton(
-                                      child: Text('Yes'),
+                                      child: const Text('Yes'),
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                         AuthService().signOut();
                                       },
                                     ),
                                     TextButton(
-                                      child: Text('No'),
+                                      child: const Text('No'),
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
@@ -101,17 +100,19 @@ class _ProfileState extends State<Profile> {
                               });
                             //
                           },
-                          label: Icon(
+                          label: const Icon(
                             Icons.logout,
                             size: 30.0,
+                            color: Colors.black,
                           ),
                       ),
-                      SizedBox(width: 190.0,),
+                      const SizedBox(width: 190.0,),
                       TextButton.icon(
                         onPressed: () => _showSettingsPanel(),
-                        label: Icon(
+                        label: const Icon(
                           Icons.settings,
                           size: 30.0,
+                          color: Colors.black,
                         ),
                       ),
                     ],
@@ -130,7 +131,7 @@ class _ProfileState extends State<Profile> {
                         String downloadUrl = await StorageServices(uid: user.uid)
                             .uploadImage(convertedImage);
                         //updating the profilePic url
-                        DatabaseService(uid: user.uid).updataUserData(
+                        DatabaseService(uid: user.uid).updateUserData(
                           userDoc['username'],
                           userDoc['email'],
                           userDoc['password'],
@@ -160,33 +161,33 @@ class _ProfileState extends State<Profile> {
                     height: 20.0,
                   ),
                   Text(
-                    userDoc?['username'],
+                    userDoc['username'],
                     style: const TextStyle(
                       fontSize: 25.0,
                       letterSpacing: 1.0,
                     ),
                   ),
                   Text(
-                    userDoc?['email'],
+                    userDoc['email'],
                     style: const TextStyle(
                       fontSize: 16.0,
                       letterSpacing: 1.0,
                     ),
                   ),
-                  SizedBox(height: 20.0,),
+                  const SizedBox(height: 20.0,),
                   Row(
                     children: [
-                      SizedBox(width: 70,),
+                      const SizedBox(width: 70,),
                       Text(
                         '${userDoc['followers']}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 40,
                         ),
                       ),
-                      SizedBox(width: 140,),
+                      const SizedBox(width: 140,),
                       Text(
                         '${userDoc['following'].length}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 40,
                         ),
                       ),
@@ -200,26 +201,23 @@ class _ProfileState extends State<Profile> {
                       Text("Following")
                     ],
                   ),
-                  SizedBox(height: 20.0,),
+                  const SizedBox(height: 20.0,),
                   Text(
                     '${userDoc['notesUploaded']}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 40.0,
                     ),
                   ),
-                  Text(
-                    "PDFs Uploaded",
-                  ),
-                  SizedBox(height: 50,),
+                  const Text("PDFs Uploaded"),
+                  const SizedBox(height: 50,),
                   ElevatedButton(
                     onPressed:() => _showUploadPanel(),
-              
-                    child: Text('Upload'),
-                    style: ButtonStyle(
-                        fixedSize:
-                            WidgetStateProperty.all<Size>(Size(300.0, 60.0)),
-                        backgroundColor:
-                            WidgetStateProperty.all<Color>(Colors.purple[100]!)
+                    style: buttonStyleSignUp,
+                    child: const Text(
+                      'Upload',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                      ),
                     ),
                   ),
                 ],

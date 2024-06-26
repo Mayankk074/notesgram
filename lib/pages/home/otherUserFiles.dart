@@ -24,7 +24,7 @@ class OtherUserFiles extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Uploaded Files'),
+        title: const Text('Uploaded Files'),
       ),
       body: ListView.builder(
           itemCount: notesList.length,

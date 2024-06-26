@@ -34,15 +34,15 @@ class NotesTile extends StatelessWidget {
     bool flag=currentUserUid?.uid!=userUid;
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.0),
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Card(
-        margin: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+        margin: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
         child: Column(
           children: [
             ListTile(
               //using the flag to show userProfile
               leading: flag? CupertinoButton(
-                padding: EdgeInsets.only(left: 5),
+                padding: const EdgeInsets.only(left: 5),
                 onPressed: (){
                   Navigator.pushNamed(context, '/userProfile',arguments: {
                     'userUid': userUid,
@@ -66,7 +66,7 @@ class NotesTile extends StatelessWidget {
                 onPressed: ()async {
                   await downloadFile(context);
                 },
-                icon: Icon(Icons.download,),
+                icon: const Icon(Icons.download,),
               ),
             ),
             Row(
@@ -79,7 +79,7 @@ class NotesTile extends StatelessWidget {
                 Expanded(child: Center(child: Text("Subject:\n$subject"))),
               ],
             ),
-            SizedBox(height: 10,)
+            const SizedBox(height: 10,)
           ],
         ),
       ),

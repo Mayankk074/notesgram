@@ -6,9 +6,9 @@ class LoadingShared extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
-        child: const SpinKitChasingDots(
+        child: SpinKitChasingDots(
           color: Colors.purple,
         ),
       ),
