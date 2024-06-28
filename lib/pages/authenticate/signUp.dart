@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:notesgram/services/auth.dart';
 import 'package:notesgram/services/database.dart';
@@ -14,6 +17,9 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
 
   final _formKey=GlobalKey<FormState>();
+
+  final CollectionReference _userCollection=FirebaseFirestore.instance
+      .collection('users');
 
   // TextFormField Values
   String? username;
@@ -63,7 +69,7 @@ class _SignUpState extends State<SignUp> {
                     fontSize:20.0,
                   ),
                 ),
-                const SizedBox(height: 30.0,),
+                const SizedBox(height: 20.0,),
                 TextFormField(
                   validator: (val) => val!.isEmpty ? 'Enter a username': null,
                   onChanged: (val) => setState(()=> username=val ),
@@ -73,7 +79,7 @@ class _SignUpState extends State<SignUp> {
                       prefixIcon: const Icon(Icons.alternate_email_outlined
                       )),
                 ),
-                const SizedBox(height: 30.0,),
+                const SizedBox(height: 20.0,),
                 TextFormField(
                   validator: (val) => val!.isEmpty ? 'Enter a email': null,
                   onChanged: (val) => setState(()=> email=val ),
@@ -83,7 +89,7 @@ class _SignUpState extends State<SignUp> {
                       prefixIcon: const Icon(Icons.email
                       )),
                 ),
-                const SizedBox(height: 30.0,),
+                const SizedBox(height: 20.0,),
                 TextFormField(
                   validator: (val) => val!.length < 6 ? 'Enter a password': null,
                   onChanged: (val) => setState(()=> password=val ),
@@ -95,7 +101,7 @@ class _SignUpState extends State<SignUp> {
                               ),
                   obscureText: true,
                 ),
-                const SizedBox(height: 30.0,),
+                const SizedBox(height: 20.0,),
                 TextFormField(
                   validator: (val) => val! != password ? 'Enter same password': null,
                   decoration: textInputDecoration.copyWith(
@@ -104,7 +110,7 @@ class _SignUpState extends State<SignUp> {
                       prefixIcon: const Icon(Icons.password
                       )),
                 ),
-                const SizedBox(height: 60.0,),
+                const SizedBox(height: 40.0,),
                 ElevatedButton(
                   onPressed: () async {
                     if(_formKey.currentState!.validate()){
@@ -125,10 +131,61 @@ class _SignUpState extends State<SignUp> {
                   style: buttonStyleSignUp,
                   child: const Text('Create account'),
                 ),
-                const SizedBox(height: 20.0,),
+                const SizedBox(height: 10.0,),
                 Text(error,style: const TextStyle(
                   color: Colors.red,
                 ),),
+                const Row(
+                  children: [
+                    Expanded(child: Divider()),
+                    Text(
+                      'Or continue with',
+                      style: TextStyle(
+                        color: Colors.black54,
+                      ),
+                    ),
+                    Expanded(child: Divider()),
+                  ],
+                ),
+                //Google SignIn
+                CupertinoButton(
+                  onPressed: () async {
+                    UserCredential? result= await _auth.signInWithGoogle();
+                    if(result==null){
+                      setState(() {
+                        error='There is an error';
+                        loading=false;
+                      });
+                    }else{
+                      User? user = result.user;
+                      bool flag=false;
+                      //checking if user is already present
+                      QuerySnapshot snap=await _userCollection.get();
+                      List<DocumentSnapshot> listOfDocs=snap.docs;
+                      for(DocumentSnapshot snap in listOfDocs){
+                        if(snap.id == user?.uid){
+                          flag=true;
+                          break;
+                        }
+                      }
+                      if(!flag){
+                        //creating new DB if user is not present
+                        String? gMail=user?.email;
+                        String? name=user?.displayName;
+                        String? photoUrl=user?.photoURL;
+                        await DatabaseService(uid: user?.uid).updateUserData(name!, gMail!, "",photoUrl,0,[],0);
+                      }
+                      if (context.mounted) Navigator.of(context).pop();
+                    }
+                  },
+                  child: CircleAvatar(
+                    radius: 40.0,
+                    backgroundImage: const AssetImage(
+                        'assets/googleLogo.png'
+                    ),
+                    backgroundColor: Colors.purple[50],
+                  ),
+                )
               ],
             ),
           ),

@@ -1,5 +1,6 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:notesgram/models/userUid.dart';
 
 class AuthService{
@@ -20,6 +21,23 @@ class AuthService{
     }  catch (e) {
       return null;
     }
+  }
+
+  //SignIn with Google
+  Future<UserCredential?> signInWithGoogle() async {
+    //begin interactive signIn process
+    final GoogleSignInAccount? gUser= await GoogleSignIn().signIn();
+
+    //obtain auth details from the request
+    final GoogleSignInAuthentication gAuth= await gUser!.authentication;
+
+    //create a new credentials for user
+    final credential= GoogleAuthProvider.credential(
+      idToken: gAuth.idToken,
+      accessToken: gAuth.accessToken
+    );
+    //final sign In
+    return await _auth.signInWithCredential(credential);
   }
 
   //Sign In anon

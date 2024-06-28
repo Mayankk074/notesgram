@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:notesgram/services/auth.dart';
 import 'package:notesgram/shared/constants.dart';
@@ -31,13 +32,12 @@ class _SignInState extends State<SignIn> {
       appBar: AppBar(
         backgroundColor: Colors.purple[50],
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          height: 2000.0,
-          padding: const EdgeInsets.fromLTRB(20.0, 80.0, 20.0, 0),
-          color: Colors.purple[50],
-          child: Form(
-            key: _formKey,
+      backgroundColor: Colors.purple[50],
+      body: Container(
+        padding: const EdgeInsets.fromLTRB(20.0, 80.0, 20.0, 0),
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
             child: Column(
               children: [
                 const Row(
@@ -91,7 +91,7 @@ class _SignInState extends State<SignIn> {
                           error='There is an error';
                           loading=false;
                         });
-        
+                  
                       }else{
                         if(context.mounted) Navigator.of(context).pop();
                       }
@@ -105,12 +105,46 @@ class _SignInState extends State<SignIn> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 10.0,),
                 Text(
                   error,
                   style: const TextStyle(
                     color: Colors.red,
                   ),
                 ),
+                const Row(
+                  children: [
+                    Expanded(child: Divider()),
+                    Text(
+                      'Or continue with',
+                      style: TextStyle(
+                        color: Colors.black54,
+                      ),
+                    ),
+                    Expanded(child: Divider()),
+                  ],
+                ),
+                //Google SignIn
+                CupertinoButton(
+                  onPressed: () async {
+                    dynamic result= await _auth.signInWithGoogle();
+                    if(result==null){
+                      setState(() {
+                        error='There is an error';
+                        loading=false;
+                      });
+                    }else{
+                      if (context.mounted) Navigator.of(context).pop();
+                    }
+                  },
+                  child: CircleAvatar(
+                    radius: 40.0,
+                    backgroundImage: const AssetImage(
+                        'assets/googleLogo.png'
+                    ),
+                    backgroundColor: Colors.purple[50],
+                  ),
+                )
               ],
             ),
           ),

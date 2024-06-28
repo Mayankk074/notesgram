@@ -154,7 +154,7 @@ class _ProfileState extends State<Profile> {
                       backgroundImage: userDoc['profilePic'] != 'No DP'
                           ? NetworkImage(userDoc['profilePic'])
                           : null,
-                      backgroundColor: Colors.redAccent,
+                      backgroundColor: Colors.purple[100],
                     ),
                   ),
                   const SizedBox(

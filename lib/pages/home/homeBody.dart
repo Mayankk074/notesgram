@@ -46,8 +46,7 @@ class _HomeBodyState extends State<HomeBody> {
         ));
       }
     }
-    setState(() {
-    });
+    setState(() {});
   }
 
   @override
