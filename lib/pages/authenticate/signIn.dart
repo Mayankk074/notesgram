@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:notesgram/services/auth.dart';
 import 'package:notesgram/shared/constants.dart';
 import 'package:notesgram/shared/loadingShared.dart';
+
+import '../../services/database.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -15,6 +19,9 @@ class _SignInState extends State<SignIn> {
 
   final _formKey=GlobalKey<FormState>();
   final AuthService _auth=AuthService();
+
+  final CollectionReference _userCollection=FirebaseFirestore.instance
+      .collection('users');
 
   //loading screen
   bool loading=false;
@@ -134,6 +141,24 @@ class _SignInState extends State<SignIn> {
                         loading=false;
                       });
                     }else{
+                      User? user = result.user;
+                      bool flag=false;
+                      //checking if user is already present
+                      QuerySnapshot snap=await _userCollection.get();
+                      List<DocumentSnapshot> listOfDocs=snap.docs;
+                      for(DocumentSnapshot snap in listOfDocs){
+                        if(snap.id == user?.uid){
+                          flag=true;
+                          break;
+                        }
+                      }
+                      if(!flag){
+                        //creating new DB if user is not present
+                        String? gMail=user?.email;
+                        String? name=user?.displayName;
+                        String? photoUrl=user?.photoURL;
+                        await DatabaseService(uid: user?.uid).updateUserData(name!, gMail!, "",photoUrl,0,[],0);
+                      }
                       if (context.mounted) Navigator.of(context).pop();
                     }
                   },
