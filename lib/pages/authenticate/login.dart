@@ -7,11 +7,12 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.purple[100],
       body: SafeArea(
         child: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/NoteBG.jpg'),
+              image: AssetImage('assets/loginBG.jpeg'),
               fit: BoxFit.cover,
             )
           ),
