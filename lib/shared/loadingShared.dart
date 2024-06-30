@@ -8,7 +8,7 @@ class LoadingShared extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: SpinKitChasingDots(
+        child: SpinKitCircle(
           color: Colors.purple,
         ),
       ),
