@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:notesgram/models/userUid.dart';
 import 'package:notesgram/services/database.dart';
 import 'package:notesgram/shared/constants.dart';
+import 'package:notesgram/shared/loadingShared.dart';
 import 'package:provider/provider.dart';
 
 class UserProfile extends StatefulWidget {
@@ -44,7 +45,7 @@ class _UserProfileState extends State<UserProfile> {
       future: getUserProfile(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snap) {
         if (snap.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const LoadingShared();
         } else if (snap.hasError) {
           return Center(child: Text('Error: ${snap.error}'));
         }
