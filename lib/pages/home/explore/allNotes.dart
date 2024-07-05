@@ -58,6 +58,8 @@ class _AllNotesState extends State<AllNotes> {
 
   searchResultList(){
     List<Note> showResults=[];
+    //Shuffle the Notes randomly
+    allNotes.shuffle();
 
     if(_searchController.text.isNotEmpty){
       //checking which Note object contains the subject text coming from search field
