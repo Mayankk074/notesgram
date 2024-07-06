@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:notesgram/models/note.dart';
 import 'package:notesgram/pages/home/notesTile.dart';
 import 'package:notesgram/services/database.dart';
+import 'package:notesgram/shared/constants.dart';
 
 
 class AllNotes extends StatefulWidget {
@@ -16,6 +18,7 @@ class _AllNotesState extends State<AllNotes> {
   //Lists of Note object to be displayed
   List<Note> allNotes=[];
   List<Note> filteredNotes=[];
+  int loadLength=11;
 
   final CollectionReference _notesCollection=FirebaseFirestore.instance
       .collection('notes');
@@ -110,19 +113,39 @@ class _AllNotesState extends State<AllNotes> {
         ),
         Expanded(
           child: ListView.builder(
-              itemCount: filteredNotes.length,
+              itemCount: loadLength < filteredNotes.length ? loadLength : filteredNotes.length+1,
               itemBuilder: (context, index){
-                final note=filteredNotes[index];
-                //creating NotesTile
-                return NotesTile(
-                  pdfLink: note.link,
-                  name: note.name,
-                  userDP: note.userDP,
-                  userName: note.userName,
-                  subject: note.subject,
-                  course: note.course,
-                  userUid: note.userUid,
-                );
+                int itemCount=loadLength < filteredNotes.length ? loadLength-1 : filteredNotes.length;
+                if(index==itemCount){
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(20.0,10.0,20.0,10.0),
+                    child: ElevatedButton(
+                      onPressed: (){
+                        setState(() => loadLength+=10);
+                      },
+                      style: buttonStyleSignUp,
+                      child: const Text(
+                        'Load More',
+                        style: TextStyle(
+                        fontSize: 16.0,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                else{
+                  final note=filteredNotes[index];
+                  //creating NotesTile
+                  return NotesTile(
+                    pdfLink: note.link,
+                    name: note.name,
+                    userDP: note.userDP,
+                    userName: note.userName,
+                    subject: note.subject,
+                    course: note.course,
+                    userUid: note.userUid,
+                  );
+                }
               }
           ),
         ),
