@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NotesTile extends StatelessWidget {
-  const NotesTile({super.key, this.pdfLink, this.name, this.userName, this.userDP,this.course,this.subject, this.userUid});
+  const NotesTile({super.key, this.pdfLink, this.name, this.userName, this.userDP,this.course,this.subject, this.userUid, this.description});
 
   final String? pdfLink;
   final String? name;
@@ -14,6 +14,7 @@ class NotesTile extends StatelessWidget {
   final String? course;
   final String? subject;
   final String? userUid;
+  final String? description;
 
   Future<void> downloadFile(BuildContext context) async {
     // launching the pdfLink and it will automatically start downloading
@@ -36,51 +37,75 @@ class NotesTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Card(
+        elevation: 8,
         margin: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
-        child: Column(
-          children: [
-            ListTile(
-              //using the flag to show userProfile
-              leading: flag? CupertinoButton(
-                padding: const EdgeInsets.only(left: 5),
-                onPressed: (){
-                  Navigator.pushNamed(context, '/userProfile',arguments: {
-                    'userUid': userUid,
-                  });
-                },
-                child: CircleAvatar(
-                  //if there is no dp then dont show image
-                  backgroundImage: userDP !='No DP'? NetworkImage(
-                    userDP!,
-                  ): null,
-                  radius: 30.0,
-                ),
-              ):CircleAvatar(
-                  backgroundImage: userDP !='No DP'? NetworkImage(
-                    userDP!,
-                  ): null,
-                  radius: 30.0,
-                ),
-              title: Text(name!),
-              trailing: IconButton(
-                onPressed: ()async {
-                  await downloadFile(context);
-                },
-                icon: const Icon(Icons.download,),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        flag? CupertinoButton(
+                          padding: const EdgeInsets.only(left: 5),
+                          onPressed: (){
+                            Navigator.pushNamed(context, '/userProfile',arguments: {
+                              'userUid': userUid,
+                            });
+                          },
+                          child: CircleAvatar(
+                            //if there is no dp then dont show image
+                            backgroundImage: userDP !='No DP'? NetworkImage(
+                              userDP!,
+                            ): null,
+                            radius: 30.0,
+                          ),
+                        ):CircleAvatar(
+                          backgroundImage: userDP !='No DP'? NetworkImage(
+                            userDP!,
+                          ): null,
+                          radius: 30.0,
+                        ),
+                        const SizedBox(height: 8), // Space between CircleAvatar and username
+                        Text(
+                          userName!,
+                          style: const TextStyle(fontSize: 12.0), // Adjust the font size as needed
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      name!,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: IconButton(
+                      onPressed: ()async {
+                        await downloadFile(context);
+                      },
+                      icon: const Icon(Icons.download,),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            Row(
-              children: [
-                // SizedBox(width: 20,),
-                Expanded(child: Center(child: Text(userName!))),
-                // SizedBox(width: 30.0,),
-                Expanded(child: Center(child: Text("Course/Class:\n$course"))),
-                // SizedBox(width: 30.0,),
-                Expanded(child: Center(child: Text("Subject:\n$subject"))),
-              ],
-            ),
-            const SizedBox(height: 10,)
-          ],
+              const Divider(),
+              Row(
+                children: [
+                  Expanded(child: Center(child: Text("Description: $description"))),
+                  Expanded(child: Center(child: Text("Course/Class:\n$course"))),
+                  Expanded(child: Center(child: Text("Subject:\n$subject"))),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -25,6 +25,7 @@ class _UploadFormState extends State<UploadForm> {
   // Form Values
   String? _currentCourse;
   String? _currentSubject;
+  String? _currentDescription;
 
   String fileName='';
   File? pdf;
@@ -81,8 +82,16 @@ class _UploadFormState extends State<UploadForm> {
               decoration: textInputDecoration.copyWith(
                 hintText: 'Subject Name'
               ),
-              validator: (val) => val!.isEmpty ? "Enter Course" : null,
+              validator: (val) => val!.isEmpty ? "Enter Subject" : null,
               onChanged: (val) => setState(() => _currentSubject=val),
+            ),
+            const SizedBox(height: 10.0,),
+            TextFormField(
+              decoration: textInputDecoration.copyWith(
+                  hintText: 'Description'
+              ),
+              validator: (val) => val!.isEmpty ? "Enter Description" : null,
+              onChanged: (val) => setState(() => _currentDescription=val),
             ),
             const SizedBox(height: 30.0,),
             ElevatedButton(
@@ -96,7 +105,7 @@ class _UploadFormState extends State<UploadForm> {
 
                   //updating the database with pdf url
                   await DatabaseService(uid: user.uid)
-                      .updateNotesData(url, fileName, _currentCourse, _currentSubject);
+                      .updateNotesData(url, fileName, _currentCourse, _currentSubject, _currentDescription);
 
                   //updating the no. of notesUploaded
                   await DatabaseService(uid: user.uid)

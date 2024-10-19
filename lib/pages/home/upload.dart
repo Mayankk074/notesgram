@@ -20,6 +20,7 @@ class Notes extends StatelessWidget {
     List<String>? notesNames=notesDocument?.notesName;
     List<String>? notesCourse=notesDocument?.notesCourse;
     List<String>? notesSubject=notesDocument?.notesSubject;
+    List<String>? notesDescription=notesDocument?.notesDescription;
 
     return userDoc==null ? const LoadingShared():
         notesList !=null ?
@@ -34,6 +35,7 @@ class Notes extends StatelessWidget {
           course: notesCourse?[index],
           subject: notesSubject?[index],
           userUid: userDoc.id,
+          description: notesDescription?[index],
         );
       }
     ): const Center(

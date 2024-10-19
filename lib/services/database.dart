@@ -84,11 +84,12 @@ class DatabaseService{
   }
 
   //upload the notes data of user in database
-  Future updateNotesData(String? url, String? name, String? course, String? subject) async {
+  Future updateNotesData(String? url, String? name, String? course, String? subject, String? description) async {
     List notesList=[];
     List notesName=[];
     List notesCourse=[];
     List notesSubject=[];
+    List notesDescription=[];
     try {
       // Fetch the existing notes data from the database
       DocumentSnapshot snapshot = await _notesCollection.doc(uid).get();
@@ -98,6 +99,7 @@ class DatabaseService{
         notesName = List<String>.from(snapshot.get('names'));
         notesCourse = List<String>.from(snapshot.get('course'));
         notesSubject = List<String>.from(snapshot.get('subject'));
+        notesDescription=List<String>.from(snapshot.get('description'));
       } catch (e) {
         if (kDebugMode) {
           print(e.toString());
@@ -114,6 +116,8 @@ class DatabaseService{
         notesCourse.add(course);
         //add subject of file in list
         notesSubject.add(subject);
+        //add description of file in list
+        notesDescription.add(description);
       }
       // Update the notes data in the database
       await _notesCollection.doc(uid).set({
@@ -121,6 +125,7 @@ class DatabaseService{
         'names': notesName,
         'course': notesCourse,
         'subject': notesSubject,
+        'description': notesDescription,
       });
     } catch (e) {
       if (kDebugMode) {
@@ -144,6 +149,7 @@ class DatabaseService{
         notesName: List<String>.from(snap.get('names')),
         notesCourse: List<String>.from(snap.get('course')),
         notesSubject: List<String>.from(snap.get('subject')),
+        notesDescription: List<String>.from(snap.get('description')),
       ) : null;
     }
     catch(e){
