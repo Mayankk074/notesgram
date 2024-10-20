@@ -8,6 +8,7 @@ class Note{
   String? userUid;
   String? userName;
   String? userDP;
+  String? description;
 
-  Note({this.subject,this.userUid,this.userDP,this.name,this.course,this.userName,this.link});
+  Note({this.subject,this.userUid,this.userDP,this.name,this.course,this.userName,this.link, this.description});
 }

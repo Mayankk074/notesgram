@@ -42,6 +42,7 @@ class _AllNotesState extends State<AllNotes> {
       var listLink=List<String>.from(snap.get('notes'));
       var listCourse=List<String>.from(snap.get('course'));
       var listSubject=List<String>.from(snap.get('subject'));
+      var listDescription=List<String>.from(snap.get('description'));
 
       for (int i=0;i<listName.length;i++){
         //Creating Note objects from lists notes from snap
@@ -53,6 +54,7 @@ class _AllNotesState extends State<AllNotes> {
           userName:userSnap['username'],
           userDP: userSnap['profilePic'],
           userUid: uid,
+          description: listDescription[i],
           ));
       }
     }
@@ -107,9 +109,12 @@ class _AllNotesState extends State<AllNotes> {
   Widget build(BuildContext context){
     return Column(
       children: [
-        CupertinoSearchTextField(
-          controller: _searchController,
-          placeholder: 'Search subject',
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: CupertinoSearchTextField(
+            controller: _searchController,
+            placeholder: 'Search subject',
+          ),
         ),
         Expanded(
           child: ListView.builder(
@@ -144,6 +149,7 @@ class _AllNotesState extends State<AllNotes> {
                     subject: note.subject,
                     course: note.course,
                     userUid: note.userUid,
+                    description: note.description,
                   );
                 }
               }

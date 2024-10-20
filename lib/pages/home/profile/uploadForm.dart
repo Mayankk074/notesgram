@@ -54,7 +54,10 @@ class _UploadFormState extends State<UploadForm> {
                   pdf = File(file.path);
                   //fileName
                   setState(() {
-                    fileName = result.files.first.name;
+                    //Removing the .pdf from title and Assigning to fileName
+                    String temp=result.files.first.name;
+                    temp=temp.replaceAll(".pdf", "");
+                    fileName = temp;
                   });
                 }
               },

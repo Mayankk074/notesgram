@@ -47,6 +47,7 @@ class NotesTile extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
+                    flex: 1,
                     child: Column(
                       children: [
                         flag? CupertinoButton(
@@ -78,20 +79,35 @@ class NotesTile extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: Text(
-                      name!,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: IconButton(
-                      onPressed: ()async {
-                        await downloadFile(context);
-                      },
-                      icon: const Icon(Icons.download,),
+                    flex: 2,
+                    child: Column(
+                      children: [
+                        Text(
+                          name!,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0,
+                          ),
+                        ),
+                        const Divider(),
+                        Row(
+                          children: [
+                            // const Spacer(),
+                            IconButton(
+                              onPressed: (){},
+                              icon: const Icon(Icons.favorite),
+                            ),
+                            const Text("0"),
+                            const Spacer(),
+                            IconButton(
+                              onPressed: ()async {
+                                await downloadFile(context);
+                              },
+                              icon: const Icon(Icons.download,),
+                            ),
+                          ],
+                        )
+                      ],
                     ),
                   ),
                 ],
@@ -99,9 +115,53 @@ class NotesTile extends StatelessWidget {
               const Divider(),
               Row(
                 children: [
-                  Expanded(child: Center(child: Text("Description: $description"))),
-                  Expanded(child: Center(child: Text("Course/Class:\n$course"))),
-                  Expanded(child: Center(child: Text("Subject:\n$subject"))),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment:CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Description:",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text("$description"),
+                      ],
+                    )
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment:CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Course/Class:",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text("$course"),
+                      ],
+                    )
+                  ),
+                  // SizedBox(width: 10.0,),
+                  Expanded(
+                    child: Center(
+                      child: Column(
+                        crossAxisAlignment:CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Subject:",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text("$subject"),
+                        ],
+                      ),
+                    )
+                  ),
+                  // Expanded(child: Center(child: Text("Course/Class:\n$course"))),
+                  // Expanded(child: Center(child: Text("Subject:\n$subject"))),
                 ],
               ),
             ],

@@ -32,6 +32,7 @@ class _HomeBodyState extends State<HomeBody> {
       List<String> notesList=List<String>.from(notesSnap.get('notes'));
       List<String> courseList=List<String>.from(notesSnap.get('course'));
       List<String> subjectList=List<String>.from(notesSnap.get('subject'));
+      List<String> listDescription=List<String>.from(notesSnap.get('description'));
 
       for(int i=0;i<namesList.length;i++){
         //Creating Note objects from lists notes from snap
@@ -43,6 +44,7 @@ class _HomeBodyState extends State<HomeBody> {
           userName:userSnap['username'],
           userDP: userSnap['profilePic'],
           userUid: uid,
+          description: listDescription[i],
         ));
       }
     }
@@ -63,13 +65,14 @@ class _HomeBodyState extends State<HomeBody> {
           Note note=allNotes[index];
 
           return NotesTile(
-              pdfLink: note.link,
-              name: note.name,
-              userDP: note.userDP,
-              userName: note.userName,
-              subject: note.subject,
-              course: note.course,
-              userUid: note.userUid,
+            pdfLink: note.link,
+            name: note.name,
+            userDP: note.userDP,
+            userName: note.userName,
+            subject: note.subject,
+            course: note.course,
+            userUid: note.userUid,
+            description: note.description,
             );
           }
     ):const Center(
