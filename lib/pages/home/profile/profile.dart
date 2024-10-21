@@ -35,7 +35,7 @@ class _ProfileState extends State<Profile> {
         return Padding(
           //for keyboard padding
           padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: Container(
+          child: SizedBox(
             height: 400,
             child: UploadForm(userDoc: userDoc,),
           ),
@@ -50,7 +50,7 @@ class _ProfileState extends State<Profile> {
             return Padding(
               //for keyboard padding
               padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: Container(
+              child: SizedBox(
                 height: 300,
                 child: SettingsForm(userDoc: userDoc,),
               ),

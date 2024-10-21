@@ -102,6 +102,7 @@ class _UploadFormState extends State<UploadForm> {
               onPressed: () async {
 
                 if(_formKey.currentState!.validate()){
+                  Navigator.pushNamed(context, '/loadingShared');
                   //uploading the pdf to firebase storage
                   String url =
                   await StorageServices(uid: user.uid).uploadPdf(pdf);
@@ -121,6 +122,8 @@ class _UploadFormState extends State<UploadForm> {
                         List<String>.from(widget.userDoc?['following']),
                         widget.userDoc?['notesUploaded']+1,
                       );
+                  if (!context.mounted) return;
+                  Navigator.pop(context);
                   if (!context.mounted) return;
                   Navigator.pop(context);
                   const snackBar = SnackBar(

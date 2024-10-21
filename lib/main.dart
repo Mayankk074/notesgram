@@ -8,6 +8,7 @@ import 'package:notesgram/pages/home/userDP.dart';
 import 'package:notesgram/pages/loading.dart';
 import 'package:notesgram/pages/wrapper.dart';
 import 'package:notesgram/services/auth.dart';
+import 'package:notesgram/shared/loadingShared.dart';
 import 'package:provider/provider.dart';
 
 void main() async  {
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
             '/signIn': (context)=> const SignIn(),
             '/userProfile': (context)=> const UserProfile(),
             '/otherUserFiles': (context)=> OtherUserFiles(),
+            '/loadingShared': (context)=> const LoadingShared(),
           },
         ));
   }
