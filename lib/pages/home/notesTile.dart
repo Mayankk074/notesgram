@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:notesgram/models/userUid.dart';
@@ -31,9 +32,10 @@ class NotesTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentUserUid=Provider.of<UserUid?>(context);
+    final userDoc=Provider.of<DocumentSnapshot?>(context);
 
-    //checking if current user is trying to open its own profile
-    bool flag=currentUserUid?.uid!=userUid;
+    //checking if current user is also uploader of Note
+    bool flag=currentUserUid?.uid != userUid;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -100,10 +102,48 @@ class NotesTile extends StatelessWidget {
                             ),
                             const Text("0"),
                             const Spacer(),
-                            if(!flag)
+                            if(!flag) //show Delete button to the uploader only
                               IconButton(
-                                onPressed: ()async {
-                                  await DatabaseService(uid: userUid).deleteUserPDF(pdfUrl: pdfLink);
+                                onPressed: (){
+                                  //Asking for confirmation
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context){
+                                        return AlertDialog(
+                                          title: const Text('Alert!!'),
+                                          content: const SingleChildScrollView(
+                                              child: Text(
+                                                  'Do you really want to Delete?'
+                                              )
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: const Text('Yes'),
+                                              onPressed: () async {
+                                                Navigator.of(context).pop();
+                                                await DatabaseService(uid: userUid).deleteUserPDF(pdfUrl: pdfLink);
+                                                //Decreasing the no. of notesUploaded
+                                                await DatabaseService(uid: userUid)
+                                                    .updateUserData(
+                                                  userDoc?['username'],
+                                                  userDoc?['email'],
+                                                  userDoc?['password'],
+                                                  userDoc?['profilePic'],
+                                                  userDoc?['followers'],
+                                                  List<String>.from(userDoc?['following']),
+                                                  userDoc?['notesUploaded']-1,
+                                                );
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: const Text('No'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      });
                                 },
                                 icon: const Icon(Icons.delete),
                               ),

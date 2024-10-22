@@ -127,7 +127,7 @@ class _UploadFormState extends State<UploadForm> {
                   await DatabaseService(uid: user.uid)
                       .updateNotesData(url, fileName, _currentCourse, _currentSubject, _currentDescription);
 
-                  //updating the no. of notesUploaded
+                  //Increasing the no. of notesUploaded
                   await DatabaseService(uid: user.uid)
                       .updateUserData(
                         widget.userDoc?['username'],
