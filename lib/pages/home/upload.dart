@@ -10,24 +10,34 @@ class Notes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    // final userDoc=Provider.of<DocumentSnapshot?>(context);
     final notesDocument=Provider.of<NotesModel?>(context);
     final userDoc=Provider.of<DocumentSnapshot?>(context);
 
-    //Created an empty list to prevent null.
-    List<String>? notesList=[];
-    notesList=notesDocument?.notesLink;
+
+    List<String>? notesList=notesDocument?.notesLink;
     List<String>? notesNames=notesDocument?.notesName;
     List<String>? notesCourse=notesDocument?.notesCourse;
     List<String>? notesSubject=notesDocument?.notesSubject;
     List<String>? notesDescription=notesDocument?.notesDescription;
 
+    //To show message if user deletes all the pdfs.
+    if(notesList != null){
+      if(notesList.isEmpty){
+        return const Center(
+          child: Text('No file is uploaded!!'),
+        );
+      }
+    }
+
     return userDoc==null ? const LoadingShared():
-        notesList!.isNotEmpty ?
+        notesList !=null ?
       ListView.builder(
       itemCount: notesList.length,
       itemBuilder: (context, index){
         return NotesTile(
-          pdfLink: notesList?[index],
+          pdfLink: notesList[index],
           name: notesNames?[index],
           userName: userDoc['username'],
           userDP: userDoc['profilePic'],
