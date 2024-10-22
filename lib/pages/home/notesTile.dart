@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:notesgram/models/userUid.dart';
+import 'package:notesgram/services/database.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -99,6 +100,13 @@ class NotesTile extends StatelessWidget {
                             ),
                             const Text("0"),
                             const Spacer(),
+                            if(!flag)
+                              IconButton(
+                                onPressed: ()async {
+                                  await DatabaseService(uid: userUid).deleteUserPDF(pdfUrl: pdfLink);
+                                },
+                                icon: const Icon(Icons.delete),
+                              ),
                             IconButton(
                               onPressed: ()async {
                                 await downloadFile(context);

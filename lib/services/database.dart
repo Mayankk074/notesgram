@@ -134,6 +134,54 @@ class DatabaseService{
     }
   }
 
+  Future deleteUserPDF({String? pdfUrl}) async {
+    List notesList=[];
+    List notesName=[];
+    List notesCourse=[];
+    List notesSubject=[];
+    List notesDescription=[];
+    try {
+      // Fetch the existing notes data from the database
+      DocumentSnapshot snapshot = await _notesCollection.doc(uid).get();
+
+      try {
+        notesList = List<String>.from(snapshot.get('notes'));
+        notesName = List<String>.from(snapshot.get('names'));
+        notesCourse = List<String>.from(snapshot.get('course'));
+        notesSubject = List<String>.from(snapshot.get('subject'));
+        notesDescription=List<String>.from(snapshot.get('description'));
+      } catch (e) {
+        if (kDebugMode) {
+          print(e.toString());
+        }
+      }
+
+      // Deleting the note from the list
+      if (pdfUrl != null) {
+        //finding the index of PDF from List
+        int noteIdx=notesList.indexOf(pdfUrl);
+        //removing all with index pdf's fields
+        notesList.removeAt(noteIdx);
+        notesName.removeAt(noteIdx);
+        notesCourse.removeAt(noteIdx);
+        notesSubject.removeAt(noteIdx);
+        notesDescription.removeAt(noteIdx);
+      }
+      // Update the notes data in the database
+      await _notesCollection.doc(uid).set({
+        'notes': notesList,
+        'names': notesName,
+        'course': notesCourse,
+        'subject': notesSubject,
+        'description': notesDescription,
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error updating notes data: $e');
+      }
+    }
+  }
+
   Future<DocumentSnapshot> getUserSnap()async {
     return await _userCollection.doc(uid).get();
   }

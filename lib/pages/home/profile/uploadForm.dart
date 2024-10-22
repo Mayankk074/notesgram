@@ -27,7 +27,7 @@ class _UploadFormState extends State<UploadForm> {
   String? _currentSubject;
   String? _currentDescription;
 
-  String fileName='';
+  String fileName='File size should not exceed 2 MB';
   File? pdf;
 
   @override
@@ -40,7 +40,6 @@ class _UploadFormState extends State<UploadForm> {
       child: Form(
         key: _formKey,
         child: Column(
-          // mainAxisSize: MainAxisSize.min,
           children: [
             ElevatedButton(
               onPressed: () async {
@@ -50,15 +49,26 @@ class _UploadFormState extends State<UploadForm> {
                   allowedExtensions: ['pdf'],
                 );
                 if (result != null) {
-                  XFile? file = result.files.first.xFile;
-                  pdf = File(file.path);
-                  //fileName
-                  setState(() {
-                    //Removing the .pdf from title and Assigning to fileName
-                    String temp=result.files.first.name;
-                    temp=temp.replaceAll(".pdf", "");
-                    fileName = temp;
-                  });
+                  int size=result.files.first.size;
+                  //Comparing the size to 2 MB
+                  if(size < 2048000){
+                    XFile? file = result.files.first.xFile;
+                    pdf = File(file.path);
+                    //fileName
+                    setState(() {
+                      //Removing the .pdf from title and Assigning to fileName
+                      String temp=result.files.first.name;
+                      temp=temp.replaceAll(".pdf", "");
+                      fileName = temp;
+                    });
+                  }
+                  else{
+                    setState(() {
+                      //Clearing the memory
+                      pdf=null;
+                      fileName='File size should not exceed 2 MB';
+                    });
+                  }
                 }
               },
               style: buttonStyleSignIn,
@@ -73,35 +83,41 @@ class _UploadFormState extends State<UploadForm> {
             const SizedBox(height: 10.0,),
             Text(fileName),
             const SizedBox(height: 10.0,),
-            TextFormField(
-              decoration: textInputDecoration.copyWith(
-                hintText: 'Course/Class Name'
+            Expanded(
+              child: TextFormField(
+                decoration: textInputDecoration.copyWith(
+                  hintText: 'Course/Class Name'
+                ),
+                validator: (val) => val!.isEmpty ? "Enter Course" : null,
+                onChanged: (val) => setState(() => _currentCourse=val),
               ),
-              validator: (val) => val!.isEmpty ? "Enter Course" : null,
-              onChanged: (val) => setState(() => _currentCourse=val),
             ),
             const SizedBox(height: 10.0,),
-            TextFormField(
-              decoration: textInputDecoration.copyWith(
-                hintText: 'Subject Name'
+            Expanded(
+              child: TextFormField(
+                decoration: textInputDecoration.copyWith(
+                  hintText: 'Subject Name'
+                ),
+                validator: (val) => val!.isEmpty ? "Enter Subject" : null,
+                onChanged: (val) => setState(() => _currentSubject=val),
               ),
-              validator: (val) => val!.isEmpty ? "Enter Subject" : null,
-              onChanged: (val) => setState(() => _currentSubject=val),
             ),
             const SizedBox(height: 10.0,),
-            TextFormField(
-              decoration: textInputDecoration.copyWith(
-                  hintText: 'Description'
+            Expanded(
+              child: TextFormField(
+                decoration: textInputDecoration.copyWith(
+                    hintText: 'Description'
+                ),
+                validator: (val) => val!.isEmpty ? "Enter Description" : null,
+                onChanged: (val) => setState(() => _currentDescription=val),
               ),
-              validator: (val) => val!.isEmpty ? "Enter Description" : null,
-              onChanged: (val) => setState(() => _currentDescription=val),
             ),
             const SizedBox(height: 30.0,),
             ElevatedButton(
               style: buttonStyleSignUp,
               onPressed: () async {
 
-                if(_formKey.currentState!.validate()){
+                if(_formKey.currentState!.validate() && pdf != null){
                   Navigator.pushNamed(context, '/loadingShared');
                   //uploading the pdf to firebase storage
                   String url =
