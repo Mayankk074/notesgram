@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:notesgram/models/userUid.dart';
@@ -49,6 +51,7 @@ class _SettingsFormState extends State<SettingsForm> {
                     widget.userDoc?['followers'],
                     List<String>.from(widget.userDoc?['following']),
                     widget.userDoc?['notesUploaded'],
+                    HashSet<String>.from(widget.userDoc?['liked']),
                   );
                   if(!context.mounted) return;
                   Navigator.pop(context);

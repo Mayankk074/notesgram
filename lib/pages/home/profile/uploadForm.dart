@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -137,6 +138,7 @@ class _UploadFormState extends State<UploadForm> {
                         widget.userDoc?['followers'],
                         List<String>.from(widget.userDoc?['following']),
                         widget.userDoc?['notesUploaded']+1,
+                        HashSet<String>.from(widget.userDoc?['liked']),
                       );
                   if (!context.mounted) return;
                   Navigator.pop(context);

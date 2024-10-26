@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +8,8 @@ import 'package:notesgram/services/database.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class NotesTile extends StatelessWidget {
-  const NotesTile({super.key, this.pdfLink, this.name, this.userName, this.userDP,this.course,this.subject, this.userUid, this.description});
+class NotesTile extends StatefulWidget {
+  NotesTile({super.key, this.pdfLink, this.name, this.userName, this.userDP,this.course,this.subject, this.userUid, this.description, required this.likedFlag, required this.likesCount});
 
   final String? pdfLink;
   final String? name;
@@ -17,25 +19,29 @@ class NotesTile extends StatelessWidget {
   final String? subject;
   final String? userUid;
   final String? description;
+  final bool likedFlag;
+  int? likesCount;
 
-  Future<void> downloadFile(BuildContext context) async {
+  @override
+  State<NotesTile> createState() => _NotesTileState();
+}
+
+class _NotesTileState extends State<NotesTile> {
+  Future<void> downloadFile() async {
     // launching the pdfLink and it will automatically start downloading
-    final Uri url = Uri.parse(pdfLink!);
+    final Uri url = Uri.parse(widget.pdfLink!);
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $url');
     }
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
     final currentUserUid=Provider.of<UserUid?>(context);
     final userDoc=Provider.of<DocumentSnapshot?>(context);
 
-    //checking if current user is also uploader of Note
-    bool flag=currentUserUid?.uid != userUid;
+    //checking if current user is also uploader of Note 'true means different user'
+    bool flag=currentUserUid?.uid != widget.userUid;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -57,25 +63,25 @@ class NotesTile extends StatelessWidget {
                           padding: const EdgeInsets.only(left: 5),
                           onPressed: (){
                             Navigator.pushNamed(context, '/userProfile',arguments: {
-                              'userUid': userUid,
+                              'userUid': widget.userUid,
                             });
                           },
                           child: CircleAvatar(
                             //if there is no dp then dont show image
-                            backgroundImage: userDP !='No DP'? NetworkImage(
-                              userDP!,
+                            backgroundImage: widget.userDP !='No DP'? NetworkImage(
+                              widget.userDP!,
                             ): null,
                             radius: 30.0,
                           ),
                         ):CircleAvatar(
-                          backgroundImage: userDP !='No DP'? NetworkImage(
-                            userDP!,
+                          backgroundImage: widget.userDP !='No DP'? NetworkImage(
+                            widget.userDP!,
                           ): null,
                           radius: 30.0,
                         ),
                         const SizedBox(height: 8), // Space between CircleAvatar and username
                         Text(
-                          userName!,
+                          widget.userName!,
                           style: const TextStyle(fontSize: 12.0), // Adjust the font size as needed
                         ),
                       ],
@@ -85,76 +91,35 @@ class NotesTile extends StatelessWidget {
                     flex: 2,
                     child: Column(
                       children: [
-                        Text(
-                          name!,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0,
+                        TextButton(
+                          onPressed: () async {
+                            //Getting back the likesCount so it would update the value
+                            var result=await Navigator.pushNamed(context, '/singleNote', arguments: {
+                                                  'userName': widget.userName,
+                                                  'pdfName': widget.name,
+                                                  'pdfLink': widget.pdfLink,
+                                                  'userDoc': userDoc,
+                                                  'userUid': widget.userUid,
+                                                  'likedFlag': widget.likedFlag,
+                                                  'likesCount': widget.likesCount,
+                                                  'course': widget.course,
+                                                  'subject': widget.subject,
+                                                  'description': widget.description,
+                                                });
+                            //updating the value with newer one
+                            widget.likesCount=result as int?;
+                          },
+                          style: ButtonStyle(
+                            foregroundColor: WidgetStateProperty.all<Color>(Colors.black),
+                          ),
+                          child: Text(
+                            '${widget.name}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.0,
+                            ),
                           ),
                         ),
-                        const Divider(),
-                        Row(
-                          children: [
-                            // const Spacer(),
-                            IconButton(
-                              onPressed: (){},
-                              icon: const Icon(Icons.favorite),
-                            ),
-                            const Text("0"),
-                            const Spacer(),
-                            if(!flag) //show Delete button to the uploader only
-                              IconButton(
-                                onPressed: (){
-                                  //Asking for confirmation
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context){
-                                        return AlertDialog(
-                                          title: const Text('Alert!!'),
-                                          content: const SingleChildScrollView(
-                                              child: Text(
-                                                  'Do you really want to Delete?'
-                                              )
-                                          ),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: const Text('Yes'),
-                                              onPressed: () async {
-                                                Navigator.of(context).pop();
-                                                await DatabaseService(uid: userUid).deleteUserPDF(pdfUrl: pdfLink);
-                                                //Decreasing the no. of notesUploaded
-                                                await DatabaseService(uid: userUid)
-                                                    .updateUserData(
-                                                  userDoc?['username'],
-                                                  userDoc?['email'],
-                                                  userDoc?['password'],
-                                                  userDoc?['profilePic'],
-                                                  userDoc?['followers'],
-                                                  List<String>.from(userDoc?['following']),
-                                                  userDoc?['notesUploaded']-1,
-                                                );
-                                              },
-                                            ),
-                                            TextButton(
-                                              child: const Text('No'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      });
-                                },
-                                icon: const Icon(Icons.delete),
-                              ),
-                            IconButton(
-                              onPressed: ()async {
-                                await downloadFile(context);
-                              },
-                              icon: const Icon(Icons.download,),
-                            ),
-                          ],
-                        )
                       ],
                     ),
                   ),
@@ -173,7 +138,7 @@ class NotesTile extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text("$description"),
+                        Text("${widget.description}"),
                       ],
                     )
                   ),
@@ -187,11 +152,10 @@ class NotesTile extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text("$course"),
+                        Text("${widget.course}"),
                       ],
                     )
                   ),
-                  // SizedBox(width: 10.0,),
                   Expanded(
                     child: Center(
                       child: Column(
@@ -203,13 +167,11 @@ class NotesTile extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text("$subject"),
+                          Text("${widget.subject}"),
                         ],
                       ),
                     )
                   ),
-                  // Expanded(child: Center(child: Text("Course/Class:\n$course"))),
-                  // Expanded(child: Center(child: Text("Subject:\n$subject"))),
                 ],
               ),
             ],

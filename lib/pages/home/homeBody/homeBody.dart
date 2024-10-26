@@ -1,9 +1,12 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:notesgram/models/note.dart';
 import 'package:notesgram/models/userUid.dart';
 import 'package:notesgram/pages/home/notesTile.dart';
 import 'package:notesgram/services/database.dart';
+import 'package:provider/provider.dart';
 
 class HomeBody extends StatefulWidget {
   HomeBody({super.key, this.user});
@@ -33,6 +36,7 @@ class _HomeBodyState extends State<HomeBody> {
       List<String> courseList=List<String>.from(notesSnap.get('course'));
       List<String> subjectList=List<String>.from(notesSnap.get('subject'));
       List<String> listDescription=List<String>.from(notesSnap.get('description'));
+      List<int> listLikes=List<int>.from(notesSnap.get('likes'));
 
       for(int i=0;i<namesList.length;i++){
         //Creating Note objects from lists notes from snap
@@ -45,6 +49,7 @@ class _HomeBodyState extends State<HomeBody> {
           userDP: userSnap['profilePic'],
           userUid: uid,
           description: listDescription[i],
+          likesCount: listLikes[i],
         ));
       }
     }
@@ -59,11 +64,17 @@ class _HomeBodyState extends State<HomeBody> {
 
   @override
   Widget build(BuildContext context) {
+    final userDoc=Provider.of<DocumentSnapshot?>(context);
+    HashSet<String> liked=HashSet<String>();
+    if(userDoc != null){
+      liked=HashSet<String>.from(userDoc['liked']);
+    }
+
     return allNotes.isNotEmpty? ListView.builder(
         itemCount: allNotes.length,
         itemBuilder: (context, index) {
           Note note=allNotes[index];
-
+          bool likedFlag=liked.contains(note.link);
           return NotesTile(
             pdfLink: note.link,
             name: note.name,
@@ -73,6 +84,8 @@ class _HomeBodyState extends State<HomeBody> {
             course: note.course,
             userUid: note.userUid,
             description: note.description,
+            likedFlag: likedFlag,
+            likesCount: note.likesCount,
             );
           }
     ):const Center(

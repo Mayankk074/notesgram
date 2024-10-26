@@ -6,6 +6,7 @@ class NotesModel {
   List<String>? notesCourse;
   List<String>? notesSubject;
   List<String>? notesDescription;
+  List<int>? notesLikes;
 
-  NotesModel({this.notesLink, this.notesName, this.notesCourse, this.notesSubject, this.notesDescription});
+  NotesModel({this.notesLink, this.notesName, this.notesCourse, this.notesSubject, this.notesDescription, this.notesLikes});
 }

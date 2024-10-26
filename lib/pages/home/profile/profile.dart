@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -138,7 +139,8 @@ class _ProfileState extends State<Profile> {
                           downloadUrl,
                           userDoc['followers'],
                           List<String>.from(userDoc['following']),
-                          userDoc['notesUploaded']
+                          userDoc['notesUploaded'],
+                          HashSet<String>.from(userDoc['liked']),
                         );
               
                         log("image selected!");

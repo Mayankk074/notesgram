@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:notesgram/models/notesModel.dart';
@@ -18,7 +20,7 @@ class DatabaseService{
 
 
   //upload the data of user in database
-  Future updateUserData(String username, String email, String password, String? downloadUrl, int followers,List<String> following, int notesUploaded) async {
+  Future updateUserData(String username, String email, String password, String? downloadUrl, int followers,List<String> following, int notesUploaded, HashSet<String> liked) async {
 
     return await _userCollection.doc(uid).set({
       'username': username,
@@ -28,6 +30,7 @@ class DatabaseService{
       'followers': followers,
       'following': following,
       'notesUploaded': notesUploaded,
+      'liked': liked
     });
   }
 
@@ -90,6 +93,7 @@ class DatabaseService{
     List notesCourse=[];
     List notesSubject=[];
     List notesDescription=[];
+    List notesLikes=[];
     try {
       // Fetch the existing notes data from the database
       DocumentSnapshot snapshot = await _notesCollection.doc(uid).get();
@@ -100,6 +104,7 @@ class DatabaseService{
         notesCourse = List<String>.from(snapshot.get('course'));
         notesSubject = List<String>.from(snapshot.get('subject'));
         notesDescription=List<String>.from(snapshot.get('description'));
+        notesLikes=List<int>.from(snapshot.get('likes'));
       } catch (e) {
         if (kDebugMode) {
           print(e.toString());
@@ -118,6 +123,8 @@ class DatabaseService{
         notesSubject.add(subject);
         //add description of file in list
         notesDescription.add(description);
+        //add likes of file in list
+        notesLikes.add(0);
       }
       // Update the notes data in the database
       await _notesCollection.doc(uid).set({
@@ -126,6 +133,7 @@ class DatabaseService{
         'course': notesCourse,
         'subject': notesSubject,
         'description': notesDescription,
+        'likes': notesLikes,
       });
     } catch (e) {
       if (kDebugMode) {
@@ -134,12 +142,14 @@ class DatabaseService{
     }
   }
 
+  //Deleteing user pdf from delete button
   Future deleteUserPDF({String? pdfUrl}) async {
     List notesList=[];
     List notesName=[];
     List notesCourse=[];
     List notesSubject=[];
     List notesDescription=[];
+    List notesLikes=[];
     try {
       // Fetch the existing notes data from the database
       DocumentSnapshot snapshot = await _notesCollection.doc(uid).get();
@@ -150,6 +160,7 @@ class DatabaseService{
         notesCourse = List<String>.from(snapshot.get('course'));
         notesSubject = List<String>.from(snapshot.get('subject'));
         notesDescription=List<String>.from(snapshot.get('description'));
+        notesLikes=List<int>.from(snapshot.get('likes'));
       } catch (e) {
         if (kDebugMode) {
           print(e.toString());
@@ -166,6 +177,7 @@ class DatabaseService{
         notesCourse.removeAt(noteIdx);
         notesSubject.removeAt(noteIdx);
         notesDescription.removeAt(noteIdx);
+        notesLikes.removeAt(noteIdx);
       }
       // Update the notes data in the database
       await _notesCollection.doc(uid).set({
@@ -174,6 +186,62 @@ class DatabaseService{
         'course': notesCourse,
         'subject': notesSubject,
         'description': notesDescription,
+        'likes': notesLikes,
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error updating notes data: $e');
+      }
+    }
+  }
+
+  //Updating the likes count from like button
+  Future updatingLikes({String? pdfUrl, required bool likedFlag}) async {
+    List notesList=[];
+    List notesName=[];
+    List notesCourse=[];
+    List notesSubject=[];
+    List notesDescription=[];
+    List notesLikes=[];
+    try {
+      // Fetch the existing notes data from the database
+      DocumentSnapshot snapshot = await _notesCollection.doc(uid).get();
+
+      try {
+        notesList = List<String>.from(snapshot.get('notes'));
+        notesName = List<String>.from(snapshot.get('names'));
+        notesCourse = List<String>.from(snapshot.get('course'));
+        notesSubject = List<String>.from(snapshot.get('subject'));
+        notesDescription=List<String>.from(snapshot.get('description'));
+        notesLikes=List<int>.from(snapshot.get('likes'));
+
+      } catch (e) {
+        if (kDebugMode) {
+          print(e.toString());
+        }
+      }
+
+      // Deleting the note from the list
+      if (pdfUrl != null) {
+        //finding the index of PDF from List
+        int noteIdx=notesList.indexOf(pdfUrl);
+        //Increasing likes count
+        int likesCount=notesLikes.elementAt(noteIdx);
+        if(likedFlag){
+          notesLikes[noteIdx]=--likesCount;
+        }
+        else{
+          notesLikes[noteIdx]=++likesCount;
+        }
+      }
+      // Update the notes data in the database
+      await _notesCollection.doc(uid).set({
+        'notes': notesList,
+        'names': notesName,
+        'course': notesCourse,
+        'subject': notesSubject,
+        'description': notesDescription,
+        'likes': notesLikes,
       });
     } catch (e) {
       if (kDebugMode) {
@@ -198,6 +266,7 @@ class DatabaseService{
         notesCourse: List<String>.from(snap.get('course')),
         notesSubject: List<String>.from(snap.get('subject')),
         notesDescription: List<String>.from(snap.get('description')),
+        notesLikes: List<int>.from(snap.get('likes')),
       ) : null;
     }
     catch(e){

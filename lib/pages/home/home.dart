@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:notesgram/models/notesModel.dart';
 import 'package:notesgram/models/userUid.dart';
 import 'package:notesgram/pages/home/explore/explore.dart';
-import 'package:notesgram/pages/home/homeBody.dart';
+import 'package:notesgram/pages/home/homeBody/homeBody.dart';
 import 'package:notesgram/pages/home/profile/profile.dart';
-import 'package:notesgram/pages/home/upload.dart';
+import 'package:notesgram/pages/home/upload/upload.dart';
 import 'package:notesgram/services/database.dart';
 import 'package:provider/provider.dart';
 

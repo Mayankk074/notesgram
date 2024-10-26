@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,11 +7,15 @@ import 'package:notesgram/models/note.dart';
 import 'package:notesgram/pages/home/notesTile.dart';
 import 'package:notesgram/services/database.dart';
 import 'package:notesgram/shared/constants.dart';
+import 'package:provider/provider.dart';
+
+import '../../../models/userUid.dart';
 
 
 class AllNotes extends StatefulWidget {
-  const AllNotes({super.key});
+  const AllNotes({super.key, required this.currUserUid});
 
+  final UserUid currUserUid;
   @override
   State<AllNotes> createState() => _AllNotesState();
 }
@@ -35,27 +41,32 @@ class _AllNotesState extends State<AllNotes> {
     for (DocumentSnapshot snap in allDocs) {
       String uid = snap.id;
 
-      //getting the userData of the note uploader
-      DocumentSnapshot userSnap = await DatabaseService(uid: uid).getUserSnap();
+      //Not showing currUser Notes
+      if(uid != widget.currUserUid.uid){
+        //getting the userData of the note uploader
+        DocumentSnapshot userSnap = await DatabaseService(uid: uid).getUserSnap();
 
-      var listName=List<String>.from(snap.get('names'));
-      var listLink=List<String>.from(snap.get('notes'));
-      var listCourse=List<String>.from(snap.get('course'));
-      var listSubject=List<String>.from(snap.get('subject'));
-      var listDescription=List<String>.from(snap.get('description'));
+        var listName=List<String>.from(snap.get('names'));
+        var listLink=List<String>.from(snap.get('notes'));
+        var listCourse=List<String>.from(snap.get('course'));
+        var listSubject=List<String>.from(snap.get('subject'));
+        var listDescription=List<String>.from(snap.get('description'));
+        var listLikes=List<int>.from(snap.get('likes'));
 
-      for (int i=0;i<listName.length;i++){
-        //Creating Note objects from lists notes from snap
-        allNotes.add(Note(
-          name: listName[i],
-          link: listLink[i],
-          course: listCourse[i],
-          subject: listSubject[i],
-          userName:userSnap['username'],
-          userDP: userSnap['profilePic'],
-          userUid: uid,
-          description: listDescription[i],
+        for (int i=0;i<listName.length;i++){
+          //Creating Note objects from lists notes from snap
+          allNotes.add(Note(
+            name: listName[i],
+            link: listLink[i],
+            course: listCourse[i],
+            subject: listSubject[i],
+            userName:userSnap['username'],
+            userDP: userSnap['profilePic'],
+            userUid: uid,
+            description: listDescription[i],
+            likesCount: listLikes[i],
           ));
+        }
       }
     }
     searchResultList();
@@ -107,6 +118,10 @@ class _AllNotesState extends State<AllNotes> {
 
   @override
   Widget build(BuildContext context){
+
+    final userDoc=Provider.of<DocumentSnapshot>(context);
+    HashSet<String> liked=HashSet<String>.from(userDoc['liked']);
+
     return Column(
       children: [
         Padding(
@@ -140,6 +155,8 @@ class _AllNotesState extends State<AllNotes> {
                 }
                 else{
                   final note=filteredNotes[index];
+                  bool likedFlag=liked.contains(note.link);
+                  // print(likedFlag);
                   //creating NotesTile
                   return NotesTile(
                     pdfLink: note.link,
@@ -150,6 +167,8 @@ class _AllNotesState extends State<AllNotes> {
                     course: note.course,
                     userUid: note.userUid,
                     description: note.description,
+                    likedFlag: likedFlag,
+                    likesCount: note.likesCount,
                   );
                 }
               }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:notesgram/models/userUid.dart';
 import 'package:notesgram/pages/authenticate/signIn.dart';
 import 'package:notesgram/pages/authenticate/signUp.dart';
+import 'package:notesgram/pages/home/note_viewer.dart';
 import 'package:notesgram/pages/home/otherUserFiles.dart';
 import 'package:notesgram/pages/home/userDP.dart';
 import 'package:notesgram/pages/loading.dart';
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
             '/userProfile': (context)=> const UserProfile(),
             '/otherUserFiles': (context)=> OtherUserFiles(),
             '/loadingShared': (context)=> const LoadingShared(),
+            '/singleNote': (context)=> const NoteViewer(),
           },
         ));
   }
