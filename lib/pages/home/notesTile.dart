@@ -1,15 +1,13 @@
-import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:notesgram/models/userUid.dart';
-import 'package:notesgram/services/database.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NotesTile extends StatefulWidget {
-  NotesTile({super.key, this.pdfLink, this.name, this.userName, this.userDP,this.course,this.subject, this.userUid, this.description, required this.likedFlag, required this.likesCount});
+  NotesTile({super.key, this.pdfLink, this.name, this.userName, this.userDP,this.course,this.subject, this.userUid, this.description, required this.likedFlag, required this.likesCount, this.currUserDoc});
 
   final String? pdfLink;
   final String? name;
@@ -21,6 +19,7 @@ class NotesTile extends StatefulWidget {
   final String? description;
   final bool likedFlag;
   int? likesCount;
+  DocumentSnapshot? currUserDoc;
 
   @override
   State<NotesTile> createState() => _NotesTileState();
@@ -98,7 +97,7 @@ class _NotesTileState extends State<NotesTile> {
                                                   'userName': widget.userName,
                                                   'pdfName': widget.name,
                                                   'pdfLink': widget.pdfLink,
-                                                  'userDoc': userDoc,
+                                                  'userDoc': userDoc ?? widget.currUserDoc, //for otherUserFiles widget because it becomes null
                                                   'userUid': widget.userUid,
                                                   'likedFlag': widget.likedFlag,
                                                   'likesCount': widget.likesCount,
