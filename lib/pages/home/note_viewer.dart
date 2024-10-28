@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:notesgram/models/userUid.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../services/database.dart';
@@ -19,7 +20,7 @@ class NoteViewer extends StatefulWidget {
 class _NoteViewerState extends State<NoteViewer> {
   Map data = {};
   late DocumentSnapshot userDoc;
-  late String pdfLink;
+  String pdfLink="";
   String? userUid;
   bool likedFlag=false;
 
@@ -86,9 +87,13 @@ class _NoteViewerState extends State<NoteViewer> {
                 const SizedBox(
                   height: 20,
                 ),
+                //showing pdf preview using SyncFusion PDF Viewer
                 Container(
                   height: 500,
                   color: Colors.amberAccent,
+                  child: pdfLink.isNotEmpty ? SfPdfViewer.network(
+                    pdfLink,
+                  ): Container(),
                 ),
                 const SizedBox(
                   height: 20,

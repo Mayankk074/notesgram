@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:notesgram/models/userUid.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class NotesTile extends StatefulWidget {
   NotesTile({super.key, this.pdfLink, this.name, this.userName, this.userDP,this.course,this.subject, this.userUid, this.description, required this.likedFlag, required this.likesCount, this.currUserDoc});
@@ -26,13 +25,6 @@ class NotesTile extends StatefulWidget {
 }
 
 class _NotesTileState extends State<NotesTile> {
-  Future<void> downloadFile() async {
-    // launching the pdfLink and it will automatically start downloading
-    final Uri url = Uri.parse(widget.pdfLink!);
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +98,9 @@ class _NotesTileState extends State<NotesTile> {
                                                   'description': widget.description,
                                                 });
                             //updating the value with newer one
-                            widget.likesCount=result as int?;
+                            if(result != null){
+                              widget.likesCount=result as int? ;
+                            }
                           },
                           style: ButtonStyle(
                             foregroundColor: WidgetStateProperty.all<Color>(Colors.black),
