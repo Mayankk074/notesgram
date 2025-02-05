@@ -159,7 +159,8 @@ class _SignInState extends State<SignIn> {
                         String? gMail=user?.email;
                         String? name=user?.displayName;
                         String? photoUrl=user?.photoURL;
-                        await DatabaseService(uid: user?.uid).updateUserData(name!, gMail!, "",photoUrl,0,[],0,HashSet<String>());
+                        await DatabaseService(uid: user?.uid).updateUserData(name!, gMail!, "",photoUrl,'Enter college name',
+                            'Enter course','Enter class','Enter bio',0,[],0,HashSet<String>());
                       }
                       if (context.mounted) Navigator.of(context).pop();
                     }

@@ -20,13 +20,17 @@ class DatabaseService{
 
 
   //upload the data of user in database
-  Future updateUserData(String username, String email, String password, String? downloadUrl, int followers,List<String> following, int notesUploaded, HashSet<String> liked) async {
+  Future updateUserData(String username, String email, String password, String? downloadUrl,String college, String course, String className, String bio,int followers,List<String> following, int notesUploaded, HashSet<String> liked) async {
 
     return await _userCollection.doc(uid).set({
       'username': username,
       'email': email,
       'password': password,
       'profilePic': downloadUrl,
+      'college': college,
+      'course': course,
+      'class': className,
+      'bio': bio,
       'followers': followers,
       'following': following,
       'notesUploaded': notesUploaded,

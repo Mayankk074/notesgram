@@ -125,14 +125,20 @@ class _UserProfileState extends State<UserProfile> {
                       //increase the no. of followers of another user
                       await DatabaseService(uid: data['userUid'] ).updateUserData(
                           userSnap?['username'], userSnap?['email'], userSnap?['password'],
-                          userSnap?['profilePic'], userSnap?['followers']+1, followingList, userSnap?['notesUploaded'],HashSet<String>.from(userSnap?['liked']));
+                          userSnap?['profilePic'],userSnap?['college'],
+                          userSnap?['course'],
+                          userSnap?['class'],
+                          userSnap?['bio'], userSnap?['followers']+1, followingList, userSnap?['notesUploaded'],HashSet<String>.from(userSnap?['liked']));
                       //adding the other user uid in the following
                       await DatabaseService(uid: userUid?.uid ).startFollowing(data['userUid']);
                     }else{
                       //decrease the no. of followers of another user
                       await DatabaseService(uid: data['userUid'] ).updateUserData(
                           userSnap?['username'], userSnap?['email'], userSnap?['password'],
-                          userSnap?['profilePic'], userSnap?['followers']-1, followingList, userSnap?['notesUploaded'],HashSet<String>.from(userSnap?['liked']),);
+                          userSnap?['profilePic'],userSnap?['college'],
+                        userSnap?['course'],
+                        userSnap?['class'],
+                        userSnap?['bio'], userSnap?['followers']-1, followingList, userSnap?['notesUploaded'],HashSet<String>.from(userSnap?['liked']),);
                       //removing the other userUid in the following
                       await DatabaseService(uid: userUid?.uid ).stopFollowing(data['userUid']);
                     }

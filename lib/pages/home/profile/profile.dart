@@ -52,7 +52,7 @@ class _ProfileState extends State<Profile> {
               //for keyboard padding
               padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
               child: SizedBox(
-                height: 300,
+                // height: 500,
                 child: SettingsForm(userDoc: userDoc,),
               ),
             );
@@ -61,170 +61,200 @@ class _ProfileState extends State<Profile> {
 
     return userDoc == null
         ? const LoadingShared()
-        : Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      TextButton.icon(
-                          onPressed: (){
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context){
-                                return AlertDialog(
-                                  title: const Text('Alert!!'),
-                                  content: const SingleChildScrollView(
-                                    child: Text(
-                                      'Do you really want to Sign Out?'
-                                    )
-                                  ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: const Text('Yes'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                        AuthService().signOut();
-                                      },
+        : SafeArea(
+          child: Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        TextButton.icon(
+                            onPressed: (){
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context){
+                                  return AlertDialog(
+                                    title: const Text('Alert!!'),
+                                    content: const SingleChildScrollView(
+                                      child: Text(
+                                        'Do you really want to Sign Out?'
+                                      )
                                     ),
-                                    TextButton(
-                                      child: const Text('No'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
-                              });
-                            //
-                          },
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('Yes'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          AuthService().signOut();
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: const Text('No'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                });
+                              //
+                            },
+                            label: const Icon(
+                              Icons.logout,
+                              size: 30.0,
+                              color: Colors.black,
+                            ),
+                        ),
+                        const SizedBox(width: 190.0,),
+                        TextButton.icon(
+                          onPressed: () => _showSettingsPanel(),
                           label: const Icon(
-                            Icons.logout,
+                            Icons.settings,
                             size: 30.0,
                             color: Colors.black,
                           ),
-                      ),
-                      const SizedBox(width: 190.0,),
-                      TextButton.icon(
-                        onPressed: () => _showSettingsPanel(),
-                        label: const Icon(
-                          Icons.settings,
-                          size: 30.0,
-                          color: Colors.black,
                         ),
+                      ],
+                    ),
+                    CupertinoButton(
+                      onPressed: () async {
+                        // picking image from gallery
+                        XFile? selectedImage = await ImagePicker()
+                            .pickImage(source: ImageSource.gallery);
+                
+                        if (selectedImage != null) {
+                          //converting into File
+                          File convertedImage = File(selectedImage.path);
+                
+                          //uploading image with uid
+                          String downloadUrl = await StorageServices(uid: user.uid)
+                              .uploadImage(convertedImage);
+                          //updating the profilePic url
+                          DatabaseService(uid: user.uid).updateUserData(
+                            userDoc['username'],
+                            userDoc['email'],
+                            userDoc['password'],
+                            downloadUrl,
+                            userDoc['college'],
+                            userDoc['course'],
+                            userDoc['class'],
+                            userDoc['bio'],
+                            userDoc['followers'],
+                            List<String>.from(userDoc['following']),
+                            userDoc['notesUploaded'],
+                            HashSet<String>.from(userDoc['liked']),
+                          );
+                
+                          log("image selected!");
+                        } else {
+                          log("image not selected");
+                        }
+                      },
+                      padding: EdgeInsets.zero,
+                      child: CircleAvatar(
+                        radius: 70.0,
+                        // Getting the profile pic from the database
+                        //if there is no dp then dont show image
+                        backgroundImage: userDoc['profilePic'] != 'No DP'
+                            ? NetworkImage(userDoc['profilePic'])
+                            : null,
+                        backgroundColor: Colors.purple[100],
                       ),
-                    ],
-                  ),
-                  CupertinoButton(
-                    onPressed: () async {
-                      // picking image from gallery
-                      XFile? selectedImage = await ImagePicker()
-                          .pickImage(source: ImageSource.gallery);
-              
-                      if (selectedImage != null) {
-                        //converting into File
-                        File convertedImage = File(selectedImage.path);
-              
-                        //uploading image with uid
-                        String downloadUrl = await StorageServices(uid: user.uid)
-                            .uploadImage(convertedImage);
-                        //updating the profilePic url
-                        DatabaseService(uid: user.uid).updateUserData(
-                          userDoc['username'],
-                          userDoc['email'],
-                          userDoc['password'],
-                          downloadUrl,
-                          userDoc['followers'],
-                          List<String>.from(userDoc['following']),
-                          userDoc['notesUploaded'],
-                          HashSet<String>.from(userDoc['liked']),
-                        );
-              
-                        log("image selected!");
-                      } else {
-                        log("image not selected");
-                      }
-                    },
-                    padding: EdgeInsets.zero,
-                    child: CircleAvatar(
-                      radius: 70.0,
-                      // Getting the profile pic from the database
-                      //if there is no dp then dont show image
-                      backgroundImage: userDoc['profilePic'] != 'No DP'
-                          ? NetworkImage(userDoc['profilePic'])
-                          : null,
-                      backgroundColor: Colors.purple[100],
                     ),
-                  ),
-                  const SizedBox(
-                    height: 20.0,
-                  ),
-                  Text(
-                    userDoc['username'],
-                    style: const TextStyle(
-                      fontSize: 25.0,
-                      letterSpacing: 1.0,
+                    const SizedBox(
+                      height: 20.0,
                     ),
-                  ),
-                  Text(
-                    userDoc['email'],
-                    style: const TextStyle(
-                      fontSize: 16.0,
-                      letterSpacing: 1.0,
-                    ),
-                  ),
-                  const SizedBox(height: 20.0,),
-                  Row(
-                    children: [
-                      const SizedBox(width: 70,),
-                      Text(
-                        '${userDoc['followers']}',
-                        style: const TextStyle(
-                          fontSize: 40,
-                        ),
+                    Text(
+                      userDoc['username'],
+                      style: const TextStyle(
+                        fontSize: 25.0,
+                        letterSpacing: 1.0,
                       ),
-                      const SizedBox(width: 140,),
-                      Text(
-                        '${userDoc['following'].length}',
-                        style: const TextStyle(
-                          fontSize: 40,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Row(
-                    children: [
-                      SizedBox(width: 40,),
-                      Text("Followers"),
-                      SizedBox(width: 110,),
-                      Text("Following")
-                    ],
-                  ),
-                  const SizedBox(height: 20.0,),
-                  Text(
-                    '${userDoc['notesUploaded']}',
-                    style: const TextStyle(
-                      fontSize: 40.0,
                     ),
-                  ),
-                  const Text("PDFs Uploaded"),
-                  const SizedBox(height: 50,),
-                  ElevatedButton(
-                    onPressed:() => _showUploadPanel(),
-                    style: buttonStyleSignUp,
-                    child: const Text(
-                      'Upload',
-                      style: TextStyle(
+                    Text(
+                      userDoc['college'],
+                      style: const TextStyle(
                         fontSize: 16.0,
+                        letterSpacing: 1.0,
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 10.0,),
+                    Text(
+                      userDoc['course'],
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        letterSpacing: 1.0,
+                      ),
+                    ),
+                    const SizedBox(height: 10.0,),
+                    Text(
+                      userDoc['class'],
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        letterSpacing: 1.0,
+                      ),
+                    ),
+                    const SizedBox(height: 10.0,),
+                    Text(
+                      userDoc['bio'],
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        letterSpacing: 1.0,
+                      ),
+                    ),
+                    const SizedBox(height: 20.0,),
+                    Row(
+                      children: [
+                        const SizedBox(width: 70,),
+                        Text(
+                          '${userDoc['followers']}',
+                          style: const TextStyle(
+                            fontSize: 40,
+                          ),
+                        ),
+                        const SizedBox(width: 140,),
+                        Text(
+                          '${userDoc['following'].length}',
+                          style: const TextStyle(
+                            fontSize: 40,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Row(
+                      children: [
+                        SizedBox(width: 40,),
+                        Text("Followers"),
+                        SizedBox(width: 110,),
+                        Text("Following")
+                      ],
+                    ),
+                    const SizedBox(height: 20.0,),
+                    Text(
+                      '${userDoc['notesUploaded']}',
+                      style: const TextStyle(
+                        fontSize: 40.0,
+                      ),
+                    ),
+                    const Text("PDFs Uploaded"),
+                    const SizedBox(height: 50,),
+                    ElevatedButton(
+                      onPressed:() => _showUploadPanel(),
+                      style: buttonStyleSignUp,
+                      child: const Text(
+                        'Upload',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          );
+        );
   }
 }

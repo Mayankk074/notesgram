@@ -125,7 +125,8 @@ class _SignUpState extends State<SignUp> {
                         });
                       }
                       else{
-                        await DatabaseService(uid: result.uid).updateUserData(username!, email!, password!,'No DP',0,[],0,HashSet<String>());
+                        await DatabaseService(uid: result.uid).updateUserData(username!, email!, password!,'No DP','Enter college name',
+                            'Enter course','Enter class','Enter bio',0,[],0,HashSet<String>());
                         if (context.mounted) Navigator.of(context).pop();
                       }
                     }
@@ -175,7 +176,8 @@ class _SignUpState extends State<SignUp> {
                         String? gMail=user?.email;
                         String? name=user?.displayName;
                         String? photoUrl=user?.photoURL;
-                        await DatabaseService(uid: user?.uid).updateUserData(name!, gMail!, "",photoUrl,0,[],0, HashSet<String>());
+                        await DatabaseService(uid: user?.uid).updateUserData(name!, gMail!, "",photoUrl,'Enter college name',
+                            'Enter course','Enter class','Enter bio',0,[],0, HashSet<String>());
                       }
                       if (context.mounted) Navigator.of(context).pop();
                     }
