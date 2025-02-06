@@ -63,8 +63,8 @@ class _ProfileState extends State<Profile> {
         ? const LoadingShared()
         : SafeArea(
           child: Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+              // alignment: Alignment.center,
+              padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0.0),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -119,91 +119,103 @@ class _ProfileState extends State<Profile> {
                         ),
                       ],
                     ),
-                    CupertinoButton(
-                      onPressed: () async {
-                        // picking image from gallery
-                        XFile? selectedImage = await ImagePicker()
-                            .pickImage(source: ImageSource.gallery);
-                
-                        if (selectedImage != null) {
-                          //converting into File
-                          File convertedImage = File(selectedImage.path);
-                
-                          //uploading image with uid
-                          String downloadUrl = await StorageServices(uid: user.uid)
-                              .uploadImage(convertedImage);
-                          //updating the profilePic url
-                          DatabaseService(uid: user.uid).updateUserData(
-                            userDoc['username'],
-                            userDoc['email'],
-                            userDoc['password'],
-                            downloadUrl,
-                            userDoc['college'],
-                            userDoc['course'],
-                            userDoc['class'],
-                            userDoc['bio'],
-                            userDoc['followers'],
-                            List<String>.from(userDoc['following']),
-                            userDoc['notesUploaded'],
-                            HashSet<String>.from(userDoc['liked']),
-                          );
-                
-                          log("image selected!");
-                        } else {
-                          log("image not selected");
-                        }
-                      },
-                      padding: EdgeInsets.zero,
-                      child: CircleAvatar(
-                        radius: 70.0,
-                        // Getting the profile pic from the database
-                        //if there is no dp then dont show image
-                        backgroundImage: userDoc['profilePic'] != 'No DP'
-                            ? NetworkImage(userDoc['profilePic'])
-                            : null,
-                        backgroundColor: Colors.purple[100],
-                      ),
+                    const SizedBox(
+                      height: 40.0,
+                    ),
+                    Row(
+                      children: [
+                        CupertinoButton(
+                          onPressed: () async {
+                            // picking image from gallery
+                            XFile? selectedImage = await ImagePicker()
+                                .pickImage(source: ImageSource.gallery);
+
+                            if (selectedImage != null) {
+                              //converting into File
+                              File convertedImage = File(selectedImage.path);
+
+                              //uploading image with uid
+                              String downloadUrl = await StorageServices(uid: user.uid)
+                                  .uploadImage(convertedImage);
+                              //updating the profilePic url
+                              DatabaseService(uid: user.uid).updateUserData(
+                                userDoc['username'],
+                                userDoc['email'],
+                                userDoc['password'],
+                                downloadUrl,
+                                userDoc['college'],
+                                userDoc['course'],
+                                userDoc['class'],
+                                userDoc['bio'],
+                                userDoc['followers'],
+                                List<String>.from(userDoc['following']),
+                                userDoc['notesUploaded'],
+                                HashSet<String>.from(userDoc['liked']),
+                              );
+
+                              log("image selected!");
+                            } else {
+                              log("image not selected");
+                            }
+                          },
+                          padding: EdgeInsets.zero,
+                          child: CircleAvatar(
+                            radius: 35.0,
+                            // Getting the profile pic from the database
+                            //if there is no dp then dont show image
+                            backgroundImage: userDoc['profilePic'] != 'No DP'
+                                ? NetworkImage(userDoc['profilePic'])
+                                : null,
+                            backgroundColor: Colors.purple[100],
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 20.0,
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                userDoc['username'],
+                                style: const TextStyle(
+                                  fontSize: 12.0,
+                                  letterSpacing: 1.0,
+                                ),
+                              ),
+                              Text(
+                                userDoc['college'],
+                                style: const TextStyle(
+                                  fontSize: 16.0,
+                                  letterSpacing: 1.0,
+                                ),
+                              ),
+                              Text(
+                                '${userDoc['course']} ${userDoc['class']}',
+                                style: const TextStyle(
+                                  fontSize: 16.0,
+                                  letterSpacing: 1.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(
                       height: 20.0,
                     ),
-                    Text(
-                      userDoc['username'],
-                      style: const TextStyle(
-                        fontSize: 25.0,
-                        letterSpacing: 1.0,
-                      ),
-                    ),
-                    Text(
-                      userDoc['college'],
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        letterSpacing: 1.0,
-                      ),
-                    ),
-                    const SizedBox(height: 10.0,),
-                    Text(
-                      userDoc['course'],
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        letterSpacing: 1.0,
-                      ),
-                    ),
-                    const SizedBox(height: 10.0,),
-                    Text(
-                      userDoc['class'],
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        letterSpacing: 1.0,
-                      ),
-                    ),
-                    const SizedBox(height: 10.0,),
-                    Text(
-                      userDoc['bio'],
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        letterSpacing: 1.0,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          userDoc['bio'],
+                          style: const TextStyle(
+                            fontSize: 16.0,
+                            letterSpacing: 1.0,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 20.0,),
                     Row(
@@ -240,7 +252,7 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                     const Text("PDFs Uploaded"),
-                    const SizedBox(height: 50,),
+                    const SizedBox(height: 180,),
                     ElevatedButton(
                       onPressed:() => _showUploadPanel(),
                       style: buttonStyleSignUp,
