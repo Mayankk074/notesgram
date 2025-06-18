@@ -112,7 +112,7 @@ class _ProfileState extends State<Profile> {
                         TextButton.icon(
                           onPressed: () => _showSettingsPanel(),
                           label: const Icon(
-                            Icons.settings,
+                            Icons.menu_rounded,
                             size: 30.0,
                             color: Colors.black,
                           ),
@@ -120,7 +120,7 @@ class _ProfileState extends State<Profile> {
                       ],
                     ),
                     const SizedBox(
-                      height: 40.0,
+                      height: 30.0,
                     ),
                     Row(
                       children: [
@@ -218,41 +218,68 @@ class _ProfileState extends State<Profile> {
                       ],
                     ),
                     const SizedBox(height: 20.0,),
+                    const Divider(),
                     Row(
                       children: [
-                        const SizedBox(width: 70,),
+                        const SizedBox(width: 30,),
                         Text(
                           '${userDoc['followers']}',
                           style: const TextStyle(
                             fontSize: 40,
                           ),
                         ),
-                        const SizedBox(width: 140,),
+                        const SizedBox(width: 80,),
+                        const Text(
+                          "Followers",
+                          style: TextStyle(
+                            fontSize: 20,
+                            letterSpacing: 1
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 30.0,),
+                    Row(
+                      children: [
+                        const SizedBox(width: 30,),
                         Text(
                           '${userDoc['following'].length}',
                           style: const TextStyle(
                             fontSize: 40,
                           ),
                         ),
+                        const SizedBox(width: 80,),
+                        const Text(
+                          "Following",
+                          style: TextStyle(
+                              fontSize: 20,
+                              letterSpacing: 1
+                          ),
+                        )
                       ],
                     ),
-                    const Row(
+                    const SizedBox(height: 30.0,),
+                    Row(
                       children: [
-                        SizedBox(width: 40,),
-                        Text("Followers"),
-                        SizedBox(width: 110,),
-                        Text("Following")
+                        const SizedBox(width: 30,),
+                        Text(
+                          '${userDoc['notesUploaded']}',
+                          style: const TextStyle(
+                            fontSize: 40.0,
+                          ),
+                        ),
+                        const SizedBox(width: 80,),
+                        const Text(
+                          "PDFs Uploaded",
+                          style: TextStyle(
+                              fontSize: 20,
+                              letterSpacing: 1
+                          ),
+                        ),
                       ],
                     ),
-                    const SizedBox(height: 20.0,),
-                    Text(
-                      '${userDoc['notesUploaded']}',
-                      style: const TextStyle(
-                        fontSize: 40.0,
-                      ),
-                    ),
-                    const Text("PDFs Uploaded"),
-                    const SizedBox(height: 180,),
+                    const Divider(),
+                    const SizedBox(height: 50,),
                     ElevatedButton(
                       onPressed:() => _showUploadPanel(),
                       style: buttonStyleSignUp,
