@@ -43,9 +43,14 @@ class _SettingsFormState extends State<SettingsForm> {
 
 
     final user=Provider.of<UserUid?>(context);
+    double screenWidth=MediaQuery.of(context).size.width;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8.0,80,8,50),
+      padding: EdgeInsets.fromLTRB(
+          screenWidth*0.045,
+          screenWidth*0.2,
+          screenWidth*0.045,
+          screenWidth*0.065),
       child: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -57,28 +62,28 @@ class _SettingsFormState extends State<SettingsForm> {
                 validator: (val) => val!.isEmpty ? "Enter username" : null,
                 onChanged: (val) => setState(()=> currentUsername=val),
               ),
-              const SizedBox(height: 60.0,),
+              SizedBox(height: screenWidth*0.06,),
               TextFormField(
                 initialValue: currentCollege,
                 decoration: textInputDecoration,
                 validator: (val) => val!.isEmpty ? "Enter college" : null,
                 onChanged: (val) => setState(()=> currentCollege=val),
               ),
-              const SizedBox(height: 60.0,),
+              SizedBox(height: screenWidth*0.06,),
               TextFormField(
                 initialValue: currentCourse,
                 decoration: textInputDecoration,
                 validator: (val) => val!.isEmpty ? "Enter course" : null,
                 onChanged: (val) => setState(()=> currentCourse=val),
               ),
-              const SizedBox(height: 60.0,),
+              SizedBox(height: screenWidth*0.06,),
               TextFormField(
                 initialValue: currentClass,
                 decoration: textInputDecoration,
                 validator: (val) => val!.isEmpty ? "Enter class" : null,
                 onChanged: (val) => setState(()=> currentClass=val),
               ),
-              const SizedBox(height: 60.0,),
+              SizedBox(height: screenWidth*0.06,),
               TextFormField(
                 initialValue: currentBio,
                 decoration: textInputDecoration,
@@ -87,7 +92,7 @@ class _SettingsFormState extends State<SettingsForm> {
                 validator: (val) => val!.isEmpty ? "Enter bio" : null,
                 onChanged: (val) => setState(()=> currentBio=val),
               ),
-              const SizedBox(height: 60.0,),
+              SizedBox(height: screenWidth*0.06,),
               ElevatedButton(
                 onPressed: () async {
                   if(_formKey.currentState!.validate()){
@@ -116,10 +121,10 @@ class _SettingsFormState extends State<SettingsForm> {
                   }
                 },
                 style: buttonStyleSignUp,
-                child: const Text(
+                child: Text(
                   'Update',
                   style: TextStyle(
-                    fontSize: 16.0,
+                    fontSize: screenWidth*0.055,
                   ),
                 ),
               ),

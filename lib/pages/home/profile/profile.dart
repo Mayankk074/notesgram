@@ -52,19 +52,21 @@ class _ProfileState extends State<Profile> {
               //for keyboard padding
               padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
               child: SizedBox(
-                // height: 500,
                 child: SettingsForm(userDoc: userDoc,),
               ),
             );
           });
     }
 
+    double screenWidth=MediaQuery.of(context).size.width;
+
     return userDoc == null
         ? const LoadingShared()
         : SafeArea(
           child: Container(
-              // alignment: Alignment.center,
-              padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0.0),
+              padding: EdgeInsets.only(left: screenWidth*0.045,
+                  top:screenWidth*0.035,
+                  right: screenWidth*0.045),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -102,25 +104,25 @@ class _ProfileState extends State<Profile> {
                                 });
                               //
                             },
-                            label: const Icon(
+                            label: Icon(
                               Icons.logout,
-                              size: 30.0,
+                              size: screenWidth*0.08,
                               color: Colors.black,
                             ),
                         ),
-                        const SizedBox(width: 190.0,),
+                        const Spacer(),
                         TextButton.icon(
                           onPressed: () => _showSettingsPanel(),
-                          label: const Icon(
+                          label: Icon(
                             Icons.menu_rounded,
-                            size: 30.0,
+                            size: screenWidth*0.08,
                             color: Colors.black,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 30.0,
+                    SizedBox(
+                      height: screenWidth*0.08,
                     ),
                     Row(
                       children: [
@@ -160,7 +162,7 @@ class _ProfileState extends State<Profile> {
                           },
                           padding: EdgeInsets.zero,
                           child: CircleAvatar(
-                            radius: 35.0,
+                            radius: screenWidth*0.12,
                             // Getting the profile pic from the database
                             //if there is no dp then dont show image
                             backgroundImage: userDoc['profilePic'] != 'No DP'
@@ -169,8 +171,8 @@ class _ProfileState extends State<Profile> {
                             backgroundColor: Colors.purple[100],
                           ),
                         ),
-                        const SizedBox(
-                          width: 20.0,
+                        SizedBox(
+                          width: screenWidth*0.07,
                         ),
                         Expanded(
                           child: Column(
@@ -178,22 +180,23 @@ class _ProfileState extends State<Profile> {
                             children: [
                               Text(
                                 userDoc['username'],
-                                style: const TextStyle(
-                                  fontSize: 12.0,
+                                style: TextStyle(
+                                  fontSize: screenWidth*0.045,
                                   letterSpacing: 1.0,
+                                  fontWeight: FontWeight.bold
                                 ),
                               ),
                               Text(
                                 userDoc['college'],
-                                style: const TextStyle(
-                                  fontSize: 16.0,
+                                style: TextStyle(
+                                  fontSize: screenWidth*0.045,
                                   letterSpacing: 1.0,
                                 ),
                               ),
                               Text(
                                 '${userDoc['course']} ${userDoc['class']}',
-                                style: const TextStyle(
-                                  fontSize: 16.0,
+                                style: TextStyle(
+                                  fontSize: screenWidth*0.045,
                                   letterSpacing: 1.0,
                                 ),
                               ),
@@ -202,91 +205,93 @@ class _ProfileState extends State<Profile> {
                         ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 20.0,
+                    SizedBox(
+                      height: screenWidth*0.07,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
                           userDoc['bio'],
-                          style: const TextStyle(
-                            fontSize: 16.0,
+                          style: TextStyle(
+                            fontSize: screenWidth*0.045,
                             letterSpacing: 1.0,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20.0,),
+                    SizedBox(height: screenWidth*0.02),
                     const Divider(),
                     Row(
                       children: [
-                        const SizedBox(width: 30,),
+                        SizedBox(width: screenWidth*0.05,),
                         Text(
                           '${userDoc['followers']}',
-                          style: const TextStyle(
-                            fontSize: 40,
+                          style: TextStyle(
+                            fontSize: screenWidth*0.1,
                           ),
                         ),
-                        const SizedBox(width: 80,),
-                        const Text(
+                        SizedBox(width: screenWidth*0.2,),
+                        Text(
                           "Followers",
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: screenWidth*0.065,
                             letterSpacing: 1
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 30.0,),
+                    SizedBox(height: screenWidth*0.01,),
                     Row(
                       children: [
-                        const SizedBox(width: 30,),
+                        SizedBox(width: screenWidth*0.05,),
                         Text(
                           '${userDoc['following'].length}',
-                          style: const TextStyle(
-                            fontSize: 40,
+                          style: TextStyle(
+                            fontSize: screenWidth*0.1,
                           ),
                         ),
-                        const SizedBox(width: 80,),
-                        const Text(
+                        SizedBox(width: screenWidth*0.2,),
+                        Text(
                           "Following",
                           style: TextStyle(
-                              fontSize: 20,
+                              fontSize: screenWidth*0.065,
                               letterSpacing: 1
                           ),
                         )
                       ],
                     ),
-                    const SizedBox(height: 30.0,),
+                    SizedBox(height: screenWidth*0.01,),
                     Row(
                       children: [
-                        const SizedBox(width: 30,),
+                        SizedBox(width: screenWidth*0.05,),
                         Text(
                           '${userDoc['notesUploaded']}',
-                          style: const TextStyle(
-                            fontSize: 40.0,
+                          style: TextStyle(
+                            fontSize:screenWidth*0.1,
                           ),
                         ),
-                        const SizedBox(width: 80,),
-                        const Text(
-                          "PDFs Uploaded",
-                          style: TextStyle(
-                              fontSize: 20,
-                              letterSpacing: 1
+                        SizedBox(width: screenWidth*0.2,),
+                        Flexible(
+                          child: Text(
+                            "PDFs Uploaded",
+                            style: TextStyle(
+                                fontSize: screenWidth*0.065,
+                                letterSpacing: 1
+                            ),
                           ),
                         ),
                       ],
                     ),
                     const Divider(),
-                    const SizedBox(height: 50,),
+                    SizedBox(height: screenWidth*0.2,),
                     ElevatedButton(
                       onPressed:() => _showUploadPanel(),
                       style: buttonStyleSignUp,
-                      child: const Text(
+                      child: Text(
                         'Upload',
                         style: TextStyle(
-                          fontSize: 16.0,
+                          fontSize: screenWidth*0.055,
                         ),
                       ),
                     ),

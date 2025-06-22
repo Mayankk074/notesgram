@@ -43,7 +43,11 @@ class _SignInState extends State<SignIn> {
       ),
       backgroundColor: Colors.purple[50],
       body: Container(
-        padding: const EdgeInsets.fromLTRB(20.0, 80.0, 20.0, 0),
+        padding:  EdgeInsets.only(
+          top: MediaQuery.of(context).size.height*0.1,
+          left: 20.0,
+          right: 20.0,
+        ),
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(

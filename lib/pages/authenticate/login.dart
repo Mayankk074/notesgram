@@ -17,7 +17,7 @@ class Login extends StatelessWidget {
             )
           ),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(0.0, 530.0, 0.0, 0.0),
+            padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.7),
             child: Column(
               children: [
                 Row(

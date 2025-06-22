@@ -51,24 +51,22 @@ class _SignUpState extends State<SignUp> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Create Account',
-                      style: TextStyle(
-                        fontSize: 33.0,
-                        letterSpacing: 2.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )
-                  ],
+                Center(
+                  child: Text(
+                    'Create Account',
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.width * 0.08,
+                      letterSpacing: 2.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 15.0,),
-                const Text(
+                Text(
                   'Just a few quick things to get started:',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize:20.0,
+                    fontSize:MediaQuery.of(context).size.width * 0.05,
                   ),
                 ),
                 const SizedBox(height: 20.0,),
