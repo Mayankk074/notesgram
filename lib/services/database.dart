@@ -57,9 +57,14 @@ class DatabaseService{
       'email': snapshot['email'],
       'password': snapshot['password'],
       'profilePic': snapshot['profilePic'],
+      'college': snapshot['college'],
+      'course': snapshot['course'],
+      'class': snapshot['class'],
+      'bio': snapshot['bio'],
       'followers': snapshot['followers'],
       'following': followingList,
       'notesUploaded': snapshot['notesUploaded'],
+      'liked': snapshot['liked']
     }
     );
   }
@@ -83,9 +88,14 @@ class DatabaseService{
       'email': snapshot['email'],
       'password': snapshot['password'],
       'profilePic': snapshot['profilePic'],
+      'college': snapshot['college'],
+      'course': snapshot['course'],
+      'class': snapshot['class'],
+      'bio': snapshot['bio'],
       'followers': snapshot['followers'],
       'following': followingList,
       'notesUploaded': snapshot['notesUploaded'],
+      'liked': snapshot['liked']
     }
     );
   }
