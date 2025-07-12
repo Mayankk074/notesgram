@@ -119,8 +119,8 @@ class _AllNotesState extends State<AllNotes> {
   @override
   Widget build(BuildContext context){
 
-    final userDoc=Provider.of<DocumentSnapshot>(context);
-    HashSet<String> liked=HashSet<String>.from(userDoc['liked']);
+    final userDoc=Provider.of<DocumentSnapshot?>(context);
+    HashSet<String> liked=HashSet<String>.from(userDoc?['liked']);
 
     return Column(
       children: [
