@@ -42,6 +42,8 @@ class _UserProfileState extends State<UserProfile> {
     data=ModalRoute.of(context)!.settings.arguments as Map;
 
     userUid=Provider.of<UserUid>(context);
+    double screenWidth=MediaQuery.of(context).size.width;
+    double screenHeight=MediaQuery.of(context).size.height;
 
     return FutureBuilder(
       future: getUserProfile(),
@@ -61,62 +63,131 @@ class _UserProfileState extends State<UserProfile> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CircleAvatar(
-                  radius: 70.0,
-                  backgroundImage: userSnap?['profilePic'] != 'No DP' ?
-                  NetworkImage(userSnap?['profilePic']):
-                  null,
-                ),
-                Text(
-                  userSnap?['username'],
-                  style: const TextStyle(
-                    fontSize: 25.0,
-                    letterSpacing: 1.0,
-                  ),
-                ),
-                Text(
-                  userSnap?['email'],
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    letterSpacing: 1.0,
-                  ),
-                ),
-                const SizedBox(height: 20.0,),
                 Row(
                   children: [
-                    const SizedBox(width: 70,),
+                    CircleAvatar(
+                      radius: screenWidth*0.12,
+                      backgroundImage: userSnap?['profilePic'] != 'No DP' ?
+                      NetworkImage(userSnap?['profilePic']):
+                      null,
+                      backgroundColor: Colors.purple[100],
+                      child: userSnap?['profilePic'] != 'No DP' ?
+                        null : const Icon(Icons.person, size: 140),
+                    ),
+                    SizedBox(
+                      width: screenWidth*0.07,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            userSnap?['username'],
+                            style: TextStyle(
+                                fontSize: screenWidth*0.045,
+                                letterSpacing: 1.0,
+                                fontWeight: FontWeight.bold
+                            ),
+                          ),
+                          Text(
+                            userSnap?['college'],
+                            style: TextStyle(
+                              fontSize: screenWidth*0.045,
+                              letterSpacing: 1.0,
+                            ),
+                          ),
+                          Text(
+                            '${userSnap?['course']} ${userSnap?['class']}',
+                            style: TextStyle(
+                              fontSize: screenWidth*0.045,
+                              letterSpacing: 1.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: screenHeight*0.02,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      userSnap?['bio'],
+                      style: TextStyle(
+                        fontSize: screenWidth*0.045,
+                        letterSpacing: 1.0,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: screenHeight*0.1),
+                const Divider(),
+                Row(
+                  children: [
+                    SizedBox(width: screenWidth*0.05,),
                     Text(
                       '${userSnap?['followers']}',
-                      style: const TextStyle(
-                        fontSize: 40,
+                      style: TextStyle(
+                        fontSize: screenWidth*0.1,
                       ),
                     ),
-                    const SizedBox(width: 140,),
+                    SizedBox(width: screenWidth*0.2,),
+                    Text(
+                      "Followers",
+                      style: TextStyle(
+                          fontSize: screenWidth*0.065,
+                          letterSpacing: 1
+                      ),
+                    ),
+                  ],
+                ),//end
+                SizedBox(height: screenHeight*0.01,),
+                Row(
+                  children: [
+                    SizedBox(width: screenWidth*0.05,),
                     Text(
                       '${userSnap?['following'].length}',
-                      style: const TextStyle(
-                        fontSize: 40,
+                      style: TextStyle(
+                        fontSize: screenWidth*0.1,
+                      ),
+                    ),
+                    SizedBox(width: screenWidth*0.2,),
+                    Text(
+                      "Following",
+                      style: TextStyle(
+                          fontSize: screenWidth*0.065,
+                          letterSpacing: 1
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(height: screenHeight*0.01,),
+                Row(
+                  children: [
+                    SizedBox(width: screenWidth*0.05,),
+                    Text(
+                      '${userSnap?['notesUploaded']}',
+                      style: TextStyle(
+                        fontSize:screenWidth*0.1,
+                      ),
+                    ),
+                    SizedBox(width: screenWidth*0.2,),
+                    Flexible(
+                      child: Text(
+                        "PDFs Uploaded",
+                        style: TextStyle(
+                            fontSize: screenWidth*0.065,
+                            letterSpacing: 1
+                        ),
                       ),
                     ),
                   ],
                 ),
-                const Row(
-                  children: [
-                    SizedBox(width: 40,),
-                    Text("Followers"),
-                    SizedBox(width: 110,),
-                    Text("Following")
-                  ],
-                ),
-                const SizedBox(height: 20.0,),
-                Text(
-                  '${userSnap?['notesUploaded']}',
-                  style: const TextStyle(
-                    fontSize: 40.0,
-                  ),
-                ),
-                const Text("PDFs Uploaded"),
-                const SizedBox(height: 50,),
+                const Divider(),
+                SizedBox(height: screenHeight*0.1,),
                 ElevatedButton(
                   onPressed:()async{
                     setState(() => isFollow=!isFollow);
@@ -151,7 +222,7 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 50,),
+                SizedBox(height: screenHeight*0.03,),
                 ElevatedButton(
                   onPressed:(){
                     Navigator.pushNamed(context, '/otherUserFiles',arguments: {

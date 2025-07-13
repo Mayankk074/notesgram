@@ -59,13 +59,14 @@ class _ProfileState extends State<Profile> {
     }
 
     double screenWidth=MediaQuery.of(context).size.width;
+    double screenHeight=MediaQuery.of(context).size.height;
 
     return userDoc == null
         ? const LoadingShared()
         : SafeArea(
           child: Container(
               padding: EdgeInsets.only(left: screenWidth*0.045,
-                  top:screenWidth*0.035,
+                  top:screenHeight*0.01,
                   right: screenWidth*0.045),
               child: SingleChildScrollView(
                 child: Column(
@@ -122,7 +123,7 @@ class _ProfileState extends State<Profile> {
                       ],
                     ),
                     SizedBox(
-                      height: screenWidth*0.08,
+                      height: screenHeight*0.02,
                     ),
                     Row(
                       children: [
@@ -169,6 +170,7 @@ class _ProfileState extends State<Profile> {
                                 ? NetworkImage(userDoc['profilePic'])
                                 : null,
                             backgroundColor: Colors.purple[100],
+                            child: userDoc['profilePic'] != 'No DP' ? null : const Icon(Icons.person, size: 80),
                           ),
                         ),
                         SizedBox(
@@ -206,7 +208,7 @@ class _ProfileState extends State<Profile> {
                       ],
                     ),
                     SizedBox(
-                      height: screenWidth*0.07,
+                      height: screenHeight*0.02,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -220,7 +222,7 @@ class _ProfileState extends State<Profile> {
                         ),
                       ],
                     ),
-                    SizedBox(height: screenWidth*0.02),
+                    SizedBox(height: screenHeight*0.1),
                     const Divider(),
                     Row(
                       children: [
@@ -241,7 +243,7 @@ class _ProfileState extends State<Profile> {
                         ),
                       ],
                     ),
-                    SizedBox(height: screenWidth*0.01,),
+                    SizedBox(height: screenHeight*0.01,),
                     Row(
                       children: [
                         SizedBox(width: screenWidth*0.05,),
@@ -261,7 +263,7 @@ class _ProfileState extends State<Profile> {
                         )
                       ],
                     ),
-                    SizedBox(height: screenWidth*0.01,),
+                    SizedBox(height: screenHeight*0.01,),
                     Row(
                       children: [
                         SizedBox(width: screenWidth*0.05,),
@@ -284,7 +286,7 @@ class _ProfileState extends State<Profile> {
                       ],
                     ),
                     const Divider(),
-                    SizedBox(height: screenWidth*0.2,),
+                    SizedBox(height: screenHeight*0.15,),
                     ElevatedButton(
                       onPressed:() => _showUploadPanel(),
                       style: buttonStyleSignUp,

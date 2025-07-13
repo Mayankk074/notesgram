@@ -60,15 +60,18 @@ class _NotesTileState extends State<NotesTile> {
                           child: CircleAvatar(
                             //if there is no dp then dont show image
                             backgroundImage: widget.userDP !='No DP'? NetworkImage(
-                              widget.userDP!,
-                            ): null,
+                              widget.userDP!): null,
                             radius: 30.0,
+                            backgroundColor: Colors.purple[100],
+                            child: widget.userDP != 'No DP' ?
+                              null : const Icon(Icons.person,),
                           ),
                         ):CircleAvatar(
                           backgroundImage: widget.userDP !='No DP'? NetworkImage(
-                            widget.userDP!,
-                          ): null,
+                            widget.userDP!): null,
                           radius: 30.0,
+                          backgroundColor: Colors.purple[100],
+                          child: widget.userDP != 'No DP' ? null : const Icon(Icons.person),
                         ),
                         const SizedBox(height: 8), // Space between CircleAvatar and username
                         Text(
