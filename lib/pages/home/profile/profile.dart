@@ -170,6 +170,7 @@ class _ProfileState extends State<Profile> {
                                 ? NetworkImage(userDoc['profilePic'])
                                 : null,
                             backgroundColor: Colors.purple[100],
+                            //showing person Icon if there is no DP
                             child: userDoc['profilePic'] != 'No DP' ? null : const Icon(Icons.person, size: 80),
                           ),
                         ),

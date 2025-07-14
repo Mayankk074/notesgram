@@ -6,8 +6,9 @@ import 'package:notesgram/models/userUid.dart';
 import 'package:provider/provider.dart';
 
 class NotesTile extends StatefulWidget {
-  NotesTile({super.key, this.pdfLink, this.name, this.userName, this.userDP,this.course,this.subject, this.userUid, this.description, required this.likedFlag, required this.likesCount, this.currUserDoc});
+  NotesTile({super.key, this.pdfLink, this.name, this.userName, this.userDP,this.course,this.subject, this.userUid, this.description, required this.likedFlag, required this.likesCount, this.currUserDoc, this.refreshCallback});
 
+  final Function? refreshCallback;
   final String? pdfLink;
   final String? name;
   final String? userName;
@@ -52,10 +53,14 @@ class _NotesTileState extends State<NotesTile> {
                       children: [
                         flag? CupertinoButton(
                           padding: const EdgeInsets.only(left: 5),
-                          onPressed: (){
-                            Navigator.pushNamed(context, '/userProfile',arguments: {
+                          onPressed: () async {
+                            await Navigator.pushNamed(context, '/userProfile',arguments: {
                               'userUid': widget.userUid,
                             });
+                            // After returning from profile, refresh the list on Homescreen
+                            if (widget.refreshCallback != null) {
+                              widget.refreshCallback!();
+                            }
                           },
                           child: CircleAvatar(
                             //if there is no dp then dont show image

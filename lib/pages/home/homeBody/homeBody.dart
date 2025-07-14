@@ -23,6 +23,10 @@ class _HomeBodyState extends State<HomeBody> {
   List<String> followingList=[];
 
   Future followingNotes()async {
+
+    allNotes.clear(); // clear old notes
+    followingList.clear(); // clear old following
+
     DocumentSnapshot snap=await DatabaseService(uid: widget.user?.uid).getUserSnap();
 
     followingList=List<String>.from(snap['following']);
@@ -86,6 +90,7 @@ class _HomeBodyState extends State<HomeBody> {
             description: note.description,
             likedFlag: likedFlag,
             likesCount: note.likesCount,
+            refreshCallback: followingNotes, //sending call back function to refresh the screen after following/unfollowing
             );
           }
     ):const Center(

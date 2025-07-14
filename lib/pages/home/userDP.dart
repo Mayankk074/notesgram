@@ -31,9 +31,7 @@ class _UserProfileState extends State<UserProfile> {
     currentUserSnap= await DatabaseService(uid: userUid?.uid).getUserSnap();
     List<String> followingList=List<String>.from(currentUserSnap?['following']);
     //checking if user is already following that other user
-    if(followingList.contains(data['userUid'])){
-      isFollow=true;
-    }
+    isFollow=followingList.contains(data['userUid']);
   }
   @override
   Widget build(BuildContext context) {
@@ -190,9 +188,9 @@ class _UserProfileState extends State<UserProfile> {
                 SizedBox(height: screenHeight*0.1,),
                 ElevatedButton(
                   onPressed:()async{
-                    setState(() => isFollow=!isFollow);
+                    //Creating List from iterable
                     List<String> followingList=List<String>.from(userSnap?['following']);
-                    if(isFollow){
+                    if(!isFollow){
                       //increase the no. of followers of another user
                       await DatabaseService(uid: data['userUid'] ).updateUserData(
                           userSnap?['username'], userSnap?['email'], userSnap?['password'],
@@ -213,6 +211,14 @@ class _UserProfileState extends State<UserProfile> {
                       //removing the other userUid in the following
                       await DatabaseService(uid: userUid?.uid ).stopFollowing(data['userUid']);
                     }
+
+                    // re-fetch the latest snapshot and set isFollow again
+                    DocumentSnapshot updatedSnap = await DatabaseService(uid: userUid?.uid).getUserSnap();
+                    followingList = List<String>.from(updatedSnap['following']);
+
+                    setState(() {
+                      isFollow = followingList.contains(data['userUid']);
+                    });
                   },
                   style: buttonStyleSignUp,
                   child: Text(
