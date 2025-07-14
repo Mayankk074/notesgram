@@ -211,17 +211,12 @@ class _ProfileState extends State<Profile> {
                     SizedBox(
                       height: screenHeight*0.02,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          userDoc['bio'],
-                          style: TextStyle(
-                            fontSize: screenWidth*0.045,
-                            letterSpacing: 1.0,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      userDoc['bio'],
+                      style: TextStyle(
+                        fontSize: screenWidth*0.045,
+                        letterSpacing: 1.0,
+                      ),
                     ),
                     SizedBox(height: screenHeight*0.1),
                     const Divider(),

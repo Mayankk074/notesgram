@@ -109,17 +109,12 @@ class _UserProfileState extends State<UserProfile> {
                 SizedBox(
                   height: screenHeight*0.02,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      userSnap?['bio'],
-                      style: TextStyle(
-                        fontSize: screenWidth*0.045,
-                        letterSpacing: 1.0,
-                      ),
-                    ),
-                  ],
+                Text(
+                  userSnap?['bio'],
+                  style: TextStyle(
+                    fontSize: screenWidth*0.045,
+                    letterSpacing: 1.0,
+                  ),
                 ),
                 SizedBox(height: screenHeight*0.1),
                 const Divider(),
