@@ -29,7 +29,7 @@ class _ProfileState extends State<Profile> {
     final userDoc = Provider.of<DocumentSnapshot?>(context);
     final user = Provider.of<UserUid>(context);
 
-    void _showUploadPanel(){
+    void showUploadPanel(){
       showModalBottomSheet(context: context,
           isScrollControlled: true,
           builder: (context){
@@ -44,19 +44,6 @@ class _ProfileState extends State<Profile> {
       });
     }
 
-    void _showSettingsPanel(){
-      showModalBottomSheet(context: context,
-          isScrollControlled: true,
-          builder: (context){
-            return Padding(
-              //for keyboard padding
-              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: SizedBox(
-                child: SettingsForm(userDoc: userDoc,),
-              ),
-            );
-          });
-    }
 
     double screenWidth=MediaQuery.of(context).size.width;
     double screenHeight=MediaQuery.of(context).size.height;
@@ -73,47 +60,15 @@ class _ProfileState extends State<Profile> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         TextButton.icon(
-                            onPressed: (){
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context){
-                                  return AlertDialog(
-                                    title: const Text('Alert!!'),
-                                    content: const SingleChildScrollView(
-                                      child: Text(
-                                        'Do you really want to Sign Out?'
-                                      )
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        child: const Text('Yes'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                          AuthService().signOut();
-                                        },
-                                      ),
-                                      TextButton(
-                                        child: const Text('No'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                });
-                              //
-                            },
-                            label: Icon(
-                              Icons.logout,
-                              size: screenWidth*0.08,
-                              color: Colors.black,
-                            ),
-                        ),
-                        const Spacer(),
-                        TextButton.icon(
-                          onPressed: () => _showSettingsPanel(),
+                          onPressed: ()async {
+                            await Navigator.pushNamed(context, '/profileMenu', arguments: {
+                                'userDoc': userDoc
+                              });
+                            setState(() {});
+                          },
                           label: Icon(
                             Icons.menu_rounded,
                             size: screenWidth*0.08,
@@ -197,7 +152,7 @@ class _ProfileState extends State<Profile> {
                                 ),
                               ),
                               Text(
-                                '${userDoc['course']} ${userDoc['class']}',
+                                '${userDoc['course']} - ${userDoc['class']}',
                                 style: TextStyle(
                                   fontSize: screenWidth*0.045,
                                   letterSpacing: 1.0,
@@ -284,7 +239,7 @@ class _ProfileState extends State<Profile> {
                     const Divider(),
                     SizedBox(height: screenHeight*0.15,),
                     ElevatedButton(
-                      onPressed:() => _showUploadPanel(),
+                      onPressed:() => showUploadPanel(),
                       style: buttonStyleSignUp,
                       child: Text(
                         'Upload',
