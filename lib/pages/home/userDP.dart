@@ -70,7 +70,7 @@ class _UserProfileState extends State<UserProfile> {
                       null,
                       backgroundColor: Colors.purple[100],
                       child: userSnap?['profilePic'] != 'No DP' ?
-                        null : const Icon(Icons.person, size: 140),
+                        null : const Icon(Icons.person, size: 80),
                     ),
                     SizedBox(
                       width: screenWidth*0.07,

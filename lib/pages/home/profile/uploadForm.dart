@@ -124,9 +124,9 @@ class _UploadFormState extends State<UploadForm> {
                   String url =
                   await StorageServices(uid: user.uid).uploadPdf(pdf);
 
-                  //updating the database with pdf url
+                  //adding the Note in DB as a subCollection document
                   await DatabaseService(uid: user.uid)
-                      .updateNotesData(url, fileName, _currentCourse, _currentSubject, _currentDescription);
+                        .addNote(course: _currentCourse,description: _currentDescription,likes: 0, fileName: fileName, subject: _currentSubject, url: url);
 
                   //Increasing the no. of notesUploaded
                   await DatabaseService(uid: user.uid)

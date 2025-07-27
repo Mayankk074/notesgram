@@ -10,6 +10,7 @@ class Note{
   String? userDP;
   String? description;
   int? likesCount;
+  String? noteId;
 
-  Note({this.subject,this.userUid,this.userDP,this.name,this.course,this.userName,this.link, this.description, this.likesCount});
+  Note({this.subject,this.noteId, this.userUid,this.userDP,this.name,this.course,this.userName,this.link, this.description, this.likesCount});
 }

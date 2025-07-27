@@ -9,6 +9,8 @@ import 'package:notesgram/pages/home/upload/upload.dart';
 import 'package:notesgram/services/database.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/notesModel1.dart';
+
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -32,9 +34,9 @@ class _HomeState extends State<Home> {
         ),
         
         //listening to user notes
-        StreamProvider<NotesModel?>.value(
-          value: DatabaseService(uid: user.uid).notesData,
-          initialData: null,
+        StreamProvider<List<NotesModel1?>>.value(
+          value: DatabaseService(uid: user.uid).notesData1,
+          initialData: const [],
         ),
       ],
       child: Scaffold(

@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:notesgram/models/note.dart';
+import 'package:notesgram/models/notesModel1.dart';
 import 'package:notesgram/models/userUid.dart';
 import 'package:notesgram/pages/home/notesTile.dart';
 import 'package:notesgram/services/database.dart';
@@ -32,28 +33,24 @@ class _HomeBodyState extends State<HomeBody> {
     followingList=List<String>.from(snap['following']);
 
     for(String uid in followingList){
+      //userDetails of followed user.
       DocumentSnapshot userSnap=await DatabaseService(uid: uid).getUserSnap();
-      DocumentSnapshot notesSnap=await DatabaseService(uid: uid).getNotesSnap();
+      //getting all Notes of user from following list.
+      List<NotesModel1?> notesList =await DatabaseService(uid: uid).notesDataFromCol();
 
-      List<String> namesList=List<String>.from(notesSnap.get('names'));
-      List<String> notesList=List<String>.from(notesSnap.get('notes'));
-      List<String> courseList=List<String>.from(notesSnap.get('course'));
-      List<String> subjectList=List<String>.from(notesSnap.get('subject'));
-      List<String> listDescription=List<String>.from(notesSnap.get('description'));
-      List<int> listLikes=List<int>.from(notesSnap.get('likes'));
-
-      for(int i=0;i<namesList.length;i++){
+      for(int i=0;i<notesList.length;i++){
         //Creating Note objects from lists notes from snap
         allNotes.add(Note(
-          name: namesList[i],
-          link: notesList[i],
-          course: courseList[i],
-          subject: subjectList[i],
+          name: notesList[i]?.notesName,
+          link: notesList[i]?.notesLink,
+          course: notesList[i]?.notesCourse,
+          subject: notesList[i]?.notesSubject,
           userName:userSnap['username'],
           userDP: userSnap['profilePic'],
           userUid: uid,
-          description: listDescription[i],
-          likesCount: listLikes[i],
+          description: notesList[i]?.notesDescription,
+          likesCount: notesList[i]?.notesLikes,
+          noteId: notesList[i]?.uid
         ));
       }
     }
@@ -90,6 +87,7 @@ class _HomeBodyState extends State<HomeBody> {
             description: note.description,
             likedFlag: likedFlag,
             likesCount: note.likesCount,
+            id: note.noteId,
             refreshCallback: followingNotes, //sending call back function to refresh the screen after following/unfollowing
             );
           }

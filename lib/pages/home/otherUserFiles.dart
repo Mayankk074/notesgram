@@ -9,30 +9,25 @@ import 'package:notesgram/services/database.dart';
 import 'package:notesgram/shared/loadingShared.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/notesModel1.dart';
+
 class OtherUserFiles extends StatelessWidget {
   OtherUserFiles({super.key});
 
   Map data={};
   DocumentSnapshot? userSnap;
-  NotesModel? notesSnap;
+  List<NotesModel1?> notesSnap=[];
   DocumentSnapshot? currUserSnap;
 
-  List<String> notesList=[];
-  List<String> notesName=[];
-  List<String> notesCourse=[];
-  List<String> notesSubject=[];
-  List<String> notesDescription=[];
-  List<int> notesLikes=[];
-
   //for assigning the notes Lists
-  void getNotesData(){
-    notesList=notesSnap!.notesLink!;
-    notesName=notesSnap!.notesName!;
-    notesCourse=notesSnap!.notesCourse!;
-    notesSubject=notesSnap!.notesSubject!;
-    notesDescription=notesSnap!.notesDescription!;
-    notesLikes=notesSnap!.notesLikes!;
-  }
+  // void getNotesData(){
+  //   notesList=notesSnap!.notesLink!;
+  //   notesName=notesSnap!.notesName!;
+  //   notesCourse=notesSnap!.notesCourse!;
+  //   notesSubject=notesSnap!.notesSubject!;
+  //   notesDescription=notesSnap!.notesDescription!;
+  //   notesLikes=notesSnap!.notesLikes!;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -51,32 +46,35 @@ class OtherUserFiles extends StatelessWidget {
         HashSet<String> liked=HashSet<String>.from(currUserSnap?['liked']);
 
         //Stream for NotesSnap for otherUser for notes
-        return StreamBuilder<NotesModel?>(
-            stream: DatabaseService(uid:userSnap?.id).notesData,
+        return StreamBuilder<List<NotesModel1?>>(
+            stream: DatabaseService(uid:userSnap?.id).notesData1,
             builder: (context, snapshot) {
               if(snapshot.hasData){
-                notesSnap=snapshot.data;
-                getNotesData();
+                notesSnap=snapshot.data!;
+                print(notesSnap);
+                // getNotesData();
                 return Scaffold(
                   appBar: AppBar(
                     title: const Text('Uploaded Files'),
                   ),
                   body: ListView.builder(
-                    itemCount: notesList.length,
+                    itemCount: notesSnap.length,
                     itemBuilder: (context, index){
-                      bool likedFlag=liked.contains(notesList[index]);
+                      bool likedFlag=liked.contains(notesSnap[index]?.notesLink);
                       return NotesTile(
-                        pdfLink: notesList[index],
-                        name: notesName[index],
+                        pdfLink: notesSnap[index]?.notesLink,
+                        name: notesSnap[index]?.notesName,
                         userName: userSnap?['username'],
                         userDP: userSnap?['profilePic'],
-                        course: notesCourse[index],
-                        subject: notesSubject[index],
+                        course: notesSnap[index]?.notesCourse,
+                        subject: notesSnap[index]?.notesSubject,
                         userUid: userSnap?.id,
                         likedFlag: likedFlag,
-                        description: notesDescription[index],
-                        likesCount: notesLikes[index],
+                        description: notesSnap[index]?.notesDescription,
+                        likesCount: notesSnap[index]?.notesLikes,
                         currUserDoc: currUserSnap,
+                        //Note document id
+                        id: notesSnap[index]!.uid,
                       );
                     },
                   ),

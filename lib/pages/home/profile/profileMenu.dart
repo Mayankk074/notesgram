@@ -9,6 +9,7 @@ class Menu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map data=ModalRoute.of(context)?.settings.arguments as Map;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Settings'),
@@ -16,9 +17,10 @@ class Menu extends StatelessWidget {
       body: ListView(
         children: [
           ListTile(
-            leading: Icon(Icons.settings),
+            leading: Icon(Icons.settings_outlined),
             title: Text('Edit profile'),
             onTap: (){
+              //Building the Route Page and sending userDoc so that SettingsForm will initialize once via initState
               Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsForm(userDoc: data['userDoc'])));
             },
           ),
@@ -54,6 +56,20 @@ class Menu extends StatelessWidget {
                       ],
                     );
                   });
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.lock_outline),
+            title: const Text('Privacy'),
+            onTap: (){
+              Navigator.pushNamed(context, '/privacy');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.question_answer_outlined),
+            title: const Text('FAQs'),
+            onTap: (){
+              Navigator.pushNamed(context, '/faq');
             },
           )
         ],

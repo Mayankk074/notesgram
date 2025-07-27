@@ -52,9 +52,7 @@ class _ProfileState extends State<Profile> {
         ? const LoadingShared()
         : SafeArea(
           child: Container(
-              padding: EdgeInsets.only(left: screenWidth*0.045,
-                  top:screenHeight*0.01,
-                  right: screenWidth*0.045),
+              padding: EdgeInsets.only(left: screenWidth*0.045),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -64,13 +62,15 @@ class _ProfileState extends State<Profile> {
                       children: [
                         TextButton.icon(
                           onPressed: ()async {
+                            //Sending the userDoc for details
                             await Navigator.pushNamed(context, '/profileMenu', arguments: {
                                 'userDoc': userDoc
                               });
+                            //updating UI because there might be edit in details
                             setState(() {});
                           },
                           label: Icon(
-                            Icons.menu_rounded,
+                            Icons.settings_outlined,
                             size: screenWidth*0.08,
                             color: Colors.black,
                           ),

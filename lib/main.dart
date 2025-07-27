@@ -5,6 +5,8 @@ import 'package:notesgram/pages/authenticate/signIn.dart';
 import 'package:notesgram/pages/authenticate/signUp.dart';
 import 'package:notesgram/pages/home/note_viewer.dart';
 import 'package:notesgram/pages/home/otherUserFiles.dart';
+import 'package:notesgram/pages/home/profile/faq.dart';
+import 'package:notesgram/pages/home/profile/privacy.dart';
 import 'package:notesgram/pages/home/profile/profileMenu.dart';
 import 'package:notesgram/pages/home/profile/settingsForm.dart';
 import 'package:notesgram/pages/home/userDP.dart';
@@ -42,6 +44,8 @@ class MyApp extends StatelessWidget {
             '/loadingShared': (context)=> const LoadingShared(),
             '/singleNote': (context)=> const NoteViewer(),
             '/profileMenu': (context) => const Menu(),
+            '/privacy': (context) => const Privacy(),
+            '/faq': (context) => const Faq()
           },
         ));
   }

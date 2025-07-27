@@ -26,51 +26,48 @@ class _AllNotesState extends State<AllNotes> {
   List<Note> filteredNotes=[];
   int loadLength=11;
 
-  final CollectionReference _notesCollection=FirebaseFirestore.instance
-      .collection('notes');
-
   //Text controller for search field
   final TextEditingController _searchController=TextEditingController();
 
-  Future getAllNotes()async {
-    //getting all documents from the collection of 'notes'
-    QuerySnapshot? snapshot = await _notesCollection.get();
-    List<DocumentSnapshot>? allDocs = snapshot.docs;
+  Future getAllNotes() async {
+    // Get all documents from all 'notes' subCollections (across all users)
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collectionGroup('notes')
+        .get();
 
-    //going through all docs and converting into single list of names and notes
-    for (DocumentSnapshot snap in allDocs) {
-      String uid = snap.id;
+    for (DocumentSnapshot snap in snapshot.docs) {
+      // Get the full path like: users/abc123/notes/noteDocId
+      String fullPath = snap.reference.path;
+      List<String> segments = fullPath.split('/');
+      String uid = segments[1]; // users/{uid}/notes/{noteId}
 
-      //Not showing currUser Notes
-      if(uid != widget.currUserUid.uid){
-        //getting the userData of the note uploader
-        DocumentSnapshot userSnap = await DatabaseService(uid: uid).getUserSnap();
+      // Skip if current user
+      if (uid != widget.currUserUid.uid) {
+        // Get user data
+        DocumentSnapshot userSnap = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(uid)
+            .get();
 
-        var listName=List<String>.from(snap.get('names'));
-        var listLink=List<String>.from(snap.get('notes'));
-        var listCourse=List<String>.from(snap.get('course'));
-        var listSubject=List<String>.from(snap.get('subject'));
-        var listDescription=List<String>.from(snap.get('description'));
-        var listLikes=List<int>.from(snap.get('likes'));
-
-        for (int i=0;i<listName.length;i++){
-          //Creating Note objects from lists notes from snap
-          allNotes.add(Note(
-            name: listName[i],
-            link: listLink[i],
-            course: listCourse[i],
-            subject: listSubject[i],
-            userName:userSnap['username'],
-            userDP: userSnap['profilePic'],
-            userUid: uid,
-            description: listDescription[i],
-            likesCount: listLikes[i],
-          ));
-        }
+        // Create Note object from fields
+        allNotes.add(Note(
+          name: snap['fileName'],
+          link: snap['url'],
+          course: snap['course'],
+          subject: snap['subject'],
+          userName: userSnap['username'],
+          userDP: userSnap['profilePic'],
+          userUid: uid,
+          description: snap['description'],
+          likesCount: snap['likes'],
+          noteId: snap.id
+        ));
       }
     }
+
     searchResultList();
   }
+
 
   searchResultList(){
     List<Note> showResults=[];
@@ -169,6 +166,7 @@ class _AllNotesState extends State<AllNotes> {
                     description: note.description,
                     likedFlag: likedFlag,
                     likesCount: note.likesCount,
+                    id: note.noteId,
                   );
                 }
               }

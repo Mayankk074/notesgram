@@ -153,7 +153,7 @@ class _NoteViewerState extends State<NoteViewer> {
                           data['likesCount']++;
                         }
                         await DatabaseService(uid: userUid).updatingLikes(
-                            pdfUrl: pdfLink, likedFlag: !likedFlag);
+                            likedFlag: !likedFlag, id: data['id']);
                         //Again rebuilding the widget for likesCount
                         setState(() {});
                       },
@@ -183,8 +183,7 @@ class _NoteViewerState extends State<NoteViewer> {
                                     TextButton(
                                       child: const Text('Yes'),
                                       onPressed: () async {
-                                        Navigator.of(dialogContext).pop();
-                                        await DatabaseService(uid: userUid).deleteUserPDF(pdfUrl: pdfLink);
+                                        await DatabaseService(uid: userUid).deleteUserPDF(id: data['id']);
                                         //Decreasing the no. of notesUploaded
                                         await DatabaseService(uid: userUid)
                                             .updateUserData(
@@ -202,6 +201,7 @@ class _NoteViewerState extends State<NoteViewer> {
                                             HashSet<String>.from(userDoc['liked'])
                                         );
                                         if(!context.mounted) return;
+                                        Navigator.of(dialogContext).pop();
                                         Navigator.of(context).pop();
                                         const snackBar = SnackBar(
                                           content: Text('Yay! Note has been deleted!'),

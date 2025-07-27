@@ -113,11 +113,12 @@ class _SettingsFormState extends State<SettingsForm> {
                         HashSet<String>.from(widget.userDoc?['liked']),
                       );
                       if(!context.mounted) return;
+                      //removing screens so it will fetch new data
+                      Navigator.pop(context);
                       Navigator.pop(context);
                       const snackBar = SnackBar(
                         content: Text('Yay! User Data has been updated!'),
                       );
-                      Navigator.pop(context);
                       // Find the ScaffoldMessenger in the widget tree
                       // and use it to show a SnackBar.
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);

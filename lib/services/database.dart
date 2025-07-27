@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:notesgram/models/notesModel.dart';
 
+import '../models/notesModel1.dart';
+
 class DatabaseService{
   
   final String? uid;
@@ -17,6 +19,32 @@ class DatabaseService{
   //for notes Data
   final CollectionReference _notesCollection=FirebaseFirestore.instance
       .collection('notes');
+
+  Future<void> addNote({
+    required String? fileName,
+    required String? course,
+    required String? subject,
+    required String? description,
+    required String? url,
+    required int? likes
+  }) async {
+
+    final noteData = {
+      'fileName': fileName,
+      'course': course,
+      'subject': subject,
+      'description': description,
+      'url': url,
+      'likes': likes,
+      'uploadedAt': FieldValue.serverTimestamp(),
+    };
+
+    // Path: users/{uid}/notes/{auto-generated-id}
+    await _userCollection
+        .doc(uid)
+        .collection('notes')
+        .add(noteData); // auto-generates a new doc ID
+  }
 
 
   //upload the data of user in database
@@ -42,166 +70,48 @@ class DatabaseService{
     List<String> followingList=[];
 
     // Fetch the existing notes data from the database
-    DocumentSnapshot snapshot = await _userCollection.doc(uid).get();
+    final userRef = _userCollection.doc(uid);
+    DocumentSnapshot snapshot = await userRef.get();
 
     try {
       followingList = List<String>.from(snapshot.get('following'));
+      followingList.add(following);
+      userRef.update({
+        'following': followingList
+      });
     } catch (e) {
       if (kDebugMode) {
         print(e.toString());
       }
     }
-    followingList.add(following);
-    _userCollection.doc(uid).set({
-      'username': snapshot['username'],
-      'email': snapshot['email'],
-      'password': snapshot['password'],
-      'profilePic': snapshot['profilePic'],
-      'college': snapshot['college'],
-      'course': snapshot['course'],
-      'class': snapshot['class'],
-      'bio': snapshot['bio'],
-      'followers': snapshot['followers'],
-      'following': followingList,
-      'notesUploaded': snapshot['notesUploaded'],
-      'liked': snapshot['liked']
-    }
-    );
   }
 
   Future stopFollowing(String following) async {
     List<String> followingList=[];
 
     // Fetch the existing notes data from the database
-    DocumentSnapshot snapshot = await _userCollection.doc(uid).get();
+    final userRef = _userCollection.doc(uid);
+    DocumentSnapshot snapshot = await userRef.get();
 
     try {
       followingList = List<String>.from(snapshot.get('following'));
+      followingList.remove(following);
+      userRef.update({
+        'following': followingList
+      });
     } catch (e) {
       if (kDebugMode) {
         print(e.toString());
       }
     }
-    followingList.remove(following);
-    _userCollection.doc(uid).set({
-      'username': snapshot['username'],
-      'email': snapshot['email'],
-      'password': snapshot['password'],
-      'profilePic': snapshot['profilePic'],
-      'college': snapshot['college'],
-      'course': snapshot['course'],
-      'class': snapshot['class'],
-      'bio': snapshot['bio'],
-      'followers': snapshot['followers'],
-      'following': followingList,
-      'notesUploaded': snapshot['notesUploaded'],
-      'liked': snapshot['liked']
-    }
-    );
-  }
-
-  //upload the notes data of user in database
-  Future updateNotesData(String? url, String? name, String? course, String? subject, String? description) async {
-    List notesList=[];
-    List notesName=[];
-    List notesCourse=[];
-    List notesSubject=[];
-    List notesDescription=[];
-    List notesLikes=[];
-    try {
-      // Fetch the existing notes data from the database
-      DocumentSnapshot snapshot = await _notesCollection.doc(uid).get();
-
-      try {
-        notesList = List<String>.from(snapshot.get('notes'));
-        notesName = List<String>.from(snapshot.get('names'));
-        notesCourse = List<String>.from(snapshot.get('course'));
-        notesSubject = List<String>.from(snapshot.get('subject'));
-        notesDescription=List<String>.from(snapshot.get('description'));
-        notesLikes=List<int>.from(snapshot.get('likes'));
-      } catch (e) {
-        if (kDebugMode) {
-          print(e.toString());
-        }
-      }
-
-      // Add the new note to the list
-      if (url != null && name != null) {
-        //add url in list
-        notesList.add(url);
-        //add name of file in list
-        notesName.add(name);
-        //add course of file in list
-        notesCourse.add(course);
-        //add subject of file in list
-        notesSubject.add(subject);
-        //add description of file in list
-        notesDescription.add(description);
-        //add likes of file in list
-        notesLikes.add(0);
-      }
-      // Update the notes data in the database
-      await _notesCollection.doc(uid).set({
-        'notes': notesList,
-        'names': notesName,
-        'course': notesCourse,
-        'subject': notesSubject,
-        'description': notesDescription,
-        'likes': notesLikes,
-      });
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error updating notes data: $e');
-      }
-    }
   }
 
   //Deleteing user pdf from delete button
-  Future deleteUserPDF({String? pdfUrl}) async {
-    List notesList=[];
-    List notesName=[];
-    List notesCourse=[];
-    List notesSubject=[];
-    List notesDescription=[];
-    List notesLikes=[];
+  Future deleteUserPDF({String? id}) async {
     try {
-      // Fetch the existing notes data from the database
-      DocumentSnapshot snapshot = await _notesCollection.doc(uid).get();
-
-      try {
-        notesList = List<String>.from(snapshot.get('notes'));
-        notesName = List<String>.from(snapshot.get('names'));
-        notesCourse = List<String>.from(snapshot.get('course'));
-        notesSubject = List<String>.from(snapshot.get('subject'));
-        notesDescription=List<String>.from(snapshot.get('description'));
-        notesLikes=List<int>.from(snapshot.get('likes'));
-      } catch (e) {
-        if (kDebugMode) {
-          print(e.toString());
-        }
-      }
-
-      // Deleting the note from the list
-      if (pdfUrl != null) {
-        //finding the index of PDF from List
-        int noteIdx=notesList.indexOf(pdfUrl);
-        //removing all with index pdf's fields
-        notesList.removeAt(noteIdx);
-        notesName.removeAt(noteIdx);
-        notesCourse.removeAt(noteIdx);
-        notesSubject.removeAt(noteIdx);
-        notesDescription.removeAt(noteIdx);
-        notesLikes.removeAt(noteIdx);
-      }
-      // Update the notes data in the database
-      await _notesCollection.doc(uid).set({
-        'notes': notesList,
-        'names': notesName,
-        'course': notesCourse,
-        'subject': notesSubject,
-        'description': notesDescription,
-        'likes': notesLikes,
-      });
+      //getting the doc from subCollection
+      DocumentSnapshot snap=await _userCollection.doc(uid).collection('notes').doc(id).get();
+      await snap.reference.delete();
     } catch (e) {
       if (kDebugMode) {
         print('Error updating notes data: $e');
@@ -210,53 +120,21 @@ class DatabaseService{
   }
 
   //Updating the likes count from like button
-  Future updatingLikes({String? pdfUrl, required bool likedFlag}) async {
-    List notesList=[];
-    List notesName=[];
-    List notesCourse=[];
-    List notesSubject=[];
-    List notesDescription=[];
-    List notesLikes=[];
+  Future updatingLikes({required bool likedFlag, required String id}) async {
     try {
       // Fetch the existing notes data from the database
-      DocumentSnapshot snapshot = await _notesCollection.doc(uid).get();
+      //fetching the reference of document
+      final noteRef=_userCollection.doc(uid).collection('notes').doc(id);
+      DocumentSnapshot snapshot = await noteRef.get();
+      if (snapshot.exists) {
+        final currentLikes = snapshot.get('likes') ?? 0;
+        final updatedLikes = likedFlag ? currentLikes - 1 : currentLikes + 1;
 
-      try {
-        notesList = List<String>.from(snapshot.get('notes'));
-        notesName = List<String>.from(snapshot.get('names'));
-        notesCourse = List<String>.from(snapshot.get('course'));
-        notesSubject = List<String>.from(snapshot.get('subject'));
-        notesDescription=List<String>.from(snapshot.get('description'));
-        notesLikes=List<int>.from(snapshot.get('likes'));
-
-      } catch (e) {
-        if (kDebugMode) {
-          print(e.toString());
-        }
+        //updating the likes field only by reference
+        await noteRef.update({
+          'likes': updatedLikes,
+        });
       }
-
-      // Deleting the note from the list
-      if (pdfUrl != null) {
-        //finding the index of PDF from List
-        int noteIdx=notesList.indexOf(pdfUrl);
-        //Increasing likes count
-        int likesCount=notesLikes.elementAt(noteIdx);
-        if(likedFlag){
-          notesLikes[noteIdx]=--likesCount;
-        }
-        else{
-          notesLikes[noteIdx]=++likesCount;
-        }
-      }
-      // Update the notes data in the database
-      await _notesCollection.doc(uid).set({
-        'notes': notesList,
-        'names': notesName,
-        'course': notesCourse,
-        'subject': notesSubject,
-        'description': notesDescription,
-        'likes': notesLikes,
-      });
     } catch (e) {
       if (kDebugMode) {
         print('Error updating notes data: $e');
@@ -272,33 +150,40 @@ class DatabaseService{
     return await _notesCollection.doc(uid).get();
   }
 
-  NotesModel? _notesOfUser(DocumentSnapshot? snap){
+
+  //get the notes of loggedIn user  via subCollection
+  Stream<List<NotesModel1?>> get notesData1{
+    return _userCollection.doc(uid).collection('notes').snapshots().map(
+        _notesOfUser1
+    );
+  }
+
+  Future<List<NotesModel1?>> notesDataFromCol()async{
+    QuerySnapshot snap= await _userCollection.doc(uid).collection('notes').get();
+    return _notesOfUser1(snap);
+  }
+
+  List<NotesModel1?> _notesOfUser1(QuerySnapshot? snap){
+    List<NotesModel1?> allNotes=[];
     try{
-      return snap != null ? NotesModel(
-        notesLink: List<String>.from(snap.get('notes')),
-        notesName: List<String>.from(snap.get('names')),
-        notesCourse: List<String>.from(snap.get('course')),
-        notesSubject: List<String>.from(snap.get('subject')),
-        notesDescription: List<String>.from(snap.get('description')),
-        notesLikes: List<int>.from(snap.get('likes')),
-      ) : null;
+      List<DocumentSnapshot>? allDocs = snap?.docs;
+      for(DocumentSnapshot doc in allDocs!){
+        allNotes.add(NotesModel1(
+          uid: doc.id,
+          notesLikes: doc.get('likes'),
+          notesDescription: doc.get('description'),
+          notesCourse: doc.get('course'),
+          notesLink: doc.get('url'),
+          notesName: doc.get('fileName'),
+          notesSubject: doc.get('subject')
+          )
+        );
+      }
+      return allNotes;
     }
     catch(e){
-      return null;
+      return allNotes;
     }
-  }
-
-  //get the notes of all Users
-  Stream<QuerySnapshot> get allNotes{
-    return _notesCollection.snapshots();
-  }
-
-
-  //get the notes of loggedIn user
-  Stream<NotesModel?> get notesData{
-    return _notesCollection.doc(uid).snapshots().map(
-      _notesOfUser
-    );
   }
 
   //get the data of the user
