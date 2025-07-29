@@ -12,21 +12,35 @@ class Menu extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Settings'),
+        title: const Text('Settings'),
       ),
       body: ListView(
         children: [
           ListTile(
-            leading: Icon(Icons.settings_outlined),
-            title: Text('Edit profile'),
+            leading: const Icon(Icons.settings_outlined),
+            title: const Text('Edit profile'),
             onTap: (){
               //Building the Route Page and sending userDoc so that SettingsForm will initialize once via initState
               Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsForm(userDoc: data['userDoc'])));
             },
           ),
           ListTile(
-            leading: Icon(Icons.logout),
-            title: Text('Log out'),
+            leading: const Icon(Icons.lock_outline),
+            title: const Text('Privacy'),
+            onTap: (){
+              Navigator.pushNamed(context, '/privacy');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.question_answer_outlined),
+            title: const Text('FAQs'),
+            onTap: (){
+              Navigator.pushNamed(context, '/faq');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text('Log out'),
             onTap: (){
               showDialog(
                   context: context,
@@ -56,20 +70,6 @@ class Menu extends StatelessWidget {
                       ],
                     );
                   });
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.lock_outline),
-            title: const Text('Privacy'),
-            onTap: (){
-              Navigator.pushNamed(context, '/privacy');
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.question_answer_outlined),
-            title: const Text('FAQs'),
-            onTap: (){
-              Navigator.pushNamed(context, '/faq');
             },
           )
         ],

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:notesgram/models/notesModel.dart';
 import 'package:notesgram/models/userUid.dart';
 import 'package:notesgram/pages/home/explore/explore.dart';
 import 'package:notesgram/pages/home/homeBody/homeBody.dart';

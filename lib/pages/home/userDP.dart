@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:notesgram/models/userUid.dart';
@@ -19,14 +17,12 @@ class _UserProfileState extends State<UserProfile> {
 
   Map data={};
   DocumentSnapshot? userSnap;
-  DocumentSnapshot? notesSnap;
   DocumentSnapshot? currentUserSnap;
   UserUid? userUid;
   bool isFollow=false;
 
   Future getUserProfile() async {
     userSnap= await DatabaseService(uid: data['userUid']).getUserSnap();
-    notesSnap= await DatabaseService(uid: data['userUid']).getNotesSnap();
     //getting the current user snap who is logged in
     currentUserSnap= await DatabaseService(uid: userUid?.uid).getUserSnap();
     List<String> followingList=List<String>.from(currentUserSnap?['following']);
@@ -187,22 +183,12 @@ class _UserProfileState extends State<UserProfile> {
                     List<String> followingList=List<String>.from(userSnap?['following']);
                     if(!isFollow){
                       //increase the no. of followers of another user
-                      await DatabaseService(uid: data['userUid'] ).updateUserData(
-                          userSnap?['username'], userSnap?['email'], userSnap?['password'],
-                          userSnap?['profilePic'],userSnap?['college'],
-                          userSnap?['course'],
-                          userSnap?['class'],
-                          userSnap?['bio'], userSnap?['followers']+1, followingList, userSnap?['notesUploaded'],HashSet<String>.from(userSnap?['liked']));
+                      await DatabaseService(uid: data['userUid'] ).follow();
                       //adding the other user uid in the following
                       await DatabaseService(uid: userUid?.uid ).startFollowing(data['userUid']);
                     }else{
                       //decrease the no. of followers of another user
-                      await DatabaseService(uid: data['userUid'] ).updateUserData(
-                          userSnap?['username'], userSnap?['email'], userSnap?['password'],
-                          userSnap?['profilePic'],userSnap?['college'],
-                        userSnap?['course'],
-                        userSnap?['class'],
-                        userSnap?['bio'], userSnap?['followers']-1, followingList, userSnap?['notesUploaded'],HashSet<String>.from(userSnap?['liked']),);
+                      await DatabaseService(uid: data['userUid'] ).unfollow();
                       //removing the other userUid in the following
                       await DatabaseService(uid: userUid?.uid ).stopFollowing(data['userUid']);
                     }
@@ -228,8 +214,6 @@ class _UserProfileState extends State<UserProfile> {
                   onPressed:(){
                     Navigator.pushNamed(context, '/otherUserFiles',arguments: {
                       'userSnap':userSnap,
-                      'notesSnap':notesSnap,
-                      'currentUserSnap':currentUserSnap
                     });
                   },
                   style: buttonStyleSignIn,

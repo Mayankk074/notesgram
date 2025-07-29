@@ -2,7 +2,6 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:notesgram/models/notesModel.dart';
 import 'package:notesgram/models/userUid.dart';
 import 'package:notesgram/pages/home/notesTile.dart';
 import 'package:notesgram/services/database.dart';
@@ -18,16 +17,6 @@ class OtherUserFiles extends StatelessWidget {
   DocumentSnapshot? userSnap;
   List<NotesModel1?> notesSnap=[];
   DocumentSnapshot? currUserSnap;
-
-  //for assigning the notes Lists
-  // void getNotesData(){
-  //   notesList=notesSnap!.notesLink!;
-  //   notesName=notesSnap!.notesName!;
-  //   notesCourse=notesSnap!.notesCourse!;
-  //   notesSubject=notesSnap!.notesSubject!;
-  //   notesDescription=notesSnap!.notesDescription!;
-  //   notesLikes=notesSnap!.notesLikes!;
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +40,6 @@ class OtherUserFiles extends StatelessWidget {
             builder: (context, snapshot) {
               if(snapshot.hasData){
                 notesSnap=snapshot.data!;
-                print(notesSnap);
-                // getNotesData();
                 return Scaffold(
                   appBar: AppBar(
                     title: const Text('Uploaded Files'),

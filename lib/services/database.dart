@@ -2,7 +2,6 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:notesgram/models/notesModel.dart';
 
 import '../models/notesModel1.dart';
 
@@ -16,9 +15,6 @@ class DatabaseService{
   //for users
   final CollectionReference _userCollection=FirebaseFirestore.instance
       .collection('users');
-  //for notes Data
-  final CollectionReference _notesCollection=FirebaseFirestore.instance
-      .collection('notes');
 
   Future<void> addNote({
     required String? fileName,
@@ -66,17 +62,49 @@ class DatabaseService{
     });
   }
 
+  //Increase the number of followers of other user
+  Future follow()async {
+    try{
+      DocumentSnapshot snap=await _userCollection.doc(uid).get();
+      int cnt=snap['followers'];
+      await snap.reference.update({
+        'followers': cnt+1
+      });
+    }
+    catch(e){
+      if (kDebugMode) {
+        print(e.toString());
+      }
+    }
+  }
+
+  //Decrease the number of followers of other user
+  Future unfollow()async {
+    try{
+      DocumentSnapshot snap=await _userCollection.doc(uid).get();
+      int cnt=snap['followers'];
+      await snap.reference.update({
+        'followers': cnt-1
+      });
+    }
+    catch(e){
+      if (kDebugMode) {
+        print(e.toString());
+      }
+    }
+  }
+
   Future startFollowing(String following) async {
     List<String> followingList=[];
 
-    // Fetch the existing notes data from the database
+    // Fetch the existing user data from the database
     final userRef = _userCollection.doc(uid);
     DocumentSnapshot snapshot = await userRef.get();
 
     try {
       followingList = List<String>.from(snapshot.get('following'));
       followingList.add(following);
-      userRef.update({
+      await userRef.update({
         'following': followingList
       });
     } catch (e) {
@@ -89,14 +117,14 @@ class DatabaseService{
   Future stopFollowing(String following) async {
     List<String> followingList=[];
 
-    // Fetch the existing notes data from the database
+    // Fetch the existing user data from the database
     final userRef = _userCollection.doc(uid);
     DocumentSnapshot snapshot = await userRef.get();
 
     try {
       followingList = List<String>.from(snapshot.get('following'));
       followingList.remove(following);
-      userRef.update({
+       await userRef.update({
         'following': followingList
       });
     } catch (e) {
@@ -106,7 +134,7 @@ class DatabaseService{
     }
   }
 
-  //Deleteing user pdf from delete button
+  // Delete user pdf from delete button
   Future deleteUserPDF({String? id}) async {
     try {
       //getting the doc from subCollection
@@ -119,7 +147,7 @@ class DatabaseService{
     }
   }
 
-  //Updating the likes count from like button
+  //Update the likes count from like button
   Future updatingLikes({required bool likedFlag, required String id}) async {
     try {
       // Fetch the existing notes data from the database
@@ -145,11 +173,6 @@ class DatabaseService{
   Future<DocumentSnapshot> getUserSnap()async {
     return await _userCollection.doc(uid).get();
   }
-
-  Future<DocumentSnapshot> getNotesSnap()async {
-    return await _notesCollection.doc(uid).get();
-  }
-
 
   //get the notes of loggedIn user  via subCollection
   Stream<List<NotesModel1?>> get notesData1{
