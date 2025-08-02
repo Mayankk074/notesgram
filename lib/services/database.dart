@@ -62,50 +62,26 @@ class DatabaseService{
     });
   }
 
-  //Increase the number of followers of other user
-  Future follow()async {
-    try{
-      DocumentSnapshot snap=await _userCollection.doc(uid).get();
+  Future startFollowing(String otherUserId) async {
+    List<String> followingList=[];
+
+    try {
+      // Fetch the current user data from the database
+      final userRef = _userCollection.doc(uid);
+      DocumentSnapshot snapshot = await userRef.get();
+
+      //Add other User id from the current user following list
+      followingList = List<String>.from(snapshot.get('following'));
+      followingList.add(otherUserId);
+      await userRef.update({
+        'following': followingList
+      });
+
+      //Increase the number of followers of other user
+      DocumentSnapshot snap=await _userCollection.doc(otherUserId).get();
       int cnt=snap['followers'];
       await snap.reference.update({
         'followers': cnt+1
-      });
-    }
-    catch(e){
-      if (kDebugMode) {
-        print(e.toString());
-      }
-    }
-  }
-
-  //Decrease the number of followers of other user
-  Future unfollow()async {
-    try{
-      DocumentSnapshot snap=await _userCollection.doc(uid).get();
-      int cnt=snap['followers'];
-      await snap.reference.update({
-        'followers': cnt-1
-      });
-    }
-    catch(e){
-      if (kDebugMode) {
-        print(e.toString());
-      }
-    }
-  }
-
-  Future startFollowing(String following) async {
-    List<String> followingList=[];
-
-    // Fetch the existing user data from the database
-    final userRef = _userCollection.doc(uid);
-    DocumentSnapshot snapshot = await userRef.get();
-
-    try {
-      followingList = List<String>.from(snapshot.get('following'));
-      followingList.add(following);
-      await userRef.update({
-        'following': followingList
       });
     } catch (e) {
       if (kDebugMode) {
@@ -114,19 +90,54 @@ class DatabaseService{
     }
   }
 
-  Future stopFollowing(String following) async {
+  Future stopFollowing(String otherUserId) async {
     List<String> followingList=[];
 
-    // Fetch the existing user data from the database
-    final userRef = _userCollection.doc(uid);
-    DocumentSnapshot snapshot = await userRef.get();
-
     try {
+      // Fetch the existing user data from the database
+      final userRef = _userCollection.doc(uid);
+      DocumentSnapshot snapshot = await userRef.get();
+
+      //remove other User id from the current user following list
       followingList = List<String>.from(snapshot.get('following'));
-      followingList.remove(following);
-       await userRef.update({
+      followingList.remove(otherUserId);
+      await userRef.update({
         'following': followingList
       });
+
+      //Decrease the number of followers of other user
+      DocumentSnapshot snap=await _userCollection.doc(otherUserId).get();
+      int cnt=snap['followers'];
+      await snap.reference.update({
+        'followers': cnt-1
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+      }
+    }
+  }
+
+  //updating the liked field according to isLiked
+  Future liked(bool isLiked, String pdfLink) async {
+    try {
+      // Fetch the current user data from the database
+      final userRef = _userCollection.doc(uid);
+      DocumentSnapshot snapshot = await userRef.get();
+
+      //Removing the pdfLink from liked field
+      HashSet<String> liked = HashSet<String>.from(snapshot['liked']);
+      if(isLiked){
+        liked.remove(pdfLink);
+      }else{
+        liked.add(pdfLink);
+      }
+
+      //updating the liked field
+      await userRef.update({
+        'liked': liked
+      });
+
     } catch (e) {
       if (kDebugMode) {
         print(e.toString());
@@ -181,9 +192,21 @@ class DatabaseService{
     );
   }
 
-  Future<List<NotesModel1?>> notesDataFromCol()async{
+  Future<List<NotesModel1?>> notesDataFromCollection()async{
     QuerySnapshot snap= await _userCollection.doc(uid).collection('notes').get();
     return _notesOfUser1(snap);
+  }
+
+  //Saving the note inside SavedNotes subCollection
+  Future savedNote(String noteId, String ownerId)async{
+    await _userCollection.doc(uid)
+        .collection('savedNotes')
+        .doc(noteId) // use original note's ID
+        .set({
+    'noteId': noteId,
+    'ownerId': ownerId, // original creator's userId
+    'savedAt': FieldValue.serverTimestamp(),
+    });
   }
 
   List<NotesModel1?> _notesOfUser1(QuerySnapshot? snap){

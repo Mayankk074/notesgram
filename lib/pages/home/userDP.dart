@@ -183,12 +183,10 @@ class _UserProfileState extends State<UserProfile> {
                     List<String> followingList=List<String>.from(userSnap?['following']);
                     if(!isFollow){
                       //increase the no. of followers of another user
-                      await DatabaseService(uid: data['userUid'] ).follow();
-                      //adding the other user uid in the following
+                      //adding the other user uid in the following list
                       await DatabaseService(uid: userUid?.uid ).startFollowing(data['userUid']);
                     }else{
                       //decrease the no. of followers of another user
-                      await DatabaseService(uid: data['userUid'] ).unfollow();
                       //removing the other userUid in the following
                       await DatabaseService(uid: userUid?.uid ).stopFollowing(data['userUid']);
                     }

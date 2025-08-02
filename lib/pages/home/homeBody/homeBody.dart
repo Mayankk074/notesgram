@@ -36,7 +36,7 @@ class _HomeBodyState extends State<HomeBody> {
       //userDetails of followed user.
       DocumentSnapshot userSnap=await DatabaseService(uid: uid).getUserSnap();
       //getting all Notes of user from following list.
-      List<NotesModel1?> notesList =await DatabaseService(uid: uid).notesDataFromCol();
+      List<NotesModel1?> notesList =await DatabaseService(uid: uid).notesDataFromCollection();
 
       for(int i=0;i<notesList.length;i++){
         //Creating Note objects from lists notes from snap

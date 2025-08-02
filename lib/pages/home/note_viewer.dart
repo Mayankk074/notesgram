@@ -22,6 +22,7 @@ class _NoteViewerState extends State<NoteViewer> {
   late DocumentSnapshot userDoc;
   String pdfLink="";
   String? userUid;
+  String? noteId;
   bool likedFlag=false;
 
   @override
@@ -35,6 +36,7 @@ class _NoteViewerState extends State<NoteViewer> {
       pdfLink = data['pdfLink'];
       likedFlag = data['likedFlag'];
       userUid = data['userUid'];
+      noteId=data['id'];
       setState(() {}); // Update state after initializing
     });
   }
@@ -105,55 +107,21 @@ class _NoteViewerState extends State<NoteViewer> {
                     ),
                     IconButton(
                       onPressed: () async {
+                        DatabaseService(uid: currentUserUid?.uid)
+                            .liked(likedFlag, pdfLink);
                         //checking if user has already liked the note
                         if (likedFlag) {
-                          //removing the pdfLink from "liked" field
-                          HashSet<String> liked =
-                              HashSet<String>.from(userDoc['liked']);
-                          liked.remove(pdfLink);
-                          DatabaseService(uid: currentUserUid?.uid)
-                              .updateUserData(
-                                  userDoc['username'],
-                                  userDoc['email'],
-                                  userDoc['password'],
-                                  userDoc['profilePic'],
-                                  userDoc['college'],
-                                  userDoc['course'],
-                                  userDoc['class'],
-                                  userDoc['bio'],
-                                  userDoc['followers'],
-                                  List<String>.from(userDoc['following']),
-                                  userDoc['notesUploaded'],
-                                  liked);
                           //Reversing the likedFlag
                           likedFlag=!likedFlag;
                           //decreasing the likesCount
                           data['likesCount']--;
                         } else {
-                          //Adding pdfLink in "liked" field in the UserDoc of Liker
-                          HashSet<String> liked =
-                              HashSet<String>.from(userDoc['liked']);
-                          liked.add(pdfLink);
-                          DatabaseService(uid: currentUserUid?.uid)
-                              .updateUserData(
-                                  userDoc['username'],
-                                  userDoc['email'],
-                                  userDoc['password'],
-                                  userDoc['profilePic'],
-                                  userDoc['college'],
-                                  userDoc['course'],
-                                  userDoc['class'],
-                                  userDoc['bio'],
-                                  userDoc['followers'],
-                                  List<String>.from(userDoc['following']),
-                                  userDoc['notesUploaded'],
-                                  liked);
                           likedFlag=!likedFlag;
                           //Increasing the likesCount
                           data['likesCount']++;
                         }
                         await DatabaseService(uid: userUid).updatingLikes(
-                            likedFlag: !likedFlag, id: data['id']);
+                            likedFlag: !likedFlag, id: noteId!);
                         //Again rebuilding the widget for likesCount
                         setState(() {});
                       },
@@ -165,6 +133,12 @@ class _NoteViewerState extends State<NoteViewer> {
                     ),
                     Text("${data['likesCount']}"),
                     const Spacer(),
+                    //Saving the Note in savedNotes for currentUser
+                    IconButton(
+                      onPressed: ()async {
+                        await DatabaseService(uid: currentUserUid?.uid).savedNote(noteId!, userUid!);
+                      },
+                      icon: Icon(Icons.bookmark_border_outlined)),
                     if(currUserFlag) //show Delete button to the uploader only
                       IconButton(
                         onPressed: (){
