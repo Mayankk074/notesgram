@@ -198,7 +198,7 @@ class DatabaseService{
   }
 
   //Saving the note inside SavedNotes subCollection
-  Future savedNote(String noteId, String ownerId)async{
+  Future saveNote(String noteId, String ownerId)async{
     await _userCollection.doc(uid)
         .collection('savedNotes')
         .doc(noteId) // use original note's ID
@@ -207,6 +207,21 @@ class DatabaseService{
     'ownerId': ownerId, // original creator's userId
     'savedAt': FieldValue.serverTimestamp(),
     });
+  }
+  //Unsaving the note inside SavedNotes subCollection
+  Future unsaveNote(String noteId)async{
+    await _userCollection.doc(uid)
+        .collection('savedNotes')
+        .doc(noteId) // use original note's ID
+        .delete();
+  }
+
+  Future<bool> isNoteSaved(String noteId) async {
+    final doc = await _userCollection.doc(uid)
+        .collection('savedNotes')
+        .doc(noteId)
+        .get();
+    return doc.exists;
   }
 
   List<NotesModel1?> _notesOfUser1(QuerySnapshot? snap){

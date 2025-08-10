@@ -23,7 +23,8 @@ class _NoteViewerState extends State<NoteViewer> {
   String pdfLink="";
   String? userUid;
   String? noteId;
-  bool likedFlag=false;
+  bool isLiked=false;
+  bool isSaved=false;
 
   @override
   void initState() {
@@ -34,10 +35,34 @@ class _NoteViewerState extends State<NoteViewer> {
       data = ModalRoute.of(context)!.settings.arguments as Map;
       userDoc = data['userDoc'];
       pdfLink = data['pdfLink'];
-      likedFlag = data['likedFlag'];
+      isLiked = data['likedFlag'];
       userUid = data['userUid'];
       noteId=data['id'];
+      _isNoteSaved();
       setState(() {}); // Update state after initializing
+    });
+  }
+
+  //Checking if note is Saved or not
+  Future _isNoteSaved()async{
+    final currentUserId=Provider.of<UserUid?>(context, listen: false);
+    if(currentUserId != null) {
+      isSaved = await DatabaseService(uid: currentUserId.uid).isNoteSaved(noteId!);
+    }
+    setState(() {});
+  }
+
+  //Saving/unsaving note
+  Future<void> _toggleSave(String? currentUserUid) async {
+    if (isSaved) {
+      await DatabaseService(uid: currentUserUid).unsaveNote(noteId!);
+    } else {
+      await DatabaseService(uid: currentUserUid)
+          .saveNote(noteId!, userUid!);
+    }
+
+    setState(() {
+      isSaved = !isSaved;
     });
   }
 
@@ -108,26 +133,26 @@ class _NoteViewerState extends State<NoteViewer> {
                     IconButton(
                       onPressed: () async {
                         DatabaseService(uid: currentUserUid?.uid)
-                            .liked(likedFlag, pdfLink);
+                            .liked(isLiked, pdfLink);
                         //checking if user has already liked the note
-                        if (likedFlag) {
+                        if (isLiked) {
                           //Reversing the likedFlag
-                          likedFlag=!likedFlag;
+                          isLiked=!isLiked;
                           //decreasing the likesCount
                           data['likesCount']--;
                         } else {
-                          likedFlag=!likedFlag;
+                          isLiked=!isLiked;
                           //Increasing the likesCount
                           data['likesCount']++;
                         }
                         await DatabaseService(uid: userUid).updatingLikes(
-                            likedFlag: !likedFlag, id: noteId!);
+                            likedFlag: !isLiked, id: noteId!);
                         //Again rebuilding the widget for likesCount
                         setState(() {});
                       },
                       icon: Icon(
-                        likedFlag ? Icons.favorite: Icons.favorite_border,
-                        color: likedFlag ? Colors.red : Colors.grey,
+                        isLiked ? Icons.favorite: Icons.favorite_border,
+                        color: isLiked ? Colors.red : Colors.grey,
                       ),
                       iconSize: 30,
                     ),
@@ -135,10 +160,12 @@ class _NoteViewerState extends State<NoteViewer> {
                     const Spacer(),
                     //Saving the Note in savedNotes for currentUser
                     IconButton(
-                      onPressed: ()async {
-                        await DatabaseService(uid: currentUserUid?.uid).savedNote(noteId!, userUid!);
+                      onPressed:(){
+                        _toggleSave(currentUserUid!.uid);
                       },
-                      icon: Icon(Icons.bookmark_border_outlined)),
+                      icon: Icon(
+                        isSaved ? Icons.bookmark : Icons.bookmark_border)
+                      ),
                     if(currUserFlag) //show Delete button to the uploader only
                       IconButton(
                         onPressed: (){
