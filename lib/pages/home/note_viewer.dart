@@ -185,22 +185,6 @@ class _NoteViewerState extends State<NoteViewer> {
                                       child: const Text('Yes'),
                                       onPressed: () async {
                                         await DatabaseService(uid: userUid).deleteUserPDF(id: data['id']);
-                                        //Decreasing the no. of notesUploaded
-                                        await DatabaseService(uid: userUid)
-                                            .updateUserData(
-                                            userDoc['username'],
-                                            userDoc['email'],
-                                            userDoc['password'],
-                                            userDoc['profilePic'],
-                                            userDoc['college'],
-                                            userDoc['course'],
-                                            userDoc['class'],
-                                            userDoc['bio'],
-                                            userDoc['followers'],
-                                            List<String>.from(userDoc['following']),
-                                            userDoc['notesUploaded']-1,
-                                            HashSet<String>.from(userDoc['liked'])
-                                        );
                                         if(!context.mounted) return;
                                         Navigator.of(dialogContext).pop();
                                         Navigator.of(context).pop();

@@ -44,10 +44,7 @@ class _AllNotesState extends State<AllNotes> {
       // Skip if current user
       if (uid != widget.currUserUid.uid) {
         // Get user data
-        DocumentSnapshot userSnap = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(uid)
-            .get();
+        DocumentSnapshot userSnap = await DatabaseService(uid: uid).getUserSnap();
 
         // Create Note object from fields
         allNotes.add(Note(

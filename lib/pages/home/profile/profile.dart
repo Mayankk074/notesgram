@@ -173,7 +173,22 @@ class _ProfileState extends State<Profile> {
                         letterSpacing: 1.0,
                       ),
                     ),
-                    SizedBox(height: screenHeight*0.1),
+                    SizedBox(height: screenHeight*0.05),
+                    ElevatedButton(
+                      onPressed: (){
+                        Navigator.pushNamed(context, '/savedNotes', arguments: {
+                          'userDoc': userDoc
+                        });
+                      },
+                      style: buttonStyleSignUp,
+                      child: Text(
+                        'Saved Notes',
+                        style: TextStyle(
+                          fontSize: screenWidth*0.055,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: screenHeight*0.05),
                     const Divider(),
                     Row(
                       children: [
@@ -237,10 +252,10 @@ class _ProfileState extends State<Profile> {
                       ],
                     ),
                     const Divider(),
-                    SizedBox(height: screenHeight*0.15,),
+                    SizedBox(height: screenHeight*0.10,),
                     ElevatedButton(
                       onPressed:() => showUploadPanel(),
-                      style: buttonStyleSignUp,
+                      style: buttonStyleSignIn,
                       child: Text(
                         'Upload',
                         style: TextStyle(
