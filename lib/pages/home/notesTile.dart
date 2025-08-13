@@ -99,7 +99,9 @@ class _NotesTileState extends State<NotesTile> {
                                                   'userName': widget.userName,
                                                   'pdfName': widget.name,
                                                   'pdfLink': widget.pdfLink,
-                                                  'userDoc': userDoc ?? widget.currUserDoc, //for otherUserFiles widget because it becomes null
+                              //for otherUserFiles widget: because it is not able to fetch userSnap from provider,
+                              // because it is different widgetTree so userSnap is sent explicitly.
+                                                  'userDoc': userDoc ?? widget.currUserDoc,
                                                   'userUid': widget.userUid,
                                                   'likedFlag': widget.likedFlag,
                                                   'likesCount': widget.likesCount,

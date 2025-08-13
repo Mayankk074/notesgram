@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -35,6 +36,7 @@ class DatabaseService{
       'url': url,
       'likes': likes,
       'uploadedAt': FieldValue.serverTimestamp(),
+      'savedBy': []
     };
 
     // Path: users/{uid}/notes/{auto-generated-id}
@@ -149,19 +151,41 @@ class DatabaseService{
 
   // Delete user pdf from delete button
   Future deleteUserPDF({String? id}) async {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
     try {
-      //getting the doc from subCollection
-      DocumentSnapshot snap=await _userCollection.doc(uid).collection('notes').doc(id).get();
-      await snap.reference.delete();
+      // Get note's savedBy list
+      DocumentSnapshot noteSnap = await _userCollection.doc(uid)
+          .collection('notes')
+          .doc(id)
+          .get();
+
+      if (!noteSnap.exists) return;
+
+      //It directly returning a List because it is List<dynamic>,
+      // otherwise if you save List<String> it will return Iterable<String>
+      List savedBy = noteSnap['savedBy'] ?? [];
+
+      // Delete note from owner's notes
+      batch.delete(_userCollection.doc(uid).collection('notes').doc(id));
+
+      // Remove from each user's savedNotes
+      for (String userId in savedBy) {
+        batch.delete(_userCollection.doc(userId).collection('savedNotes').doc(id));
+      }
+
       //decreasing the no. of uploads
       DocumentSnapshot userSnap=await _userCollection.doc(uid).get();
-      int notesUploaded=userSnap['notesUploaded'];
-      userSnap.reference.update({
-        'notesUploaded': notesUploaded -1
+      int notesUploaded=userSnap['notesUploaded'] ?? 0;
+
+      batch.update(userSnap.reference, {
+        'notesUploaded': notesUploaded > 0 ? notesUploaded -1 : 0
       });
+
+      // Commit all operations together
+      await batch.commit();
     } catch (e) {
       if (kDebugMode) {
-        print('Error updating notes data: $e');
+        print('Error while deleting note: $e');
       }
     }
   }
@@ -207,14 +231,21 @@ class DatabaseService{
 
   //Saving the note inside SavedNotes subCollection
   Future saveNote(String noteId, String ownerId)async{
-    await _userCollection.doc(uid)
-        .collection('savedNotes')
-        .doc(noteId) // use original note's ID
-        .set({
-    'noteId': noteId,
-    'ownerId': ownerId, // original creator's userId
-    'savedAt': FieldValue.serverTimestamp(),
-    });
+    //for transactional operations : Either all operations succeed, or none of them are applied
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+    // Add to current user's savedNotes
+    batch.set(
+      _userCollection.doc(uid).collection('savedNotes').doc(noteId),
+      {'noteId': noteId, 'ownerId': ownerId, 'savedAt': FieldValue.serverTimestamp()},
+    );
+
+    // Add currentUserId to owner's note's savedBy array
+    batch.update(
+      _userCollection.doc(ownerId).collection('notes').doc(noteId),
+      {'savedBy': FieldValue.arrayUnion([uid])},
+    );
+
+    await batch.commit();
   }
   //Unsaving the note inside SavedNotes subCollection
   Future unsaveNote(String noteId)async{
@@ -265,21 +296,28 @@ class DatabaseService{
     List<Note> result=[];
     QuerySnapshot snapshots= await _userCollection.doc(uid).collection('savedNotes').get();
     for(DocumentSnapshot snap in snapshots.docs){
-      DocumentSnapshot user=await _userCollection.doc(snap['ownerId']).get();
-      DocumentSnapshot note=await _userCollection.doc(snap['ownerId']).collection('notes').doc(snap['noteId']).get();
-      result.add(Note(
-          name: note['fileName'],
-          link: note['url'],
-          course: note['course'],
-          subject: note['subject'],
-          userName: user['username'],
-          userDP: user['profilePic'],
-          userUid: snap['ownerId'],
-          description: note['description'],
-          likesCount: note['likes'],
-          noteId: snap.id
+      try{
+        DocumentSnapshot user=await _userCollection.doc(snap['ownerId']).get();
+        DocumentSnapshot note=await _userCollection.doc(snap['ownerId']).collection('notes').doc(snap['noteId']).get();
+        result.add(Note(
+            name: note['fileName'],
+            link: note['url'],
+            course: note['course'],
+            subject: note['subject'],
+            userName: user['username'],
+            userDP: user['profilePic'],
+            userUid: snap['ownerId'],
+            description: note['description'],
+            likesCount: note['likes'],
+            noteId: snap.id
         )
-      );
+        );
+      }
+      catch(e){
+        if (kDebugMode) {
+          print('Error while getting saved notes: $e');
+        }
+      }
     }
     return result;
   }

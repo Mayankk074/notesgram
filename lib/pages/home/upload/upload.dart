@@ -20,9 +20,6 @@ class Notes extends StatelessWidget {
 
     HashSet<String> liked=HashSet<String>.from(userDoc?['liked']);
 
-    print("Heelo");
-
-
     //To show message if user deletes all the pdfs.
     if(notesList.isEmpty){
       return const Center(
