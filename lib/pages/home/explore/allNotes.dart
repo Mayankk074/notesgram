@@ -29,7 +29,7 @@ class _AllNotesState extends State<AllNotes> {
   //Text controller for search field
   final TextEditingController _searchController=TextEditingController();
 
-  Future getAllNotes() async {
+  Future getAllNotes() async {//
     // Get all documents from all 'notes' subCollections (across all users)
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collectionGroup('notes')
@@ -66,7 +66,7 @@ class _AllNotesState extends State<AllNotes> {
   }
 
 
-  searchResultList(){
+  void searchResultList(){
     List<Note> showResults=[];
     //Shuffle the Notes randomly
     allNotes.shuffle();
@@ -98,7 +98,7 @@ class _AllNotesState extends State<AllNotes> {
   }
 
   //it will fire whenever there is a change in search field
-  _onSearchChanged(){
+  void _onSearchChanged(){
     searchResultList();
   }
 

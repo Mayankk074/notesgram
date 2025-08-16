@@ -9,7 +9,6 @@ import 'package:notesgram/pages/home/profile/faq.dart';
 import 'package:notesgram/pages/home/profile/privacy.dart';
 import 'package:notesgram/pages/home/profile/profileMenu.dart';
 import 'package:notesgram/pages/home/profile/savedNotes.dart';
-import 'package:notesgram/pages/home/profile/settingsForm.dart';
 import 'package:notesgram/pages/home/userDP.dart';
 import 'package:notesgram/pages/loading.dart';
 import 'package:notesgram/pages/wrapper.dart';

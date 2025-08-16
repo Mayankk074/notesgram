@@ -39,12 +39,14 @@ class _HomeState extends State<Home> {
         ),
       ],
       child: Scaffold(
-        body: [
-          HomeBody(user: user,),
-          const Explore(),
-          const Notes(),
-          const Profile(),
-        ][currentIndex],
+        body: SafeArea(
+          child: [
+            HomeBody(user: user,),
+            const Explore(),
+            const Notes(),
+            const Profile(),
+          ][currentIndex]
+        ),
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           onTap: (int index) {

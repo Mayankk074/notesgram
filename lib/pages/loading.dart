@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:notesgram/models/userUid.dart';
-import 'package:provider/provider.dart';
 
 class Loading extends StatefulWidget {
   const Loading({super.key});
@@ -29,9 +27,11 @@ class _LoadingState extends State<Loading> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(
-        child: SpinKitCircle(
-          color: Colors.purple,
+      body: SafeArea(
+        child: Center(
+          child: SpinKitCircle(
+            color: Colors.purple,
+          ),
         ),
       ),
     );

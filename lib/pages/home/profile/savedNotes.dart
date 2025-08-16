@@ -1,9 +1,7 @@
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:notesgram/models/notesModel1.dart';
 import 'package:notesgram/services/database.dart';
 import 'package:provider/provider.dart';
 

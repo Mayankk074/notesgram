@@ -45,7 +45,7 @@ class _SettingsFormState extends State<SettingsForm> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Profile'),
+        title: const Text('Edit Profile'),
       ),
       body: Padding(
         padding: EdgeInsets.fromLTRB(

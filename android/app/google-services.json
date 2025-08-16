@@ -12,7 +12,20 @@
           "package_name": "com.foryou.notesgram"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "439412915669-spkrjklfcmq4j6ugg5j6o8p9s569kuhs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.foryou.notesgram",
+            "certificate_hash": "d0ecec237cf011c1e1cab784434db8a7fe27d943"
+          }
+        },
+        {
+          "client_id": "439412915669-fmqeo444nnu5u63trck6nh0tfabtlau4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDKUSwvrNtprJzFDF-IynzPow4yEO79r5o"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "439412915669-fmqeo444nnu5u63trck6nh0tfabtlau4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

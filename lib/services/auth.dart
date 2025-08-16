@@ -25,19 +25,18 @@ class AuthService{
 
   //SignIn with Google
   Future<UserCredential?> signInWithGoogle() async {
-    //begin interactive signIn process
-    final GoogleSignInAccount? gUser= await GoogleSignIn().signIn();
+    // Trigger the authentication flow
+    await GoogleSignIn.instance.initialize();
+    final GoogleSignInAccount googleUser = await GoogleSignIn.instance.authenticate();
 
-    //obtain auth details from the request
-    final GoogleSignInAuthentication gAuth= await gUser!.authentication;
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
-    //create a new credentials for user
-    final credential= GoogleAuthProvider.credential(
-      idToken: gAuth.idToken,
-      accessToken: gAuth.accessToken
-    );
-    //final sign In
-    return await _auth.signInWithCredential(credential);
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(idToken: googleAuth.idToken);
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   //Sign In anon
