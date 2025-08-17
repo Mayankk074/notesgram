@@ -43,6 +43,7 @@ class Notes extends StatelessWidget {
           description: notesList[index]!.notesDescription,
           likedFlag: likedFlag,
           likesCount: notesList[index]!.notesLikes,
+          uploadedAt: notesList[index]!.uploadedAt,
           id: notesList[index]!.uid,
         );
       }

@@ -5,7 +5,7 @@ import 'package:notesgram/models/userUid.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:intl/intl.dart';
 import '../../services/database.dart';
 
 class NoteViewer extends StatefulWidget {
@@ -77,6 +77,8 @@ class _NoteViewerState extends State<NoteViewer> {
   Widget build(BuildContext context) {
     final currentUserUid=Provider.of<UserUid?>(context);
     bool currUserFlag=false;
+
+
 
     //prevention for initialization
     if(userUid != null){
@@ -156,7 +158,13 @@ class _NoteViewerState extends State<NoteViewer> {
                       iconSize: 30,
                     ),
                     Text("${data['likesCount']}"),
-                    const Spacer(),
+                    Spacer(),
+                    Text(
+                      data['uploadedAt'] == null ? '' : DateFormat("d MMMM yyyy").format(data['uploadedAt']),
+                      textAlign: TextAlign.center, // centers inside Expanded
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+
                     //Saving the Note in savedNotes for currentUser
                     IconButton(
                       onPressed:(){

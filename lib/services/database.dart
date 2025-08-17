@@ -273,7 +273,8 @@ class DatabaseService{
           notesCourse: doc.get('course'),
           notesLink: doc.get('url'),
           notesName: doc.get('fileName'),
-          notesSubject: doc.get('subject')
+          notesSubject: doc.get('subject'),
+          uploadedAt: doc.get('uploadedAt').toDate()
           )
         );
       }
@@ -307,6 +308,7 @@ class DatabaseService{
             userUid: snap['ownerId'],
             description: note['description'],
             likesCount: note['likes'],
+            uploadedAt: note['uploadedAt'].toDate(),
             noteId: snap.id
         )
         );

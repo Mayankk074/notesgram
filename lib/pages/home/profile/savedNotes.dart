@@ -59,6 +59,7 @@ class _SavedNotesState extends State<SavedNotes> {
               description: savedNotes[index].description,
               likedFlag: likedFlag,
               likesCount: savedNotes[index].likesCount,
+              uploadedAt: savedNotes[index].uploadedAt,
               id: savedNotes[index].noteId,
               currUserDoc: userDoc,
             );

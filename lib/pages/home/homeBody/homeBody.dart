@@ -50,6 +50,7 @@ class _HomeBodyState extends State<HomeBody> {
           userUid: uid,
           description: notesList[i]?.notesDescription,
           likesCount: notesList[i]?.notesLikes,
+          uploadedAt: notesList[i]?.uploadedAt,
           noteId: notesList[i]?.uid
         ));
       }
@@ -87,6 +88,7 @@ class _HomeBodyState extends State<HomeBody> {
             description: note.description,
             likedFlag: likedFlag,
             likesCount: note.likesCount,
+            uploadedAt: note.uploadedAt,
             id: note.noteId,
             refreshCallback: followingNotes, //sending call back function to refresh the screen after following/unfollowing
             );

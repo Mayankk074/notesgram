@@ -6,7 +6,7 @@ import 'package:notesgram/models/userUid.dart';
 import 'package:provider/provider.dart';
 
 class NotesTile extends StatefulWidget {
-  NotesTile({super.key, required this.id, this.pdfLink, this.name, this.userName, this.userDP,this.course,this.subject, this.userUid, this.description, required this.likedFlag, required this.likesCount, this.currUserDoc, this.refreshCallback});
+  NotesTile({super.key, required this.id, this.pdfLink, this.name, this.userName, this.userDP,this.course,this.subject, this.userUid, this.description, required this.likedFlag, this.uploadedAt, required this.likesCount, this.currUserDoc, this.refreshCallback});
 
   final Function? refreshCallback;
   final String? pdfLink;
@@ -18,6 +18,7 @@ class NotesTile extends StatefulWidget {
   final String? userUid;
   final String? description;
   final bool likedFlag;
+  final DateTime? uploadedAt;
   //Note document id from DB
   final String? id;
   int? likesCount;
@@ -108,6 +109,7 @@ class _NotesTileState extends State<NotesTile> {
                                                   'course': widget.course,
                                                   'subject': widget.subject,
                                                   'description': widget.description,
+                                                  'uploadedAt': widget.uploadedAt,
                                                   'id': widget.id
                                                 });
                             //updating the value with newer one

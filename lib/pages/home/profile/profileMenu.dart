@@ -39,6 +39,13 @@ class Menu extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.rule),
+            title: const Text('Community Guidelines'),
+            onTap: (){
+              Navigator.pushNamed(context, '/guidelines');
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Log out'),
             onTap: (){

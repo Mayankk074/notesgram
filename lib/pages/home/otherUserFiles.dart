@@ -60,6 +60,7 @@ class OtherUserFiles extends StatelessWidget {
                         description: notesSnap[index]?.notesDescription,
                         likesCount: notesSnap[index]?.notesLikes,
                         currUserDoc: currUserSnap,
+                        uploadedAt: notesSnap[index]?.uploadedAt,
                         //Note document id
                         id: notesSnap[index]!.uid,
                       );

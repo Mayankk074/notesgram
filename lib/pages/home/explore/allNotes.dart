@@ -57,6 +57,7 @@ class _AllNotesState extends State<AllNotes> {
           userUid: uid,
           description: snap['description'],
           likesCount: snap['likes'],
+          uploadedAt: snap['uploadedAt'].toDate(),
           noteId: snap.id
         ));
       }
@@ -163,6 +164,7 @@ class _AllNotesState extends State<AllNotes> {
                     description: note.description,
                     likedFlag: likedFlag,
                     likesCount: note.likesCount,
+                    uploadedAt: note.uploadedAt,
                     id: note.noteId,
                   );
                 }
