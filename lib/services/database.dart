@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
 
 import '../models/note.dart';
 import '../models/notesModel1.dart';
@@ -244,6 +245,9 @@ class DatabaseService{
     );
 
     await batch.commit();
+    final box = await Hive.openBox<Note>('savedNotesBox_$uid');
+    // Start background refresh from Firestore
+    _refreshSavedNotes(box);
   }
   //Unsaving the note inside SavedNotes subCollection
   Future unsaveNote(String noteId)async{
@@ -251,6 +255,9 @@ class DatabaseService{
         .collection('savedNotes')
         .doc(noteId) // use original note's ID
         .delete();
+    final box = await Hive.openBox<Note>('savedNotesBox_$uid');
+    // Start background refresh from Firestore
+    _refreshSavedNotes(box);
   }
 
   Future<bool> isNoteSaved(String noteId) async {
@@ -291,7 +298,21 @@ class DatabaseService{
   }
 
   //Getting savedNotes from the 'savedNotes' subCollection
-  Future<List<Note>> getSavedNotes() async {
+  Stream<List<Note>> getSavedNotes() async* {
+
+    final box = await Hive.openBox<Note>('savedNotesBox_$uid');
+
+    // Emit cached data first
+    yield box.values.toList();
+
+    // Start background refresh from Firestore
+    _refreshSavedNotes(box);
+
+    // Emit whenever cache changes
+    yield* box.watch().map((_) => box.values.toList());
+  }
+
+  Future<void> _refreshSavedNotes(Box<Note> box) async{
     List<Note> result=[];
     QuerySnapshot snapshots= await _userCollection.doc(uid).collection('savedNotes').get();
     for(DocumentSnapshot snap in snapshots.docs){
@@ -319,7 +340,48 @@ class DatabaseService{
         }
       }
     }
-    return result;
+    // Clear old cache & save new
+    await box.clear();
+    await box.addAll(result);
   }
 
+  Future<List<Note>> getAllNotes() async {
+    List<Note> allNotes=[];
+    final box = await Hive.openBox<Note>('allNotes');
+    // Get all documents from all 'notes' subCollections (across all users)
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collectionGroup('notes')
+        .get();
+
+    for (DocumentSnapshot snap in snapshot.docs) {
+      // Get the full path like: users/abc123/notes/noteDocId
+      String fullPath = snap.reference.path;
+      List<String> segments = fullPath.split('/');
+      String userUid = segments[1]; // users/{uid}/notes/{noteId}
+
+      // Skip if current user
+      if (userUid != uid) {
+        // Get user data
+        DocumentSnapshot userSnap = await DatabaseService(uid: userUid).getUserSnap();
+
+        // Create Note object from fields
+        allNotes.add(Note(
+            name: snap['fileName'],
+            link: snap['url'],
+            course: snap['course'],
+            subject: snap['subject'],
+            userName: userSnap['username'],
+            userDP: userSnap['profilePic'],
+            userUid: userUid,
+            description: snap['description'],
+            likesCount: snap['likes'],
+            uploadedAt: snap['uploadedAt'].toDate(),
+            noteId: snap.id
+        ));
+      }
+    }
+    await box.clear();
+    await box.addAll(allNotes);
+    return allNotes;
+  }
 }

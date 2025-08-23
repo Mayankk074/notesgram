@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:notesgram/models/note.dart';
 import 'package:notesgram/pages/home/notesTile.dart';
 import 'package:notesgram/services/database.dart';
@@ -29,40 +30,19 @@ class _AllNotesState extends State<AllNotes> {
   //Text controller for search field
   final TextEditingController _searchController=TextEditingController();
 
-  Future getAllNotes() async {//
-    // Get all documents from all 'notes' subCollections (across all users)
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collectionGroup('notes')
-        .get();
+  Future getAllNotes() async {
+    final box = await Hive.openBox<Note>('allNotes');
 
-    for (DocumentSnapshot snap in snapshot.docs) {
-      // Get the full path like: users/abc123/notes/noteDocId
-      String fullPath = snap.reference.path;
-      List<String> segments = fullPath.split('/');
-      String uid = segments[1]; // users/{uid}/notes/{noteId}
-
-      // Skip if current user
-      if (uid != widget.currUserUid.uid) {
-        // Get user data
-        DocumentSnapshot userSnap = await DatabaseService(uid: uid).getUserSnap();
-
-        // Create Note object from fields
-        allNotes.add(Note(
-          name: snap['fileName'],
-          link: snap['url'],
-          course: snap['course'],
-          subject: snap['subject'],
-          userName: userSnap['username'],
-          userDP: userSnap['profilePic'],
-          userUid: uid,
-          description: snap['description'],
-          likesCount: snap['likes'],
-          uploadedAt: snap['uploadedAt'].toDate(),
-          noteId: snap.id
-        ));
-      }
+    // Cache data
+    List<Note> cachedNotes = box.values.toList();
+    if (cachedNotes.isEmpty) {
+      //get the allNotes if it has not been cached yet.
+      allNotes=await DatabaseService(uid: widget.currUserUid.uid).getAllNotes();
     }
-
+    else{
+      //other directly assign the cachedNotes
+      allNotes=cachedNotes;
+    }
     searchResultList();
   }
 
@@ -75,8 +55,8 @@ class _AllNotesState extends State<AllNotes> {
     if(_searchController.text.isNotEmpty){
       //checking which Note object contains the subject text coming from search field
       for(Note note in allNotes){
-        String? subject=note.subject?.toLowerCase();
-        if(subject!.contains(_searchController.text.toLowerCase())){
+        String? subject=note.subject.toLowerCase();
+        if(subject.contains(_searchController.text.toLowerCase())){
           showResults.add(note);
         }
       }

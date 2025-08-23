@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:notesgram/models/userUid.dart';
 import 'package:notesgram/pages/authenticate/signIn.dart';
 import 'package:notesgram/pages/authenticate/signUp.dart';
@@ -11,15 +13,20 @@ import 'package:notesgram/pages/home/profile/privacy.dart';
 import 'package:notesgram/pages/home/profile/profileMenu.dart';
 import 'package:notesgram/pages/home/profile/savedNotes.dart';
 import 'package:notesgram/pages/home/userDP.dart';
-import 'package:notesgram/pages/loading.dart';
+import 'package:notesgram/pages/splashLoading.dart';
 import 'package:notesgram/pages/wrapper.dart';
 import 'package:notesgram/services/auth.dart';
 import 'package:notesgram/shared/loadingShared.dart';
 import 'package:provider/provider.dart';
 
+import 'models/note.dart';
+
 void main() async  {
 
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+
+  Hive.registerAdapter(NoteAdapter());
   // Plugin must be initialized before using
   await Firebase.initializeApp();
   runApp(const MyApp());
@@ -36,7 +43,7 @@ class MyApp extends StatelessWidget {
         child:  MaterialApp(
           initialRoute: '/',
           routes: {
-            '/': (context)=> const Loading(),
+            '/': (context)=> const SplashScreen(),
             '/wrapper': (context)=> const Wrapper(),
             '/signUp': (context)=> const SignUp(),
             '/signIn': (context)=> const SignIn(),

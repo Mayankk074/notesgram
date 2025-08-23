@@ -41,17 +41,17 @@ class _HomeBodyState extends State<HomeBody> {
       for(int i=0;i<notesList.length;i++){
         //Creating Note objects from lists notes from snap
         allNotes.add(Note(
-          name: notesList[i]?.notesName,
-          link: notesList[i]?.notesLink,
-          course: notesList[i]?.notesCourse,
-          subject: notesList[i]?.notesSubject,
+          name: notesList[i]!.notesName,
+          link: notesList[i]!.notesLink,
+          course: notesList[i]!.notesCourse,
+          subject: notesList[i]!.notesSubject,
           userName:userSnap['username'],
           userDP: userSnap['profilePic'],
           userUid: uid,
-          description: notesList[i]?.notesDescription,
-          likesCount: notesList[i]?.notesLikes,
-          uploadedAt: notesList[i]?.uploadedAt,
-          noteId: notesList[i]?.uid
+          description: notesList[i]!.notesDescription,
+          likesCount: notesList[i]!.notesLikes,
+          uploadedAt: notesList[i]!.uploadedAt,
+          noteId: notesList[i]!.uid
         ));
       }
     }

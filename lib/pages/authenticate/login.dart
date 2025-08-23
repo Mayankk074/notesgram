@@ -12,7 +12,7 @@ class Login extends StatelessWidget {
         child: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/loginBG.jpeg'),
+              image: AssetImage('assets/loginBG.webp'),
               fit: BoxFit.cover,
             )
           ),

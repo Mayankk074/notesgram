@@ -17,56 +17,68 @@ class SavedNotes extends StatefulWidget {
 }
 
 class _SavedNotesState extends State<SavedNotes> {
-  List<Note> savedNotes=[];
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-    UserUid userUid=Provider.of<UserUid>(context);
-    getSavedNotes(userUid.uid);
-  }
-  void getSavedNotes(String? userUid) async {
-    savedNotes=await DatabaseService(uid: userUid).getSavedNotes();
-    setState(() {});
-  }
+  // List<Note> savedNotes=[];
+  // @override
+  // void didChangeDependencies() {
+  //   // TODO: implement didChangeDependencies
+  //   super.didChangeDependencies();
+  //   UserUid userUid=Provider.of<UserUid>(context);
+  //   getSavedNotes(userUid.uid);
+  // }
+  // void getSavedNotes(String? userUid) async {
+  //   savedNotes=await DatabaseService(uid: userUid).getSavedNotes();
+  //   setState(() {});
+  // }
 
   @override
   Widget build(BuildContext context) {
     //getting the userData from the arguments
-    Map data=ModalRoute.of(context)?.settings.arguments as Map;
-    DocumentSnapshot userDoc=data['userDoc'];
-    HashSet<String> liked=HashSet<String>.from(userDoc['liked']);
+    Map data = ModalRoute.of(context)?.settings.arguments as Map;
+    DocumentSnapshot userDoc = data['userDoc'];
+    HashSet<String> liked = HashSet<String>.from(userDoc['liked']);
+    UserUid userUid=Provider.of<UserUid>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Saved Notes'),
-      ),
-      body: savedNotes.isNotEmpty ? Padding(
-        padding: const EdgeInsets.all(8),
-        child: ListView.builder(
-          itemCount: savedNotes.length,
-          itemBuilder: (context, index){
-            bool likedFlag=liked.contains(savedNotes[index].link);
-            //creating NotesTile
-            return NotesTile(
-              pdfLink: savedNotes[index].link,
-              name: savedNotes[index].name,
-              userName: savedNotes[index].userName,
-              userDP: savedNotes[index].userDP,
-              course: savedNotes[index].course,
-              subject: savedNotes[index].subject,
-              userUid: savedNotes[index].userUid,
-              description: savedNotes[index].description,
-              likedFlag: likedFlag,
-              likesCount: savedNotes[index].likesCount,
-              uploadedAt: savedNotes[index].uploadedAt,
-              id: savedNotes[index].noteId,
-              currUserDoc: userDoc,
-            );
-          }),
-      ) : const Center(
-        child: Text('No Saved Notes'),
-      ),
+        appBar: AppBar(
+          title: const Text('Saved Notes'),
+        ),
+        body: StreamBuilder<List<Note>>(
+            stream: DatabaseService(uid: userUid.uid).getSavedNotes(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(child: CircularProgressIndicator());
+              }
+
+              final savedNotes = snapshot.data!;
+              if (savedNotes.isEmpty) {
+                return Center(child: Text("No saved notes"));
+              }
+              return Padding(
+                padding: const EdgeInsets.all(8),
+                child: ListView.builder(
+                    itemCount: savedNotes.length,
+                    itemBuilder: (context, index) {
+                      bool likedFlag = liked.contains(savedNotes[index].link);
+                      //creating NotesTile
+                      return NotesTile(
+                        pdfLink: savedNotes[index].link,
+                        name: savedNotes[index].name,
+                        userName: savedNotes[index].userName,
+                        userDP: savedNotes[index].userDP,
+                        course: savedNotes[index].course,
+                        subject: savedNotes[index].subject,
+                        userUid: savedNotes[index].userUid,
+                        description: savedNotes[index].description,
+                        likedFlag: likedFlag,
+                        likesCount: savedNotes[index].likesCount,
+                        uploadedAt: savedNotes[index].uploadedAt,
+                        id: savedNotes[index].noteId,
+                        currUserDoc: userDoc,
+                      );
+                    }),
+              );
+            }
+            )
     );
   }
 }
