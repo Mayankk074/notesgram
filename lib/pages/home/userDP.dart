@@ -5,6 +5,7 @@ import 'package:notesgram/services/database.dart';
 import 'package:notesgram/shared/constants.dart';
 import 'package:notesgram/shared/loadingShared.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
@@ -62,7 +63,7 @@ class _UserProfileState extends State<UserProfile> {
                     CircleAvatar(
                       radius: screenWidth*0.12,
                       backgroundImage: userSnap?['profilePic'] != 'No DP' ?
-                      NetworkImage(userSnap?['profilePic']):
+                      CachedNetworkImageProvider(userSnap?['profilePic']):
                       null,
                       backgroundColor: Colors.purple[100],
                       child: userSnap?['profilePic'] != 'No DP' ?

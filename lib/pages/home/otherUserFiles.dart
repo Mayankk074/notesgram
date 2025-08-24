@@ -8,14 +8,14 @@ import 'package:notesgram/services/database.dart';
 import 'package:notesgram/shared/loadingShared.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/notesModel1.dart';
+import '../../models/notesModel.dart';
 
 class OtherUserFiles extends StatelessWidget {
   OtherUserFiles({super.key});
 
   Map data={};
   DocumentSnapshot? userSnap;
-  List<NotesModel1?> notesSnap=[];
+  List<NotesModel?> notesSnap=[];
   DocumentSnapshot? currUserSnap;
 
   @override
@@ -34,9 +34,9 @@ class OtherUserFiles extends StatelessWidget {
         currUserSnap=userSnapshot.data;
         HashSet<String> liked=HashSet<String>.from(currUserSnap?['liked']);
 
-        //Stream for NotesSnap for otherUser for notes
-        return StreamBuilder<List<NotesModel1?>>(
-            stream: DatabaseService(uid:userSnap?.id).notesData1,
+        //Stream for NotesSnap of otherUser for notes
+        return StreamBuilder<List<NotesModel?>>(
+            stream: DatabaseService(uid:userSnap?.id).notesData,
             builder: (context, snapshot) {
               if(snapshot.hasData){
                 notesSnap=snapshot.data!;

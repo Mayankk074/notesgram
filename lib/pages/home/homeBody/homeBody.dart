@@ -2,8 +2,9 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:notesgram/models/note.dart';
-import 'package:notesgram/models/notesModel1.dart';
+import 'package:notesgram/models/notesModel.dart';
 import 'package:notesgram/models/userUid.dart';
 import 'package:notesgram/pages/home/notesTile.dart';
 import 'package:notesgram/services/database.dart';
@@ -21,40 +22,25 @@ class HomeBody extends StatefulWidget {
 class _HomeBodyState extends State<HomeBody> {
   List<Note> allNotes=[];
 
-  List<String> followingList=[];
-
   Future followingNotes()async {
 
     allNotes.clear(); // clear old notes
-    followingList.clear(); // clear old following
+    final box = await Hive.openBox<Note>('followingNotes_${widget.user?.uid}');
 
-    DocumentSnapshot snap=await DatabaseService(uid: widget.user?.uid).getUserSnap();
+    // Cache data
+    List<Note> cachedNotes=box.values.toList();
 
-    followingList=List<String>.from(snap['following']);
-
-    for(String uid in followingList){
-      //userDetails of followed user.
-      DocumentSnapshot userSnap=await DatabaseService(uid: uid).getUserSnap();
-      //getting all Notes of user from following list.
-      List<NotesModel1?> notesList =await DatabaseService(uid: uid).notesDataFromCollection();
-
-      for(int i=0;i<notesList.length;i++){
-        //Creating Note objects from lists notes from snap
-        allNotes.add(Note(
-          name: notesList[i]!.notesName,
-          link: notesList[i]!.notesLink,
-          course: notesList[i]!.notesCourse,
-          subject: notesList[i]!.notesSubject,
-          userName:userSnap['username'],
-          userDP: userSnap['profilePic'],
-          userUid: uid,
-          description: notesList[i]!.notesDescription,
-          likesCount: notesList[i]!.notesLikes,
-          uploadedAt: notesList[i]!.uploadedAt,
-          noteId: notesList[i]!.uid
-        ));
-      }
+    if(cachedNotes.isEmpty){
+      //get the followingNotes if it has not been cached yet.
+      allNotes = await DatabaseService(uid: widget.user?.uid).followingNotes();
     }
+    else{
+      //start background refresh in background
+      DatabaseService(uid: widget.user?.uid).followingNotes();
+      //directly assign the cachedNotes
+      allNotes=cachedNotes;
+    }
+
     setState(() {});
   }
 

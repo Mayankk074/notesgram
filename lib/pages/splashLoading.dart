@@ -39,7 +39,6 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    print('splash');
     return Scaffold(
       backgroundColor: Colors.white, // same color as native splash
       body: SafeArea(

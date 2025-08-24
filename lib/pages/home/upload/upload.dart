@@ -6,7 +6,7 @@ import 'package:notesgram/pages/home/notesTile.dart';
 import 'package:notesgram/shared/loadingShared.dart';
 import 'package:provider/provider.dart';
 
-import '../../../models/notesModel1.dart';
+import '../../../models/notesModel.dart';
 
 class Notes extends StatelessWidget {
   const Notes({super.key});
@@ -15,7 +15,7 @@ class Notes extends StatelessWidget {
   Widget build(BuildContext context) {
 
     // final userDoc=Provider.of<DocumentSnapshot?>(context);
-    final notesList=Provider.of<List<NotesModel1?>>(context);
+    final notesList=Provider.of<List<NotesModel?>>(context);
     final userDoc=Provider.of<DocumentSnapshot?>(context);
 
     HashSet<String> liked=HashSet<String>.from(userDoc?['liked']);

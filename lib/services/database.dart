@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 
 import '../models/note.dart';
-import '../models/notesModel1.dart';
+import '../models/notesModel.dart';
 
 class DatabaseService{
   
@@ -217,15 +217,15 @@ class DatabaseService{
   }
 
   //get the notes of loggedIn user  via subCollection
-  Stream<List<NotesModel1?>> get notesData1{
+  Stream<List<NotesModel?>> get notesData{
     return _userCollection.doc(uid).collection('notes').snapshots().map(
-        _notesOfUser1
+        _notesOfUser
     );
   }
 
-  Future<List<NotesModel1?>> notesDataFromCollection()async{
+  Future<List<NotesModel?>> notesDataFromCollection()async{
     QuerySnapshot snap= await _userCollection.doc(uid).collection('notes').get();
-    return _notesOfUser1(snap);
+    return _notesOfUser(snap);
   }
 
   //Saving the note inside SavedNotes subCollection
@@ -268,12 +268,12 @@ class DatabaseService{
     return doc.exists;
   }
 
-  List<NotesModel1?> _notesOfUser1(QuerySnapshot? snap){
-    List<NotesModel1?> allNotes=[];
+  List<NotesModel?> _notesOfUser(QuerySnapshot? snap){
+    List<NotesModel?> allNotes=[];
     try{
       List<DocumentSnapshot>? allDocs = snap?.docs;
       for(DocumentSnapshot doc in allDocs!){
-        allNotes.add(NotesModel1(
+        allNotes.add(NotesModel(
           uid: doc.id,
           notesLikes: doc.get('likes'),
           notesDescription: doc.get('description'),
@@ -382,6 +382,44 @@ class DatabaseService{
     }
     await box.clear();
     await box.addAll(allNotes);
+    return allNotes;
+  }
+
+  Future<List<Note>> followingNotes()async {
+    List<Note> allNotes=[];
+    List<String> followingList=[];
+    final box = await Hive.openBox<Note>('followingNotes_$uid');
+    DocumentSnapshot snap=await getUserSnap();
+
+    followingList=List<String>.from(snap['following']);
+
+    for(String otherUid in followingList){
+      //userDetails of followed user.
+      DocumentSnapshot userSnap=await DatabaseService(uid: otherUid).getUserSnap();
+      //getting all Notes of user from following list.
+      List<NotesModel?> notesList =await DatabaseService(uid: otherUid).notesDataFromCollection();
+
+      for(int i=0;i<notesList.length;i++){
+        //Creating Note objects from lists notes from snap
+        allNotes.add(Note(
+            name: notesList[i]!.notesName,
+            link: notesList[i]!.notesLink,
+            course: notesList[i]!.notesCourse,
+            subject: notesList[i]!.notesSubject,
+            userName:userSnap['username'],
+            userDP: userSnap['profilePic'],
+            userUid: otherUid,
+            description: notesList[i]!.notesDescription,
+            likesCount: notesList[i]!.notesLikes,
+            uploadedAt: notesList[i]!.uploadedAt,
+            noteId: notesList[i]!.uid
+        ));
+      }
+    }
+
+    await box.clear();
+    await box.addAll(allNotes);
+
     return allNotes;
   }
 }

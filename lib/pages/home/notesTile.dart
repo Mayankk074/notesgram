@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:notesgram/models/userUid.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class NotesTile extends StatefulWidget {
   NotesTile({super.key, required this.id, this.pdfLink, this.name, this.userName, this.userDP,this.course,this.subject, this.userUid, this.description, required this.likedFlag, this.uploadedAt, required this.likesCount, this.currUserDoc, this.refreshCallback});
@@ -66,8 +67,9 @@ class _NotesTileState extends State<NotesTile> {
                             }
                           },
                           child: CircleAvatar(
-                            //if there is no dp then dont show image
-                            backgroundImage: widget.userDP !='No DP'? NetworkImage(
+                            //if there is no dp then don't show image
+                            //disk caching using CachedNetworkImageProvider()
+                            backgroundImage: widget.userDP !='No DP'? CachedNetworkImageProvider(
                               widget.userDP!): null,
                             radius: 30.0,
                             backgroundColor: Colors.purple[100],
@@ -75,7 +77,7 @@ class _NotesTileState extends State<NotesTile> {
                               null : const Icon(Icons.person,),
                           ),
                         ):CircleAvatar(
-                          backgroundImage: widget.userDP !='No DP'? NetworkImage(
+                          backgroundImage: widget.userDP !='No DP'? CachedNetworkImageProvider(
                             widget.userDP!): null,
                           radius: 30.0,
                           backgroundColor: Colors.purple[100],

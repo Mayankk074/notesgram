@@ -40,7 +40,9 @@ class _AllNotesState extends State<AllNotes> {
       allNotes=await DatabaseService(uid: widget.currUserUid.uid).getAllNotes();
     }
     else{
-      //other directly assign the cachedNotes
+      //start background refresh in background
+      DatabaseService(uid: widget.currUserUid.uid).getAllNotes();
+      //directly assign the cachedNotes
       allNotes=cachedNotes;
     }
     searchResultList();

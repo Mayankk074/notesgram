@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:developer';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -124,7 +125,7 @@ class _ProfileState extends State<Profile> {
                           // Getting the profile pic from the database
                           //if there is no dp then dont show image
                           backgroundImage: userDoc['profilePic'] != 'No DP'
-                              ? NetworkImage(userDoc['profilePic'])
+                              ? CachedNetworkImageProvider(userDoc['profilePic'])
                               : null,
                           backgroundColor: Colors.purple[100],
                           //showing person Icon if there is no DP
