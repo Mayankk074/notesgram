@@ -47,6 +47,7 @@ dependencies:
   hive_flutter: ^1.1.0
   flutter_cache_manager: ^3.4.1
   cached_network_image: ^3.4.1
+  dropdown_search: ^6.0.2
 
 
 

@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -85,22 +86,42 @@ class _UploadFormState extends State<UploadForm> {
             Text(fileName),
             const SizedBox(height: 10.0,),
             Expanded(
-              child: TextFormField(
-                decoration: textInputDecoration.copyWith(
-                  hintText: 'Course/Class Name'
+              child: // Course Dropdown
+              // Course Searchable Dropdown
+              DropdownSearch<String>(
+                items: (f, cs) => courses,
+                selectedItem: _currentCourse,
+                popupProps: PopupProps.menu(
+                  showSearchBox: true, // Enables searching
+                  fit: FlexFit.loose,
                 ),
-                validator: (val) => val!.isEmpty ? "Enter Course" : null,
-                onChanged: (val) => setState(() => _currentCourse=val),
+                decoratorProps: DropDownDecoratorProps(
+                  decoration: textInputDecoration.copyWith(
+                    hintText: "Select Course",
+                  ),
+                ),
+                validator: (val) => val == null ? "Select Course" : null,
+                onChanged: (val) => setState(() => _currentCourse = val),
               ),
             ),
             const SizedBox(height: 10.0,),
             Expanded(
-              child: TextFormField(
-                decoration: textInputDecoration.copyWith(
-                  hintText: 'Subject Name'
+              child: // Subject Dropdown
+              // Course Searchable Dropdown
+              DropdownSearch<String>(
+                items: (f, cs) => subjects,
+                selectedItem: _currentSubject,
+                popupProps: PopupProps.menu(
+                  showSearchBox: true, // Enables searching
+                  fit: FlexFit.loose,
                 ),
-                validator: (val) => val!.isEmpty ? "Enter Subject" : null,
-                onChanged: (val) => setState(() => _currentSubject=val),
+                decoratorProps: DropDownDecoratorProps(
+                  decoration: textInputDecoration.copyWith(
+                    hintText: "Select Subject",
+                  ),
+                ),
+                validator: (val) => val == null ? "Select Subject" : null,
+                onChanged: (val) => setState(() => _currentSubject = val),
               ),
             ),
             const SizedBox(height: 10.0,),
@@ -128,22 +149,6 @@ class _UploadFormState extends State<UploadForm> {
                   await DatabaseService(uid: user.uid)
                         .addNote(course: _currentCourse,description: _currentDescription,likes: 0, fileName: fileName, subject: _currentSubject, url: url);
 
-                  //Increasing the no. of notesUploaded
-                  await DatabaseService(uid: user.uid)
-                      .updateUserData(
-                        widget.userDoc?['username'],
-                        widget.userDoc?['email'],
-                        widget.userDoc?['password'],
-                        widget.userDoc?['profilePic'],
-                        widget.userDoc?['college'],
-                        widget.userDoc?['course'],
-                        widget.userDoc?['class'],
-                        widget.userDoc?['bio'],
-                        widget.userDoc?['followers'],
-                        List<String>.from(widget.userDoc?['following']),
-                        widget.userDoc?['notesUploaded']+1,
-                        HashSet<String>.from(widget.userDoc?['liked']),
-                      );
                   if (!context.mounted) return;
                   Navigator.pop(context);
                   if (!context.mounted) return;

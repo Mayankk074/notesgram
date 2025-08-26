@@ -26,6 +26,7 @@ class DatabaseService{
     required String? url,
     required int? likes
   }) async {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
 
     final noteData = {
       'fileName': fileName,
@@ -39,16 +40,27 @@ class DatabaseService{
     };
 
     // Path: users/{uid}/notes/{auto-generated-id}
-    await _userCollection
+    final noteDoc=_userCollection
         .doc(uid)
         .collection('notes')
-        .add(noteData); // auto-generates a new doc ID
+        .doc(); // auto-generates a new doc ID
+
+    batch.set(noteDoc, noteData);
+
+    final userDoc=await _userCollection.doc(uid).get();
+    int notesUploaded=userDoc['notesUploaded'] ?? 0;
+
+    //Increasing no. of uploads
+    batch.update(userDoc.reference, {
+      'notesUploaded': notesUploaded +1
+    });
+
+    await batch.commit();
   }
 
 
   //upload the data of user in database
   Future updateUserData(String username, String email, String password, String? downloadUrl,String college, String course, String className, String bio,int followers,List<String> following, int notesUploaded, HashSet<String> liked) async {
-
     return await _userCollection.doc(uid).set({
       'username': username,
       'email': email,
@@ -67,6 +79,7 @@ class DatabaseService{
 
   Future startFollowing(String otherUserId) async {
     List<String> followingList=[];
+    WriteBatch batch = FirebaseFirestore.instance.batch();
 
     try {
       // Fetch the current user data from the database
@@ -76,16 +89,18 @@ class DatabaseService{
       //Add other User id from the current user following list
       followingList = List<String>.from(snapshot.get('following'));
       followingList.add(otherUserId);
-      await userRef.update({
+      batch.update(userRef, {
         'following': followingList
       });
 
       //Increase the number of followers of other user
       DocumentSnapshot snap=await _userCollection.doc(otherUserId).get();
       int cnt=snap['followers'];
-      await snap.reference.update({
+      batch.update(snap.reference, {
         'followers': cnt+1
       });
+
+      await batch.commit();
     } catch (e) {
       if (kDebugMode) {
         print(e.toString());
@@ -95,6 +110,7 @@ class DatabaseService{
 
   Future stopFollowing(String otherUserId) async {
     List<String> followingList=[];
+    WriteBatch batch = FirebaseFirestore.instance.batch();
 
     try {
       // Fetch the existing user data from the database
@@ -104,16 +120,19 @@ class DatabaseService{
       //remove other User id from the current user following list
       followingList = List<String>.from(snapshot.get('following'));
       followingList.remove(otherUserId);
-      await userRef.update({
+      batch.update(userRef, {
         'following': followingList
       });
 
       //Decrease the number of followers of other user
       DocumentSnapshot snap=await _userCollection.doc(otherUserId).get();
       int cnt=snap['followers'];
-      await snap.reference.update({
+      batch.update(snap.reference, {
         'followers': cnt-1
       });
+
+      await batch.commit();
+
     } catch (e) {
       if (kDebugMode) {
         print(e.toString());
