@@ -2,6 +2,7 @@
 class NotesModel {
 
   String notesLink;
+  String? notesPath;
   String notesName;
   String notesCourse;
   String notesSubject;
@@ -10,5 +11,5 @@ class NotesModel {
   String uid;
   DateTime uploadedAt;
 
-  NotesModel({required this.uid, required this.notesLink, required this.notesName, required this.notesCourse, required this.notesSubject, required this.notesDescription, required this.notesLikes, required this.uploadedAt});
+  NotesModel({required this.uid, required this.notesLink, this.notesPath, required this.notesName, required this.notesCourse, required this.notesSubject, required this.notesDescription, required this.notesLikes, required this.uploadedAt});
 }

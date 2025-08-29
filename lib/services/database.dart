@@ -1,8 +1,10 @@
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
+import 'package:notesgram/services/storage.dart';
 
 import '../models/note.dart';
 import '../models/notesModel.dart';
@@ -13,27 +15,33 @@ class DatabaseService{
   
   DatabaseService({this.uid});
 
-  //Colllection Reference
+  //Collection Reference
   //for users
   final CollectionReference _userCollection=FirebaseFirestore.instance
       .collection('users');
 
   Future<void> addNote({
+    required File? file,
     required String? fileName,
     required String? course,
     required String? subject,
     required String? description,
-    required String? url,
     required int? likes
   }) async {
     WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    //uploading the pdf to firebase storage
+    final result =
+    await StorageServices(uid: uid).uploadPdf(file);
+
 
     final noteData = {
       'fileName': fileName,
       'course': course,
       'subject': subject,
       'description': description,
-      'url': url,
+      'url': result['url'],
+      'path': result['path'],
       'likes': likes,
       'uploadedAt': FieldValue.serverTimestamp(),
       'savedBy': []
@@ -141,7 +149,7 @@ class DatabaseService{
   }
 
   //updating the liked field according to isLiked
-  Future liked(bool isLiked, String pdfLink) async {
+  Future liked(bool isLiked, String pdfLink) async  {
     try {
       // Fetch the current user data from the database
       final userRef = _userCollection.doc(uid);
@@ -168,7 +176,7 @@ class DatabaseService{
   }
 
   // Delete user pdf from delete button
-  Future deleteUserPDF({String? id}) async {
+  Future deleteUserPDF({required String id, required String filePath}) async {
     WriteBatch batch = FirebaseFirestore.instance.batch();
     try {
       // Get note's savedBy list
@@ -198,6 +206,9 @@ class DatabaseService{
       batch.update(userSnap.reference, {
         'notesUploaded': notesUploaded > 0 ? notesUploaded -1 : 0
       });
+
+      //Delete file from firebaseStorage as well
+      await StorageServices(uid: uid).deletePdf(filePath);
 
       // Commit all operations together
       await batch.commit();
@@ -298,6 +309,7 @@ class DatabaseService{
           notesDescription: doc.get('description'),
           notesCourse: doc.get('course'),
           notesLink: doc.get('url'),
+          notesPath: doc.get('path'),
           notesName: doc.get('fileName'),
           notesSubject: doc.get('subject'),
           uploadedAt: doc.get('uploadedAt').toDate()

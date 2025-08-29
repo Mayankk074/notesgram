@@ -8,6 +8,7 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import '../../services/database.dart';
+import '../../shared/constants.dart';
 
 class NoteViewer extends StatefulWidget {
   const NoteViewer({super.key});
@@ -98,6 +99,41 @@ class _NoteViewerState extends State<NoteViewer> {
               },
               icon: const Icon(Icons.arrow_back),
             ),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.flag, color: Colors.red),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text("Report Note"),
+                      content: Text("Do you want to report this note as inappropriate?"),
+                      actions: [
+                        ElevatedButton(
+                          onPressed: () async {
+                            Navigator.pop(context);
+                          },
+                          style: buttonStyleSignUp,
+                          child: Text("Cancel"),
+                        ),
+                        SizedBox(height: 10,),
+                        ElevatedButton(
+                          onPressed: () async {
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Report submitted")),
+                            );
+                          },
+                          style: buttonStyleSignIn,
+                          child: Text("Report"),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              )
+
+            ],
             title: Text('${data['userName']}'),
           ),
           body: SingleChildScrollView(
@@ -190,7 +226,7 @@ class _NoteViewerState extends State<NoteViewer> {
                                     TextButton(
                                       child: const Text('Yes'),
                                       onPressed: () async {
-                                        await DatabaseService(uid: userUid).deleteUserPDF(id: data['id']);
+                                        await DatabaseService(uid: userUid).deleteUserPDF(id: data['id'], filePath: data['pdfPath']);
                                         if(!context.mounted) return;
                                         Navigator.of(dialogContext).pop();
                                         Navigator.of(context).pop();

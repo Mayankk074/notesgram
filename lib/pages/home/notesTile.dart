@@ -7,10 +7,11 @@ import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class NotesTile extends StatefulWidget {
-  NotesTile({super.key, required this.id, this.pdfLink, this.name, this.userName, this.userDP,this.course,this.subject, this.userUid, this.description, required this.likedFlag, this.uploadedAt, required this.likesCount, this.currUserDoc, this.refreshCallback});
+  NotesTile({super.key, required this.id, this.pdfPath, this.pdfLink, this.name, this.userName, this.userDP,this.course,this.subject, this.userUid, this.description, required this.likedFlag, this.uploadedAt, required this.likesCount, this.currUserDoc, this.refreshCallback});
 
   final Function? refreshCallback;
   final String? pdfLink;
+  final String? pdfPath;
   final String? name;
   final String? userName;
   final String? userDP;
@@ -102,6 +103,7 @@ class _NotesTileState extends State<NotesTile> {
                                                   'userName': widget.userName,
                                                   'pdfName': widget.name,
                                                   'pdfLink': widget.pdfLink,
+                                                  'pdfPath': widget.pdfPath,
                               //for otherUserFiles widget: because it is not able to fetch userSnap from provider,
                               // because it is different widgetTree so userSnap is sent explicitly.
                                                   'userDoc': userDoc ?? widget.currUserDoc,

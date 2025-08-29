@@ -34,6 +34,7 @@ class Notes extends StatelessWidget {
         bool likedFlag=liked.contains(notesList[index]?.notesLink);
         return NotesTile(
           pdfLink: notesList[index]!.notesLink,
+          pdfPath: notesList[index]!.notesPath,
           name: notesList[index]?.notesName,
           userName: userDoc['username'],
           userDP: userDoc['profilePic'],

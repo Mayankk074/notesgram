@@ -141,13 +141,13 @@ class _UploadFormState extends State<UploadForm> {
 
                 if(_formKey.currentState!.validate() && pdf != null){
                   Navigator.pushNamed(context, '/loadingShared');
-                  //uploading the pdf to firebase storage
-                  String url =
-                  await StorageServices(uid: user.uid).uploadPdf(pdf);
+                  // //uploading the pdf to firebase storage
+                  // final result =
+                  // await StorageServices(uid: user.uid).uploadPdf(pdf);
 
                   //adding the Note in DB as a subCollection document
                   await DatabaseService(uid: user.uid)
-                        .addNote(course: _currentCourse,description: _currentDescription,likes: 0, fileName: fileName, subject: _currentSubject, url: url);
+                        .addNote(file: pdf, course: _currentCourse,description: _currentDescription,likes: 0, fileName: fileName, subject: _currentSubject);
 
                   if (!context.mounted) return;
                   Navigator.pop(context);
