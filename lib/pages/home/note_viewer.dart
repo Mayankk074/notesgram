@@ -20,7 +20,7 @@ class NoteViewer extends StatefulWidget {
 
 class _NoteViewerState extends State<NoteViewer> {
   Map data = {};
-  late DocumentSnapshot userDoc;
+  late DocumentSnapshot? userDoc;
   String pdfLink="";
   String? userUid;
   String? noteId;
@@ -119,10 +119,13 @@ class _NoteViewerState extends State<NoteViewer> {
                         SizedBox(height: 10,),
                         ElevatedButton(
                           onPressed: () async {
-                            Navigator.pop(context);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text("Report submitted")),
-                            );
+                            await DatabaseService(uid: userUid).report(noteId!, currentUserUid!.uid!);
+                            if(context.mounted) {
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("Report submitted")),
+                              );
+                            }
                           },
                           style: buttonStyleSignIn,
                           child: Text("Report"),
@@ -208,7 +211,7 @@ class _NoteViewerState extends State<NoteViewer> {
                       icon: Icon(
                         isSaved ? Icons.bookmark : Icons.bookmark_border)
                       ),
-                    if(currUserFlag) //show Delete button to the uploader only
+                    if(currUserFlag || currentUserUid?.uid == 'hOBcyrLrCGVQUYk06NW8I5ez12K3') //show Delete button to the uploader/admin
                       IconButton(
                         onPressed: (){
                           //Asking for confirmation

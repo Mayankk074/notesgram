@@ -7,10 +7,11 @@ import 'package:notesgram/pages/authenticate/signIn.dart';
 import 'package:notesgram/pages/authenticate/signUp.dart';
 import 'package:notesgram/pages/home/note_viewer.dart';
 import 'package:notesgram/pages/home/otherUserFiles.dart';
-import 'package:notesgram/pages/home/profile/faq.dart';
-import 'package:notesgram/pages/home/profile/guidelines.dart';
-import 'package:notesgram/pages/home/profile/privacy.dart';
-import 'package:notesgram/pages/home/profile/profileMenu.dart';
+import 'package:notesgram/pages/home/profile/menu/faq.dart';
+import 'package:notesgram/pages/home/profile/menu/guidelines.dart';
+import 'package:notesgram/pages/home/profile/menu/privacy.dart';
+import 'package:notesgram/pages/home/profile/menu/profileMenu.dart';
+import 'package:notesgram/pages/home/profile/menu/reportedNotes.dart';
 import 'package:notesgram/pages/home/profile/savedNotes.dart';
 import 'package:notesgram/pages/home/userDP.dart';
 import 'package:notesgram/pages/splashLoading.dart';
@@ -55,7 +56,8 @@ class MyApp extends StatelessWidget {
             '/privacy': (context) => const Privacy(),
             '/faq': (context) => const Faq(),
             '/guidelines': (context) => const Guidelines(),
-            '/savedNotes': (context) => const SavedNotes()
+            '/savedNotes': (context) => const SavedNotes(),
+            '/reportedNotes': (context) => const ReportedNotes()
           },
         ));
   }

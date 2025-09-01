@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:notesgram/pages/home/profile/settingsForm.dart';
+import 'package:notesgram/pages/home/profile/menu/settingsForm.dart';
+import 'package:provider/provider.dart';
 
-import '../../../services/auth.dart';
+import '../../../../models/userUid.dart';
+import '../../../../services/auth.dart';
 
 class Menu extends StatelessWidget {
   const Menu({super.key});
@@ -9,6 +11,7 @@ class Menu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map data=ModalRoute.of(context)?.settings.arguments as Map;
+    final user=Provider.of<UserUid?>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -45,6 +48,15 @@ class Menu extends StatelessWidget {
               Navigator.pushNamed(context, '/guidelines');
             },
           ),
+          //Admin page for reportedNotes
+          if(user?.uid == 'hOBcyrLrCGVQUYk06NW8I5ez12K3')
+            ListTile(
+              leading: const Icon(Icons.rule),
+              title: const Text('Reported Notes'),
+              onTap: (){
+                Navigator.pushNamed(context, '/reportedNotes');
+              },
+            ),
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Log out'),
@@ -78,7 +90,7 @@ class Menu extends StatelessWidget {
                     );
                   });
             },
-          )
+          ),
         ],
       )
     );

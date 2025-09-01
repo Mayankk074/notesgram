@@ -9,27 +9,31 @@ class Note {
   @HiveField(1)
   String link;
   @HiveField(2)
-  String course;
+  String? path;
   @HiveField(3)
-  String subject;
+  String course;
   @HiveField(4)
-  String userName;
+  String subject;
   @HiveField(5)
-  String userDP;
+  String userName;
   @HiveField(6)
-  String userUid;
+  String userDP;
   @HiveField(7)
-  String description;
+  String userUid;
   @HiveField(8)
-  int likesCount;
+  String description;
   @HiveField(9)
-  DateTime uploadedAt;
+  int likesCount;
   @HiveField(10)
+  DateTime uploadedAt;
+  @HiveField(11)
   String noteId;
+
 
   Note({
     required this.name,
     required this.link,
+    this.path,
     required this.course,
     required this.subject,
     required this.userName,

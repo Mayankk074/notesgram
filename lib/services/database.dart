@@ -185,6 +185,19 @@ class DatabaseService{
           .doc(id)
           .get();
 
+      //Reports
+      final reportsSnap = await _userCollection
+          .doc(uid)
+          .collection("notes")
+          .doc(id)
+          .collection("reports")
+          .get();
+
+      //Deleting all Reports as well with note
+      for (var doc in reportsSnap.docs) {
+        batch.delete(doc.reference);
+      }
+
       if (!noteSnap.exists) return;
 
       //It directly returning a List because it is List<dynamic>,
@@ -378,7 +391,7 @@ class DatabaseService{
 
   Future<List<Note>> getAllNotes() async {
     List<Note> allNotes=[];
-    final box = await Hive.openBox<Note>('allNotes');
+    final box = await Hive.openBox<Note>('allNotes_$uid');
     // Get all documents from all 'notes' subCollections (across all users)
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collectionGroup('notes')
@@ -452,5 +465,61 @@ class DatabaseService{
     await box.addAll(allNotes);
 
     return allNotes;
+  }
+
+  Future<void> report(String noteId, String currUserId) async{
+    final reportRef = _userCollection
+        .doc(uid)
+        .collection('notes')
+        .doc(noteId)
+        .collection('reports')
+        .doc(currUserId); // user can only report once
+
+    await reportRef.set({
+      'userId': currUserId,
+      'timestamp': FieldValue.serverTimestamp(),
+      'reason': 'Inappropriate content', // later you can add dropdown for reasons
+    });
+  }
+
+  Future<List<Note>> reportedNotes() async{
+    List<Note> reportedNotes=[];
+
+    // Get all documents from all 'notes' subCollections (across all users)
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collectionGroup('notes')
+        .get();
+
+    for (DocumentSnapshot snap in snapshot.docs) {
+      print(snap.id);
+      // Get the full path like: users/abc123/notes/noteDocId
+      String fullPath = snap.reference.path;
+      List<String> segments = fullPath.split('/');
+      String userUid = segments[1]; // users/{uid}/notes/{noteId}
+
+      DocumentSnapshot userSnap=await DatabaseService(uid: userUid).getUserSnap();
+
+      final query=snap.reference.collection('reports').count();
+      final querySnap=await query.get();
+
+      if(querySnap.count! > 5){
+        reportedNotes.add(Note(
+            name: snap['fileName'],
+            link: snap['url'],
+            path: snap['path'],
+            course: snap['course'],
+            subject: snap['subject'],
+            userName: userSnap['username'],
+            userDP: userSnap['profilePic'],
+            userUid: userUid,
+            description: snap['description'],
+            likesCount: snap['likes'],
+            uploadedAt: snap['uploadedAt'].toDate(),
+            noteId: snap.id
+        ));
+      }
+    }
+
+    return reportedNotes;
   }
 }

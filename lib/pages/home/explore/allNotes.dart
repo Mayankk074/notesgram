@@ -31,7 +31,7 @@ class _AllNotesState extends State<AllNotes> {
   final TextEditingController _searchController=TextEditingController();
 
   Future getAllNotes() async {
-    final box = await Hive.openBox<Note>('allNotes');
+    final box = await Hive.openBox<Note>('allNotes_${widget.currUserUid.uid}');
 
     // Cache data
     List<Note> cachedNotes = box.values.toList();
