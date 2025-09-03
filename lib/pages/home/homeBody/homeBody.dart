@@ -41,6 +41,9 @@ class _HomeBodyState extends State<HomeBody> {
       allNotes=cachedNotes;
     }
 
+    //Return if widget is disposed
+    if(!mounted) return;
+
     setState(() {});
   }
 
@@ -54,8 +57,14 @@ class _HomeBodyState extends State<HomeBody> {
   Widget build(BuildContext context) {
     final userDoc=Provider.of<DocumentSnapshot?>(context);
     HashSet<String> liked=HashSet<String>();
-    if(userDoc != null){
-      liked=HashSet<String>.from(userDoc['liked']);
+
+    //if userDoc is not fully populated
+    if (userDoc != null && userDoc.exists) {
+      final data = userDoc.data() as Map<String, dynamic>;
+
+      if (data.containsKey('liked') && data['liked'] != null) {
+        liked = HashSet<String>.from(data['liked']);
+      }
     }
 
     return allNotes.isNotEmpty? ListView.builder(

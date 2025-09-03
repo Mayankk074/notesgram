@@ -30,10 +30,18 @@ class DatabaseService{
   }) async {
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
-    //uploading the pdf to firebase storage
-    final result =
-    await StorageServices(uid: uid).uploadPdf(file);
+    //uploading the pdf to firebase storage ( start upload immediately)
+    final uploadFuture =
+    StorageServices(uid: uid).uploadPdf(file);
 
+    // Path: users/{uid}/notes/{auto-generated-id} (prepare note doc ref while upload is happening)
+    final noteDoc=_userCollection
+        .doc(uid)
+        .collection('notes')
+        .doc(); // auto-generates a new doc ID
+
+    // wait for upload to complete
+    final result = await uploadFuture;
 
     final noteData = {
       'fileName': fileName,
@@ -47,20 +55,11 @@ class DatabaseService{
       'savedBy': []
     };
 
-    // Path: users/{uid}/notes/{auto-generated-id}
-    final noteDoc=_userCollection
-        .doc(uid)
-        .collection('notes')
-        .doc(); // auto-generates a new doc ID
-
     batch.set(noteDoc, noteData);
 
-    final userDoc=await _userCollection.doc(uid).get();
-    int notesUploaded=userDoc['notesUploaded'] ?? 0;
-
     //Increasing no. of uploads
-    batch.update(userDoc.reference, {
-      'notesUploaded': notesUploaded +1
+    batch.update(_userCollection.doc(uid), {
+      'notesUploaded': FieldValue.increment(1)
     });
 
     await batch.commit();
@@ -86,26 +85,20 @@ class DatabaseService{
   }
 
   Future startFollowing(String otherUserId) async {
-    List<String> followingList=[];
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
     try {
       // Fetch the current user data from the database
       final userRef = _userCollection.doc(uid);
-      DocumentSnapshot snapshot = await userRef.get();
 
-      //Add other User id from the current user following list
-      followingList = List<String>.from(snapshot.get('following'));
-      followingList.add(otherUserId);
+      // //Add other User id from the current user following list
       batch.update(userRef, {
-        'following': followingList
+        'following': FieldValue.arrayUnion([otherUserId])
       });
 
       //Increase the number of followers of other user
-      DocumentSnapshot snap=await _userCollection.doc(otherUserId).get();
-      int cnt=snap['followers'];
-      batch.update(snap.reference, {
-        'followers': cnt+1
+      batch.update(_userCollection.doc(otherUserId), {
+        'followers': FieldValue.increment(1)
       });
 
       await batch.commit();
@@ -117,7 +110,6 @@ class DatabaseService{
   }
 
   Future stopFollowing(String otherUserId) async {
-    List<String> followingList=[];
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
     try {
@@ -126,17 +118,15 @@ class DatabaseService{
       DocumentSnapshot snapshot = await userRef.get();
 
       //remove other User id from the current user following list
-      followingList = List<String>.from(snapshot.get('following'));
-      followingList.remove(otherUserId);
       batch.update(userRef, {
-        'following': followingList
+        'following': FieldValue.arrayRemove([otherUserId])
       });
 
       //Decrease the number of followers of other user
-      DocumentSnapshot snap=await _userCollection.doc(otherUserId).get();
-      int cnt=snap['followers'];
-      batch.update(snap.reference, {
-        'followers': cnt-1
+      // DocumentSnapshot snap=await _userCollection.doc(otherUserId).get();
+      // int cnt=snap['followers'];
+      batch.update(_userCollection.doc(otherUserId), {
+        'followers': FieldValue.increment(-1)
       });
 
       await batch.commit();
@@ -213,18 +203,15 @@ class DatabaseService{
       }
 
       //decreasing the no. of uploads
-      DocumentSnapshot userSnap=await _userCollection.doc(uid).get();
-      int notesUploaded=userSnap['notesUploaded'] ?? 0;
-
-      batch.update(userSnap.reference, {
-        'notesUploaded': notesUploaded > 0 ? notesUploaded -1 : 0
+      batch.update(_userCollection.doc(uid), {
+        'notesUploaded': FieldValue.increment(-1)
       });
-
-      //Delete file from firebaseStorage as well
-      await StorageServices(uid: uid).deletePdf(filePath);
 
       // Commit all operations together
       await batch.commit();
+
+      //Delete file from firebaseStorage as well
+      StorageServices(uid: uid).deletePdf(filePath);
     } catch (e) {
       if (kDebugMode) {
         print('Error while deleting note: $e');
@@ -434,6 +421,17 @@ class DatabaseService{
     List<String> followingList=[];
     final box = await Hive.openBox<Note>('followingNotes_$uid');
     DocumentSnapshot snap=await getUserSnap();
+
+    //for first time user where there will be delay in profile pic upload for that error handling
+    if(snap.data() != null){
+      final data = snap.data() as Map<String, dynamic>;
+      if (!data.containsKey('following') && data['following'] == null) {
+        return allNotes;
+      }
+    }
+    else{
+      return allNotes;
+    }
 
     followingList=List<String>.from(snap['following']);
 

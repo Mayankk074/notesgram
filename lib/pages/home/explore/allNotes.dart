@@ -67,6 +67,9 @@ class _AllNotesState extends State<AllNotes> {
       showResults=allNotes;
     }
 
+    //Return if widget is disposed
+    if(!mounted) return;
+
     setState(() {
       filteredNotes=showResults;
     });

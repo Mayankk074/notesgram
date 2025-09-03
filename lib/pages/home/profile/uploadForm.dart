@@ -140,21 +140,15 @@ class _UploadFormState extends State<UploadForm> {
               onPressed: () async {
 
                 if(_formKey.currentState!.validate() && pdf != null){
-                  Navigator.pushNamed(context, '/loadingShared');
-                  // //uploading the pdf to firebase storage
-                  // final result =
-                  // await StorageServices(uid: user.uid).uploadPdf(pdf);
-
-                  //adding the Note in DB as a subCollection document
-                  await DatabaseService(uid: user.uid)
+                  //adding the Note in DB as a subCollection document asynchronously
+                  DatabaseService(uid: user.uid)
                         .addNote(file: pdf, course: _currentCourse,description: _currentDescription,likes: 0, fileName: fileName, subject: _currentSubject);
 
                   if (!context.mounted) return;
                   Navigator.pop(context);
-                  if (!context.mounted) return;
-                  Navigator.pop(context);
                   const snackBar = SnackBar(
-                    content: Text('Yay! PDF has been uploaded!'),
+                    content: Text('Yay! PDF has been uploading!'),
+                    duration: Duration(seconds: 1),
                   );
                   // Find the ScaffoldMessenger in the widget tree
                   // and use it to show a SnackBar.

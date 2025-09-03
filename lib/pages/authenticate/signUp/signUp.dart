@@ -96,9 +96,8 @@ class _SignUpState extends State<SignUp> {
                   decoration: textInputDecoration.copyWith(
                     labelText: 'Password',
                     hintText: 'Enter your password',
-                    prefixIcon: const Icon(Icons.password
-                                )
-                              ),
+                    prefixIcon: const Icon(Icons.password)
+                  ),
                   obscureText: true,
                 ),
                 const SizedBox(height: 20.0,),
@@ -114,23 +113,15 @@ class _SignUpState extends State<SignUp> {
                 ElevatedButton(
                   onPressed: () async {
                     if(_formKey.currentState!.validate()){
-                      setState(()=> loading=true);
-                      dynamic result=await _auth.signUpWithEmailAndPassword(email!, password!);
-                      if(result==null){
-                        setState(() {
-                          error='There is an error';
-                          loading=false;
-                        });
-                      }
-                      else{
-                        await DatabaseService(uid: result.uid).updateUserData(username!, email!, password!,'No DP','Enter college name',
-                            'Enter course','Enter class','Enter bio',0,[],0,HashSet<String>());
-                        if (context.mounted) Navigator.of(context).pop();
-                      }
+                      Navigator.pushNamed(context, '/details', arguments: {
+                        'email': email,
+                        'password': password,
+                        'username': username
+                      });
                     }
                   },
                   style: buttonStyleSignUp,
-                  child: const Text('Create account'),
+                  child: const Text('Next'),
                 ),
                 const SizedBox(height: 10.0,),
                 Text(error,style: const TextStyle(

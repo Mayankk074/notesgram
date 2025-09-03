@@ -4,7 +4,8 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:notesgram/models/userUid.dart';
 import 'package:notesgram/pages/authenticate/signIn.dart';
-import 'package:notesgram/pages/authenticate/signUp.dart';
+import 'package:notesgram/pages/authenticate/signUp/details.dart';
+import 'package:notesgram/pages/authenticate/signUp/signUp.dart';
 import 'package:notesgram/pages/home/note_viewer.dart';
 import 'package:notesgram/pages/home/otherUserFiles.dart';
 import 'package:notesgram/pages/home/profile/menu/faq.dart';
@@ -57,7 +58,8 @@ class MyApp extends StatelessWidget {
             '/faq': (context) => const Faq(),
             '/guidelines': (context) => const Guidelines(),
             '/savedNotes': (context) => const SavedNotes(),
-            '/reportedNotes': (context) => const ReportedNotes()
+            '/reportedNotes': (context) => const ReportedNotes(),
+            '/details': (context) => const Details()
           },
         ));
   }

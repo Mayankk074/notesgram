@@ -21,6 +21,7 @@ class _UserProfileState extends State<UserProfile> {
   DocumentSnapshot? currentUserSnap;
   UserUid? userUid;
   bool isFollow=false;
+  bool loading=false;
 
   Future getUserProfile() async {
     userSnap= await DatabaseService(uid: data['userUid']).getUserSnap();
@@ -40,7 +41,7 @@ class _UserProfileState extends State<UserProfile> {
     double screenWidth=MediaQuery.of(context).size.width;
     double screenHeight=MediaQuery.of(context).size.height;
 
-    return FutureBuilder(
+    return loading ? LoadingShared() : FutureBuilder(
       future: getUserProfile(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snap) {
         if (snap.connectionState == ConnectionState.waiting) {
@@ -180,6 +181,9 @@ class _UserProfileState extends State<UserProfile> {
                 SizedBox(height: screenHeight*0.1,),
                 ElevatedButton(
                   onPressed:()async{
+                    //Showing loading screen
+                    setState(()=> loading=true);
+
                     //Creating List from iterable
                     List<String> followingList=List<String>.from(userSnap?['following']);
                     if(!isFollow){
@@ -198,6 +202,7 @@ class _UserProfileState extends State<UserProfile> {
 
                     setState(() {
                       isFollow = followingList.contains(data['userUid']);
+                      loading=false;
                     });
                   },
                   style: buttonStyleSignUp,

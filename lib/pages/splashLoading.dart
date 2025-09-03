@@ -12,7 +12,7 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _controller;
 
   void wait() async{
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 1), () {
       if (mounted) {
         Navigator.of(context).pushReplacementNamed('/wrapper');
       }
@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 500),
     )..forward();
 
     wait();

@@ -227,7 +227,7 @@ class _NoteViewerState extends State<NoteViewer> {
                                   ),
                                   actions: <Widget>[
                                     TextButton(
-                                      child: const Text('Yes'),
+                                      style: buttonStyleSignUp,
                                       onPressed: () async {
                                         await DatabaseService(uid: userUid).deleteUserPDF(id: data['id'], filePath: data['pdfPath']);
                                         if(!context.mounted) return;
@@ -235,17 +235,21 @@ class _NoteViewerState extends State<NoteViewer> {
                                         Navigator.of(context).pop();
                                         const snackBar = SnackBar(
                                           content: Text('Yay! Note has been deleted!'),
+                                          duration: Duration(seconds: 1),
                                         );
                                         // Find the ScaffoldMessenger in the widget tree
                                         // and use it to show a SnackBar.
                                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                       },
+                                      child: const Text('Yes'),
                                     ),
+                                    SizedBox(height: 10,),
                                     TextButton(
-                                      child: const Text('No'),
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
+                                      style: buttonStyleSignIn,
+                                      child: const Text('No'),
                                     ),
                                   ],
                                 );

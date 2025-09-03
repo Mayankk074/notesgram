@@ -48,7 +48,7 @@ class StorageServices{
 
     } catch (e) {
       if (kDebugMode) {
-        print("Error deleting PDF: $e");
+        print("Error deleting PDF from storage: $e");
       }
     }
   }
