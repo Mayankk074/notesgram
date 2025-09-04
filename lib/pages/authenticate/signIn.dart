@@ -37,7 +37,7 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    return loading? const LoadingShared(): Scaffold(
+    return loading? PopScope(canPop: false, child: LoadingShared()): Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple[50],
       ),
@@ -140,33 +140,38 @@ class _SignInState extends State<SignIn> {
                 //Google SignIn
                 CupertinoButton(
                   onPressed: () async {
-                    dynamic result= await _auth.signInWithGoogle();
-                    if(result==null){
-                      setState(() {
-                        error='There is an error';
-                        loading=false;
-                      });
-                    }else{
-                      User? user = result.user;
-                      bool flag=false;
-                      //checking if user is already present
-                      QuerySnapshot snap=await _userCollection.get();
-                      List<DocumentSnapshot> listOfDocs=snap.docs;
-                      for(DocumentSnapshot snap in listOfDocs){
-                        if(snap.id == user?.uid){
-                          flag=true;
-                          break;
+                    setState(()=> loading=true);
+                    try{
+                      dynamic result= await _auth.signInWithGoogle();
+                      if(result==null){
+                        setState(() {
+                          error='There is an error';
+                          loading=false;
+                        });
+                      }else{
+                        User? user = result.user;
+                        bool flag=false;
+                        //checking if user is already present
+                        QuerySnapshot snap=await _userCollection.get();
+                        List<DocumentSnapshot> listOfDocs=snap.docs;
+                        for(DocumentSnapshot snap in listOfDocs){
+                          if(snap.id == user?.uid){
+                            flag=true;
+                            break;
+                          }
                         }
+                        if(!flag){
+                          //creating new DB if user is not present
+                          String? gMail=user?.email;
+                          String? name=user?.displayName;
+                          String? photoUrl=user?.photoURL;
+                          await DatabaseService(uid: user?.uid).updateUserData(name!, gMail!, "",photoUrl,'Enter college name',
+                              'Enter course','Enter class','Enter bio',0,[],0,HashSet<String>());
+                        }
+                        if (context.mounted) Navigator.of(context).pop();
                       }
-                      if(!flag){
-                        //creating new DB if user is not present
-                        String? gMail=user?.email;
-                        String? name=user?.displayName;
-                        String? photoUrl=user?.photoURL;
-                        await DatabaseService(uid: user?.uid).updateUserData(name!, gMail!, "",photoUrl,'Enter college name',
-                            'Enter course','Enter class','Enter bio',0,[],0,HashSet<String>());
-                      }
-                      if (context.mounted) Navigator.of(context).pop();
+                    }catch(e){
+                      setState(()=> loading=false);
                     }
                   },
                   child: CircleAvatar(

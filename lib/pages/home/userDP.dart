@@ -41,7 +41,8 @@ class _UserProfileState extends State<UserProfile> {
     double screenWidth=MediaQuery.of(context).size.width;
     double screenHeight=MediaQuery.of(context).size.height;
 
-    return loading ? LoadingShared() : FutureBuilder(
+    //LoadingScreen can't be disposed by back button.
+    return loading ? PopScope(canPop: false, child: LoadingShared()) : FutureBuilder(
       future: getUserProfile(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snap) {
         if (snap.connectionState == ConnectionState.waiting) {

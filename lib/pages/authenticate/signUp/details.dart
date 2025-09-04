@@ -40,9 +40,8 @@ class _DetailsState extends State<Details> {
 
     final data=ModalRoute.of(context)?.settings.arguments as Map;
 
-
-
-    return loading ? LoadingShared() : Scaffold(
+    //LoadingScreen can't be disposed by back button.
+    return loading ? PopScope(canPop: false, child: LoadingShared()) : Scaffold(
       appBar: AppBar(
         title: Text('Fill Details'),
         backgroundColor: Colors.purple[50],
