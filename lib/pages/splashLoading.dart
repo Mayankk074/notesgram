@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Logo or splash image (same as native one for smooth effect)
-            SizedBox(height: 35),
+            SizedBox(height: MediaQuery.heightOf(context)*0.06),
             Expanded(
               child: Center(
                 child: Image.asset("assets/splashScreen.jpg", width: 290),
@@ -61,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen>
                   return LinearProgressIndicator(
                     value: _controller.value,
                     backgroundColor: Colors.grey[300],
-                    color: Colors.purple[200],
+                    color: Color(0xFF3F51B5),
                     minHeight: 4,
                     borderRadius: BorderRadius.circular(4),
                   );

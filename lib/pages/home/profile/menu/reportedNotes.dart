@@ -31,7 +31,6 @@ class _ReportedNotesState extends State<ReportedNotes> {
 
   @override
   Widget build(BuildContext context) {
-    final user=Provider.of<UserUid?>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('ReportedNotes'),

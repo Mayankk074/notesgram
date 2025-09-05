@@ -21,7 +21,7 @@ class _ExploreState extends State<Explore> {
 
     return Container(
       alignment: Alignment.center,
-      padding: const EdgeInsets.only(top: 20.0),
+      padding: EdgeInsets.only(top: MediaQuery.heightOf(context) * 0.02),
       child: AllNotes(currUserUid: currUser,),
     );
   }

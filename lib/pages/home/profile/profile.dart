@@ -28,18 +28,21 @@ class _ProfileState extends State<Profile> {
     final userDoc = Provider.of<DocumentSnapshot?>(context);
     final user = Provider.of<UserUid>(context);
 
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     void showUploadPanel() {
       showModalBottomSheet(
           context: context,
           isScrollControlled: true,
+          backgroundColor: Colors.white,
           builder: (context) {
             return SafeArea(
               child: Padding(
                 //for keyboard padding
-                padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                 child: SizedBox(
-                  height: 400,
+                  height: screenHeight * 0.5,
                   child: UploadForm(
                     userDoc: userDoc,
                   ),
@@ -49,8 +52,7 @@ class _ProfileState extends State<Profile> {
           });
     }
 
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+
 
     return userDoc == null
         ? const LoadingShared()
@@ -72,7 +74,7 @@ class _ProfileState extends State<Profile> {
                           setState(() {});
                         },
                         label: Icon(
-                          Icons.settings_outlined,
+                          Icons.menu,
                           size: screenWidth * 0.08,
                           color: Colors.black,
                         ),
@@ -99,20 +101,7 @@ class _ProfileState extends State<Profile> {
                                 await StorageServices(uid: user.uid)
                                     .uploadImage(convertedImage);
                             //updating the profilePic url
-                            DatabaseService(uid: user.uid).updateUserData(
-                              userDoc['username'],
-                              userDoc['email'],
-                              userDoc['password'],
-                              downloadUrl,
-                              userDoc['college'],
-                              userDoc['course'],
-                              userDoc['class'],
-                              userDoc['bio'],
-                              userDoc['followers'],
-                              List<String>.from(userDoc['following']),
-                              userDoc['notesUploaded'],
-                              HashSet<String>.from(userDoc['liked']),
-                            );
+                            DatabaseService(uid: user.uid).updateProfilePic(downloadUrl);
 
                             log("image selected!");
                           } else {
@@ -127,7 +116,7 @@ class _ProfileState extends State<Profile> {
                           backgroundImage: userDoc['profilePic'] != 'No DP'
                               ? CachedNetworkImageProvider(userDoc['profilePic'])
                               : null,
-                          backgroundColor: Colors.purple[100],
+                          backgroundColor: Color(0xFF3F51B5),
                           //showing person Icon if there is no DP
                           child: userDoc['profilePic'] != 'No DP'
                               ? null
@@ -170,28 +159,18 @@ class _ProfileState extends State<Profile> {
                   SizedBox(
                     height: screenHeight * 0.02,
                   ),
-                  Text(
-                    userDoc['bio'],
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.045,
-                      letterSpacing: 1.0,
-                    ),
-                  ),
-                  SizedBox(height: screenHeight * 0.05),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/savedNotes',
-                          arguments: {'userDoc': userDoc});
-                    },
-                    style: buttonStyleSignUp,
-                    child: Text(
-                      'Saved Notes',
-                      style: TextStyle(
-                        fontSize: screenWidth * 0.055,
+                  Row(
+                    children: [
+                      Text(
+                        userDoc['bio'],
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.045,
+                          letterSpacing: 1.0,
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                  SizedBox(height: screenHeight * 0.05),
+                  SizedBox(height: screenHeight * 0.1),
                   const Divider(),
                   Row(
                     children: [
@@ -265,17 +244,30 @@ class _ProfileState extends State<Profile> {
                     ],
                   ),
                   const Divider(),
-                  SizedBox(
-                    height: screenHeight * 0.10,
-                  ),
+                  SizedBox(height: screenHeight * 0.1),
                   ElevatedButton(
-                    onPressed: () => showUploadPanel(),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/savedNotes',
+                          arguments: {'userDoc': userDoc});
+                    },
                     style: buttonStyleSignIn,
                     child: Text(
-                      'Upload',
+                      'Saved Notes',
                       style: TextStyle(
                         fontSize: screenWidth * 0.055,
                       ),
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.02),
+                  ElevatedButton.icon(
+                    onPressed: () => showUploadPanel(),
+                    label: Text(
+                      'Upload',
+                      style: TextStyle(fontSize: screenWidth * 0.055)
+                    ),
+                    icon: const Icon(
+                      Icons.upload,
+                      size: 25,
                     ),
                   ),
                 ],

@@ -10,7 +10,7 @@ class LoadingShared extends StatelessWidget {
       body: SafeArea(
         child: Center(
           child: SpinKitRing(
-            color: Colors.purple,
+            color: Color(0xFF3F51B5),
             lineWidth: 5,
           ),
         ),

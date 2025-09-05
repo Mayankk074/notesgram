@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:notesgram/pages/home/profile/menu/settingsForm.dart';
+import 'package:notesgram/shared/constants.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../models/userUid.dart';
@@ -67,6 +68,13 @@ class Menu extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: Icon(Icons.monetization_on),
+            title: Text('Earn'),
+            onTap: (){
+              Navigator.pushNamed(context, '/earn');
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Log out'),
             onTap: (){
@@ -81,15 +89,17 @@ class Menu extends StatelessWidget {
                           )
                       ),
                       actions: <Widget>[
-                        TextButton(
-                          child: const Text('Yes'),
+                        ElevatedButton(
                           onPressed: () async {
                             Navigator.of(context).pop();
                             await AuthService().signOut();
                             if(context.mounted) Navigator.of(context).pop();
                           },
+                          style: buttonStyleSignIn,
+                          child: const Text('Yes'),
                         ),
-                        TextButton(
+                        SizedBox(height: 10),
+                        ElevatedButton(
                           child: const Text('No'),
                           onPressed: () {
                             Navigator.of(context).pop();

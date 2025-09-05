@@ -41,6 +41,9 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth=MediaQuery.of(context).size.width;
+    double screenHeight=MediaQuery.of(context).size.height;
+
     return loading? PopScope(canPop: false, child: LoadingShared()): GestureDetector(
       //When clicking outside the keyboard unfocus keyboard.
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -52,14 +55,12 @@ class _SignUpState extends State<SignUp> {
               await Future.delayed(Duration(milliseconds: 300));
               if(context.mounted) Navigator.of(context).pop();
             },
-            icon: Icon(Icons.arrow_back)
+            icon: Icon(Icons.arrow_back),
           ),
-          backgroundColor: Colors.purple[50],
         ),
-        backgroundColor: Colors.purple[50],
         body:
         Container(
-          padding: const EdgeInsets.fromLTRB(20.0,30.0,20.0,0.0),
+          padding: EdgeInsets.fromLTRB(screenWidth*0.05,screenHeight*0.04,screenWidth*0.05,0),
           child: Form(
             key: _formKey,
             child: SingleChildScrollView(
@@ -70,13 +71,13 @@ class _SignUpState extends State<SignUp> {
                     child: Text(
                       'Create Account',
                       style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width * 0.08,
+                        fontSize: screenWidth * 0.08,
                         letterSpacing: 2.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 15.0,),
+                  SizedBox(height: screenHeight * 0.02),
                   Text(
                     'Just a few quick things to get started:',
                     textAlign: TextAlign.center,
@@ -84,47 +85,48 @@ class _SignUpState extends State<SignUp> {
                       fontSize:MediaQuery.of(context).size.width * 0.05,
                     ),
                   ),
-                  const SizedBox(height: 20.0,),
+                  SizedBox(height: screenHeight * 0.025),
                   TextFormField(
                     validator: (val) => val!.isEmpty ? 'Enter a username': null,
                     onChanged: (val) => setState(()=> username=val ),
-                    decoration: textInputDecoration.copyWith(
-                        labelText: 'Username',
-                        hintText: 'Enter your username',
-                        prefixIcon: const Icon(Icons.alternate_email_outlined
-                        )),
+                    decoration: InputDecoration(
+                      labelText: 'Username',
+                      hintText: 'Enter your username',
+                      prefixIcon: const Icon(Icons.alternate_email_outlined),
+                    )
                   ),
-                  const SizedBox(height: 20.0,),
+                  SizedBox(height: screenHeight * 0.025),
                   TextFormField(
                     validator: (val) => val!.isEmpty ? 'Enter a email': null,
                     onChanged: (val) => setState(()=> email=val ),
-                    decoration: textInputDecoration.copyWith(
-                        labelText: 'Email',
-                        hintText: 'Enter your Email',
-                        prefixIcon: const Icon(Icons.email
-                        )),
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      hintText: 'Enter your Email',
+                      prefixIcon: const Icon(Icons.email)
+                    )
                   ),
-                  const SizedBox(height: 20.0,),
+                  SizedBox(height: screenHeight * 0.025),
                   TextFormField(
                     validator: (val) => val!.length < 6 ? 'Enter a password': null,
                     onChanged: (val) => setState(()=> password=val ),
-                    decoration: textInputDecoration.copyWith(
-                      labelText: 'Password',
-                      hintText: 'Enter your password',
+                    decoration: InputDecoration(
+                        labelText: 'Password',
+                        hintText: 'Enter your password',
+                        prefixIcon: const Icon(Icons.password)
+                    ),
+                    obscureText: true,
+                  ),
+                  SizedBox(height: screenHeight * 0.025),
+                  TextFormField(
+                    validator: (val) => val! != password ? 'Enter same password': null,
+                    decoration: InputDecoration(
+                      labelText: 'Confirm Password',
+                      hintText: 'Enter your password again',
                       prefixIcon: const Icon(Icons.password)
                     ),
                     obscureText: true,
                   ),
-                  const SizedBox(height: 20.0,),
-                  TextFormField(
-                    validator: (val) => val! != password ? 'Enter same password': null,
-                    decoration: textInputDecoration.copyWith(
-                        labelText: 'Confirm Password',
-                        hintText: 'Enter your password again',
-                        prefixIcon: const Icon(Icons.password
-                        )),
-                  ),
-                  const SizedBox(height: 40.0,),
+                  SizedBox(height: screenHeight * 0.05),
                   ElevatedButton(
                     onPressed: () async {
                       //Unfocus keyboard before navigating
@@ -138,10 +140,9 @@ class _SignUpState extends State<SignUp> {
                         });
                       }
                     },
-                    style: buttonStyleSignUp,
                     child: const Text('Next'),
                   ),
-                  const SizedBox(height: 10.0,),
+                  SizedBox(height: screenHeight * 0.01),
                   Text(error,style: const TextStyle(
                     color: Colors.red,
                   ),),
@@ -185,7 +186,7 @@ class _SignUpState extends State<SignUp> {
                             String? gMail=user?.email;
                             String? name=user?.displayName;
                             String? photoUrl=user?.photoURL;
-                            await DatabaseService(uid: user?.uid).updateUserData(name!, gMail!, "",photoUrl,'Enter college name',
+                            await DatabaseService(uid: user?.uid).updateUserData(name!, gMail!, photoUrl,'Enter college name',
                                 'Enter course','Enter class','Enter bio',0,[],0, HashSet<String>());
                           }
                           if (context.mounted) Navigator.of(context).pop();
@@ -202,7 +203,7 @@ class _SignUpState extends State<SignUp> {
                       backgroundImage: const AssetImage(
                           'assets/googleLogo.png'
                       ),
-                      backgroundColor: Colors.purple[50],
+                      backgroundColor: Colors.white,
                     ),
                   )
                 ],

@@ -99,13 +99,16 @@ class _AllNotesState extends State<AllNotes> {
   @override
   Widget build(BuildContext context){
 
+    double screenWidth=MediaQuery.widthOf(context);
+    double screenHeight=MediaQuery.heightOf(context);
+
     final userDoc=Provider.of<DocumentSnapshot?>(context);
     HashSet<String> liked=HashSet<String>.from(userDoc?['liked']);
 
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
           child: CupertinoSearchTextField(
             controller: _searchController,
             placeholder: 'Search subject',
@@ -118,12 +121,12 @@ class _AllNotesState extends State<AllNotes> {
                 int itemCount=loadLength < filteredNotes.length ? loadLength-1 : filteredNotes.length;
                 if(index==itemCount){
                   return Padding(
-                    padding: const EdgeInsets.fromLTRB(20.0,10.0,20.0,10.0),
+                    padding: EdgeInsets.fromLTRB(screenWidth * 0.04, screenHeight * 0.01, screenWidth * 0.04, screenHeight*0.01),
                     child: ElevatedButton(
                       onPressed: (){
                         setState(() => loadLength+=10);
                       },
-                      style: buttonStyleSignUp,
+                      // style: buttonStyleSignUp,
                       child: const Text(
                         'Load More',
                         style: TextStyle(

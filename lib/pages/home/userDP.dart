@@ -108,12 +108,16 @@ class _UserProfileState extends State<UserProfile> {
                 SizedBox(
                   height: screenHeight*0.02,
                 ),
-                Text(
-                  userSnap?['bio'],
-                  style: TextStyle(
-                    fontSize: screenWidth*0.045,
-                    letterSpacing: 1.0,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      userSnap?['bio'],
+                      style: TextStyle(
+                        fontSize: screenWidth*0.045,
+                        letterSpacing: 1.0,
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(height: screenHeight*0.1),
                 const Divider(),
@@ -206,7 +210,7 @@ class _UserProfileState extends State<UserProfile> {
                       loading=false;
                     });
                   },
-                  style: buttonStyleSignUp,
+                  // style: buttonStyleSignUp,
                   child: Text(
                     isFollow?'Following':'Follow',
                     style: const TextStyle(

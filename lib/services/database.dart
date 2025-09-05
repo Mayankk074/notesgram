@@ -67,11 +67,10 @@ class DatabaseService{
 
 
   //upload the data of user in database
-  Future updateUserData(String username, String email, String password, String? downloadUrl,String college, String course, String className, String bio,int followers,List<String> following, int notesUploaded, HashSet<String> liked) async {
+  Future updateUserData(String username, String email, String? downloadUrl,String college, String course, String className, String bio,int followers,List<String> following, int notesUploaded, HashSet<String> liked) async {
     return await _userCollection.doc(uid).set({
       'username': username,
       'email': email,
-      'password': password,
       'profilePic': downloadUrl,
       'college': college,
       'course': course,
@@ -81,6 +80,12 @@ class DatabaseService{
       'following': following,
       'notesUploaded': notesUploaded,
       'liked': liked
+    });
+  }
+
+  Future updateProfilePic(String url) async {
+    await _userCollection.doc(uid).update({
+      'profilePic': url
     });
   }
 

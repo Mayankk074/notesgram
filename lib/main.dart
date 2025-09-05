@@ -8,6 +8,7 @@ import 'package:notesgram/pages/authenticate/signUp/details.dart';
 import 'package:notesgram/pages/authenticate/signUp/signUp.dart';
 import 'package:notesgram/pages/home/note_viewer.dart';
 import 'package:notesgram/pages/home/otherUserFiles.dart';
+import 'package:notesgram/pages/home/profile/menu/earn.dart';
 import 'package:notesgram/pages/home/profile/menu/faq.dart';
 import 'package:notesgram/pages/home/profile/menu/guidelines.dart';
 import 'package:notesgram/pages/home/profile/menu/privacy.dart';
@@ -19,6 +20,7 @@ import 'package:notesgram/pages/splashLoading.dart';
 import 'package:notesgram/pages/wrapper.dart';
 import 'package:notesgram/services/auth.dart';
 import 'package:notesgram/shared/loadingShared.dart';
+import 'package:notesgram/theme/theme.dart';
 import 'package:provider/provider.dart';
 
 import 'models/note.dart';
@@ -45,6 +47,7 @@ class MyApp extends StatelessWidget {
         value: AuthService().user,
         initialData: null,
         child:  MaterialApp(
+          theme: AppTheme.lightTheme,
           initialRoute: '/',
           routes: {
             '/': (context)=> const SplashScreen(),
@@ -61,7 +64,8 @@ class MyApp extends StatelessWidget {
             '/guidelines': (context) => const Guidelines(),
             '/savedNotes': (context) => const SavedNotes(),
             '/reportedNotes': (context) => const ReportedNotes(),
-            '/details': (context) => const Details()
+            '/details': (context) => const Details(),
+            '/earn' : (context) => const Earn()
           },
         ));
   }

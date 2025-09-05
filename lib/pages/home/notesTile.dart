@@ -43,8 +43,9 @@ class _NotesTileState extends State<NotesTile> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Card(
+        color: Colors.white,
         elevation: 8,
-        margin: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+        margin: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.05, right: MediaQuery.of(context).size.width*0.05),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -73,7 +74,7 @@ class _NotesTileState extends State<NotesTile> {
                             backgroundImage: widget.userDP !='No DP'? CachedNetworkImageProvider(
                               widget.userDP!): null,
                             radius: 30.0,
-                            backgroundColor: Colors.purple[100],
+                            backgroundColor: Color(0xFF3F51B5),
                             child: widget.userDP != 'No DP' ?
                               null : const Icon(Icons.person,),
                           ),
@@ -81,7 +82,7 @@ class _NotesTileState extends State<NotesTile> {
                           backgroundImage: widget.userDP !='No DP'? CachedNetworkImageProvider(
                             widget.userDP!): null,
                           radius: 30.0,
-                          backgroundColor: Colors.purple[100],
+                          backgroundColor: Color(0xFF3F51B5),
                           child: widget.userDP != 'No DP' ? null : const Icon(Icons.person),
                         ),
                         const SizedBox(height: 8), // Space between CircleAvatar and username

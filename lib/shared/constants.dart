@@ -12,24 +12,13 @@ const textInputDecoration=InputDecoration(
 
 var buttonStyleSignIn= ButtonStyle(
   fixedSize: WidgetStateProperty.all<Size>(const Size(250.0, 50)),
-  backgroundColor: WidgetStateProperty.all<Color>(Colors.purple[200]!),
-  shape: WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(28.0),
-  )),
-  foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
-  side: WidgetStateProperty.all<BorderSide>(
-      const BorderSide(color: Colors.white, width: 2.0)),
-);
-
-var buttonStyleSignUp=ButtonStyle(
-  fixedSize: WidgetStateProperty.all<Size>(const Size(250.0, 50)),
   backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
   shape: WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(28.0),
   )),
-  foregroundColor: WidgetStateProperty.all<Color>(Colors.purple[200]!),
+  foregroundColor: WidgetStateProperty.all<Color>(Color(0xFF3F51B5)),
   side: WidgetStateProperty.all<BorderSide>(
-      BorderSide(color: Colors.purple[200]!, width: 2.0)),
+      const BorderSide(color: Color(0xFF3F51B5), width: 2.0)),
 );
 
 const List<String> courses = [

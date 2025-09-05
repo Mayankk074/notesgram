@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notesgram/shared/constants.dart';
+import 'package:notesgram/theme/theme.dart';
 
 class Login extends StatelessWidget {
   const Login({super.key});
@@ -7,7 +8,7 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.purple[100],
+      backgroundColor: Color(0xFF3F51B5),
       body: SafeArea(
         child: Container(
           decoration: const BoxDecoration(
@@ -27,7 +28,6 @@ class Login extends StatelessWidget {
                       onPressed: (){
                         Navigator.pushNamed(context, '/signUp');
                       },
-                      style: buttonStyleSignUp,
                       child: const Text(
                         'Sign Up',
                         style: TextStyle(

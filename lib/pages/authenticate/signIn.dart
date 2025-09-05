@@ -37,6 +37,9 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight=MediaQuery.heightOf(context);
+    double screenWidth=MediaQuery.widthOf(context);
+
     return loading? PopScope(canPop: false, child: LoadingShared()): Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -47,14 +50,12 @@ class _SignInState extends State<SignIn> {
             },
             icon: Icon(Icons.arrow_back)
         ),
-        backgroundColor: Colors.purple[50],
       ),
-      backgroundColor: Colors.purple[50],
       body: Container(
         padding:  EdgeInsets.only(
-          top: MediaQuery.of(context).size.height*0.1,
-          left: 20.0,
-          right: 20.0,
+          top: screenHeight*0.1,
+          left: screenWidth*0.05,
+          right: screenWidth*0.05,
         ),
         child: Form(
           key: _formKey,
@@ -79,21 +80,21 @@ class _SignInState extends State<SignIn> {
                     fontSize:20.0,
                   ),
                 ),
-                const SizedBox(height: 50.0,),
+                SizedBox(height: screenHeight*0.05),
                 TextFormField(
                   validator: (val) => val!.isEmpty ? 'Enter a email': null,
                   onChanged: (val) => setState(()=> email=val ),
-                  decoration: textInputDecoration.copyWith(
+                  decoration: InputDecoration(
                       labelText: 'Email',
                       hintText: 'Enter your email',
                       prefixIcon: const Icon(Icons.alternate_email_outlined
                       )),
                 ),
-                const SizedBox(height: 15.0,),
+                SizedBox(height: screenHeight*0.02),
                 TextFormField(
                   validator: (val) => val!.length < 6 ? 'Enter valid password': null,
                   onChanged: (val) => setState(()=> pass=val ),
-                  decoration: textInputDecoration.copyWith(
+                  decoration: InputDecoration(
                       labelText: 'Password',
                       hintText: 'Enter your password',
                       prefixIcon: const Icon(Icons.password
@@ -101,7 +102,7 @@ class _SignInState extends State<SignIn> {
                   ),
                   obscureText: true,
                 ),
-                const SizedBox(height: 35.0,),
+                SizedBox(height: screenHeight*0.05),
                 ElevatedButton(
                   onPressed: () async {
                     if(_formKey.currentState!.validate()){
@@ -126,7 +127,7 @@ class _SignInState extends State<SignIn> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10.0,),
+                SizedBox(height: screenHeight * 0.01),
                 Text(
                   error,
                   style: const TextStyle(
@@ -173,7 +174,7 @@ class _SignInState extends State<SignIn> {
                           String? gMail=user?.email;
                           String? name=user?.displayName;
                           String? photoUrl=user?.photoURL;
-                          await DatabaseService(uid: user?.uid).updateUserData(name!, gMail!, "",photoUrl,'Enter college name',
+                          await DatabaseService(uid: user?.uid).updateUserData(name!, gMail!, photoUrl,'Enter college name',
                               'Enter course','Enter class','Enter bio',0,[],0,HashSet<String>());
                         }
                         if (context.mounted) Navigator.of(context).pop();
@@ -187,7 +188,7 @@ class _SignInState extends State<SignIn> {
                     backgroundImage: const AssetImage(
                         'assets/googleLogo.png'
                     ),
-                    backgroundColor: Colors.purple[50],
+                    backgroundColor: Colors.white,
                   ),
                 )
               ],

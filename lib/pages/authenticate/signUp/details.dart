@@ -44,10 +44,11 @@ class _DetailsState extends State<Details> {
     return loading ? PopScope(canPop: false, child: LoadingShared()) : Scaffold(
       appBar: AppBar(
         title: Text('Fill Details'),
-        backgroundColor: Colors.purple[50],
+        // backgroundColor: Colors.purple[50],
       ),
-      backgroundColor: Colors.purple[50],
+      // backgroundColor: Colors.purple[50],
       body: SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: Form(
           key: _formKey,
           child: Padding(
@@ -92,11 +93,11 @@ class _DetailsState extends State<Details> {
                         backgroundImage: _currentProfileImage != null
                             ? FileImage(_currentProfileImage!)
                             : null,
-                        backgroundColor: Colors.purple[100],
+                        backgroundColor: Color(0xFF3F51B5),
                         //showing person Icon if there is no DP
                         child: _currentProfileImage != null
                             ? null
-                            : const Icon(Icons.person, size: 80),
+                            : const Icon(Icons.person, color: Colors.white, size: 140),
                       ),
                     ),
                   ],
@@ -105,7 +106,7 @@ class _DetailsState extends State<Details> {
                 TextFormField(
                   validator: (val) => val!.length > 15 ? null : 'Enter valid college name',
                   onChanged: (val) => setState(() => _currentCollege = val),
-                  decoration: textInputDecoration.copyWith(
+                  decoration: InputDecoration(
                       labelText: 'College name',
                       hintText: 'Enter your college name',
                       prefixIcon: const Icon(Icons.school)
@@ -120,8 +121,10 @@ class _DetailsState extends State<Details> {
                     fit: FlexFit.loose,
                   ),
                   decoratorProps: DropDownDecoratorProps(
-                    decoration: textInputDecoration.copyWith(
+                    decoration: InputDecoration(
+                      labelText: 'Course',
                       hintText: "Select Course",
+                      prefixIcon: Icon(Icons.event_note_outlined)
                     ),
                   ),
                   validator: (val) => val == null ? "Select Course" : null,
@@ -131,7 +134,7 @@ class _DetailsState extends State<Details> {
                 TextFormField(
                   validator: (val) => val!.isNotEmpty ? null : 'Enter valid class',
                   onChanged: (val) => setState(() => _currentClass = val),
-                  decoration: textInputDecoration.copyWith(
+                  decoration: InputDecoration(
                       labelText: 'Class',
                       hintText: 'Enter your class',
                       prefixIcon: const Icon(Icons.menu_book)
@@ -141,7 +144,7 @@ class _DetailsState extends State<Details> {
                 TextFormField(
                   validator: (val) => val!.isNotEmpty ? null : 'Enter valid bio',
                   onChanged: (val) => setState(() => _currentBio = val),
-                  decoration: textInputDecoration.copyWith(
+                  decoration: InputDecoration(
                       labelText: 'Bio',
                       hintText: 'Enter your bio',
                       prefixIcon: const Icon(Icons.description)
@@ -170,8 +173,8 @@ class _DetailsState extends State<Details> {
                            imageUrl = await StorageServices(uid: result.uid).uploadImage(_currentProfileImage);
                         }
 
-                        await DatabaseService(uid: result.uid).updateUserData(data['username'], data['email'], data['password'],
-                            imageUrl , _currentCollege!, _currentCourse!, _currentClass!, _currentBio!, 0, [], 0, HashSet<String>());
+                        await DatabaseService(uid: result.uid).updateUserData(data['username'], data['email'], imageUrl,
+                            _currentCollege!, _currentCourse!, _currentClass!, _currentBio!, 0, [], 0, HashSet<String>());
                         if (context.mounted) Navigator.of(context).pop();
                         if (context.mounted) Navigator.of(context).pop();
                       }

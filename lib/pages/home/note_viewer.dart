@@ -80,6 +80,9 @@ class _NoteViewerState extends State<NoteViewer> {
     final currentUserUid=Provider.of<UserUid?>(context);
     bool currUserFlag=false;
 
+    double screenHeight=MediaQuery.heightOf(context);
+    double screenWidth=MediaQuery.widthOf(context);
+
 
 
     //prevention for initialization
@@ -91,6 +94,12 @@ class _NoteViewerState extends State<NoteViewer> {
     //User won't be able to pop the screen via back button of system
     return PopScope(
       canPop: false,
+      onPopInvokedWithResult: (didPop, result){
+        if(didPop){
+          return;
+        }
+        Navigator.pop(context, data['likesCount']);
+      },
       child: Scaffold(
           appBar: AppBar(
             leading: IconButton(
@@ -113,7 +122,7 @@ class _NoteViewerState extends State<NoteViewer> {
                           onPressed: () async {
                             Navigator.pop(context);
                           },
-                          style: buttonStyleSignUp,
+                          // style: buttonStyleSignUp,
                           child: Text("Cancel"),
                         ),
                         SizedBox(height: 10,),
@@ -143,7 +152,7 @@ class _NoteViewerState extends State<NoteViewer> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left:25),
+                  padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01, horizontal: screenWidth * 0.04),
                   child: Text(
                     '${data['pdfName']}',
                     style: const TextStyle(
@@ -152,22 +161,22 @@ class _NoteViewerState extends State<NoteViewer> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
+                SizedBox(
+                  height: screenHeight * 0.02,
                 ),
                 //showing pdf preview using SyncFusion PDF Viewer
                 Container(
-                  height: 500,
-                  color: Colors.purple[200],
+                  height: screenHeight * 0.62,
+                  color: Colors.white,
                   child: pdfLink.isNotEmpty ? CachedPdfViewer(pdfUrl: pdfLink): Container(),
                 ),
-                const SizedBox(
-                  height: 20,
+                SizedBox(
+                  height: screenHeight * 0.02,
                 ),
                 Row(
                   children: [
-                    const SizedBox(
-                      width: 10,
+                    SizedBox(
+                      width: screenWidth * 0.03,
                     ),
                     IconButton(
                       onPressed: () async {
@@ -227,7 +236,7 @@ class _NoteViewerState extends State<NoteViewer> {
                                   ),
                                   actions: <Widget>[
                                     TextButton(
-                                      style: buttonStyleSignUp,
+                                      style: Theme.of(context).elevatedButtonTheme.style,
                                       onPressed: () async {
                                         await DatabaseService(uid: userUid).deleteUserPDF(id: data['id'], filePath: data['pdfPath']);
                                         if(!context.mounted) return;
@@ -264,14 +273,14 @@ class _NoteViewerState extends State<NoteViewer> {
                       icon: const Icon(Icons.download),
                       iconSize: 30,
                     ),
-                    const SizedBox(
-                      width: 10,
+                    SizedBox(
+                      width: screenWidth * 0.03,
                     )
                   ],
                 ),
                 const Divider(),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 0, 10, 0),
+                  padding: EdgeInsets.only(left: screenWidth * 0.08, right: screenWidth * 0.03),
                   child: Row(
                     children: [
                       Expanded(

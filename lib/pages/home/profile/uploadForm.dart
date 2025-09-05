@@ -50,7 +50,7 @@ class _UploadFormState extends State<UploadForm> {
     final user = Provider.of<UserUid>(context);
 
     return Padding(
-      padding: const EdgeInsets.all(25.0),
+      padding: EdgeInsets.all(MediaQuery.widthOf(context) * 0.06),
       child: Form(
         key: _formKey,
         child: Column(
@@ -94,9 +94,9 @@ class _UploadFormState extends State<UploadForm> {
               ),
 
             ),
-            const SizedBox(height: 10.0,),
+            SizedBox(height: MediaQuery.heightOf(context) * 0.015),
             Text(fileName),
-            const SizedBox(height: 10.0,),
+            SizedBox(height: MediaQuery.heightOf(context) * 0.015),
             Expanded(
               child: // Course Dropdown
               // Course Searchable Dropdown
@@ -108,7 +108,7 @@ class _UploadFormState extends State<UploadForm> {
                   fit: FlexFit.loose,
                 ),
                 decoratorProps: DropDownDecoratorProps(
-                  decoration: textInputDecoration.copyWith(
+                  decoration: InputDecoration(
                     hintText: "Select Course",
                   ),
                 ),
@@ -116,7 +116,7 @@ class _UploadFormState extends State<UploadForm> {
                 onChanged: (val) => setState(() => _currentCourse = val),
               ),
             ),
-            const SizedBox(height: 10.0,),
+            SizedBox(height: MediaQuery.heightOf(context) * 0.015),
             Expanded(
               child: // Subject Dropdown
               // Course Searchable Dropdown
@@ -128,7 +128,7 @@ class _UploadFormState extends State<UploadForm> {
                   fit: FlexFit.loose,
                 ),
                 decoratorProps: DropDownDecoratorProps(
-                  decoration: textInputDecoration.copyWith(
+                  decoration: InputDecoration(
                     hintText: "Select Subject",
                   ),
                 ),
@@ -136,10 +136,10 @@ class _UploadFormState extends State<UploadForm> {
                 onChanged: (val) => setState(() => _currentSubject = val),
               ),
             ),
-            const SizedBox(height: 10.0,),
+            SizedBox(height: MediaQuery.heightOf(context) * 0.015),
             Expanded(
               child: TextFormField(
-                decoration: textInputDecoration.copyWith(
+                decoration: InputDecoration(
                     hintText: 'Description'
                 ),
                 validator: (val) => val!.isEmpty ? "Enter Description" : null,
@@ -148,7 +148,7 @@ class _UploadFormState extends State<UploadForm> {
             ),
             const SizedBox(height: 30.0,),
             ElevatedButton(
-              style: buttonStyleSignUp,
+              // style: buttonStyleSignUp,
               onPressed: () async {
 
                 if(_formKey.currentState!.validate() && pdf != null){
