@@ -39,6 +39,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //Cache Background Image for smoother load
+    precacheImage(AssetImage('assets/loginBG.webp'), context);
     return StreamProvider<UserUid?>.value(
         value: AuthService().user,
         initialData: null,

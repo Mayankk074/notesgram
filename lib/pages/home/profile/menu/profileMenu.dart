@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:notesgram/pages/home/profile/menu/settingsForm.dart';
 import 'package:provider/provider.dart';
 
@@ -57,6 +58,14 @@ class Menu extends StatelessWidget {
                 Navigator.pushNamed(context, '/reportedNotes');
               },
             ),
+          //Rate the App on Play Store
+          ListTile(
+            leading: const Icon(Icons.star_rate),
+            title: const Text('Rate the app'),
+            onTap: () async {
+              await InAppReview.instance.openStoreListing();
+            },
+          ),
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Log out'),

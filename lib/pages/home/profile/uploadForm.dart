@@ -6,6 +6,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:notesgram/models/userUid.dart';
 import 'package:notesgram/services/database.dart';
 import 'package:notesgram/services/storage.dart';
@@ -31,6 +32,17 @@ class _UploadFormState extends State<UploadForm> {
 
   String fileName='File size should not exceed 2 MB';
   File? pdf;
+
+  final InAppReview inAppReview = InAppReview.instance;
+
+  Future<void> showReviewPopup() async {
+    if (await inAppReview.isAvailable()) {
+      await inAppReview.requestReview();
+    } else {
+      // fallback: open Play Store
+      inAppReview.openStoreListing();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -144,8 +156,7 @@ class _UploadFormState extends State<UploadForm> {
                   DatabaseService(uid: user.uid)
                         .addNote(file: pdf, course: _currentCourse,description: _currentDescription,likes: 0, fileName: fileName, subject: _currentSubject);
 
-                  if (!context.mounted) return;
-                  Navigator.pop(context);
+                  if (context.mounted) Navigator.pop(context);
                   const snackBar = SnackBar(
                     content: Text('Yay! PDF has been uploading!'),
                     duration: Duration(seconds: 1),
@@ -153,6 +164,9 @@ class _UploadFormState extends State<UploadForm> {
                   // Find the ScaffoldMessenger in the widget tree
                   // and use it to show a SnackBar.
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                  //Open Review panel for play store
+                  await showReviewPopup();
                 }
               },
               child: const Text(

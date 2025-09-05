@@ -9,8 +9,9 @@ class LoadingShared extends StatelessWidget {
     return const Scaffold(
       body: SafeArea(
         child: Center(
-          child: SpinKitCircle(
+          child: SpinKitRing(
             color: Colors.purple,
+            lineWidth: 5,
           ),
         ),
       ),

@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "439412915669-jqa11438ro7ihc0hf3u7akjejemrh62c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.foryou.notesgram",
+            "certificate_hash": "10e532b406b6481526ee32706fbdaaebe4bc41d3"
+          }
+        },
+        {
           "client_id": "439412915669-spkrjklfcmq4j6ugg5j6o8p9s569kuhs.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

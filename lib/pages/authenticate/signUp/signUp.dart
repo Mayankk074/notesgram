@@ -46,6 +46,14 @@ class _SignUpState extends State<SignUp> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            onPressed: () async {
+              FocusManager.instance.primaryFocus?.unfocus();
+              await Future.delayed(Duration(milliseconds: 300));
+              if(context.mounted) Navigator.of(context).pop();
+            },
+            icon: Icon(Icons.arrow_back)
+          ),
           backgroundColor: Colors.purple[50],
         ),
         backgroundColor: Colors.purple[50],
